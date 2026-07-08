@@ -319,6 +319,159 @@ function wrapModel(modelName, realModel) {
         return data.length;
       }
       return data.filter(doc => matchQuery(doc, query)).length;
+    },
+
+    // 11. AGGREGATE
+    aggregate: function(pipeline) {
+      return Promise.resolve().then(() => {
+        if (isConnected()) {
+          return realModel.aggregate(pipeline);
+        }
+        
+        const data = loadCollection(modelName);
+        
+        function resolveValue(doc, expr) {
+          if (typeof expr === 'string') {
+            if (expr.startsWith('$')) {
+              const path = expr.substring(1);
+              const parts = path.split('.');
+              let current = doc;
+              for (const part of parts) {
+                if (current === null || current === undefined) return undefined;
+                current = current[part];
+              }
+              return current;
+            }
+            return expr;
+          }
+          if (expr && typeof expr === 'object') {
+            if (expr.$month) {
+              const val = resolveValue(doc, expr.$month);
+              if (!val) return null;
+              const date = new Date(val);
+              return isNaN(date.getTime()) ? null : date.getMonth() + 1;
+            }
+          }
+          return expr;
+        }
+
+        let result = [...data];
+        for (const stage of pipeline) {
+          if (stage.$match) {
+            result = result.filter(doc => {
+              for (const key in stage.$match) {
+                const queryVal = stage.$match[key];
+                const docVal = doc[key];
+                if (queryVal && typeof queryVal === 'object' && !(queryVal instanceof Date)) {
+                  if (queryVal.$gte || queryVal.$lt || queryVal.$gt || queryVal.$lte) {
+                    const dateVal = new Date(docVal);
+                    if (isNaN(dateVal.getTime())) return false;
+                    if (queryVal.$gte && dateVal < new Date(queryVal.$gte)) return false;
+                    if (queryVal.$lte && dateVal > new Date(queryVal.$lte)) return false;
+                    if (queryVal.$gt && dateVal <= new Date(queryVal.$gt)) return false;
+                    if (queryVal.$lt && dateVal >= new Date(queryVal.$lt)) return false;
+                  } else {
+                    if (JSON.stringify(docVal) !== JSON.stringify(queryVal)) return false;
+                  }
+                } else {
+                  if (docVal !== queryVal) {
+                    if (docVal && queryVal && docVal.toString() === queryVal.toString()) {
+                      continue;
+                    }
+                    return false;
+                  }
+                }
+              }
+              return true;
+            });
+          }
+          if (stage.$unwind) {
+            const path = stage.$unwind.startsWith('$') ? stage.$unwind.substring(1) : stage.$unwind;
+            const unwound = [];
+            for (const doc of result) {
+              const arr = doc[path];
+              if (Array.isArray(arr)) {
+                for (const item of arr) {
+                  unwound.push({
+                    ...doc,
+                    [path]: item
+                  });
+                }
+              } else if (arr !== undefined && arr !== null) {
+                unwound.push(doc);
+              }
+            }
+            result = unwound;
+          }
+          if (stage.$group) {
+            const groupSpec = stage.$group;
+            const groups = {};
+            for (const doc of result) {
+              let keyVal;
+              if (groupSpec._id === null) {
+                keyVal = null;
+              } else {
+                keyVal = resolveValue(doc, groupSpec._id);
+              }
+              const keyStr = keyVal === null ? 'null' : String(keyVal);
+              if (!groups[keyStr]) {
+                groups[keyStr] = {
+                  _id: keyVal,
+                  _docs: []
+                };
+              }
+              groups[keyStr]._docs.push(doc);
+            }
+            const groupResults = [];
+            for (const keyStr in groups) {
+              const grp = groups[keyStr];
+              const docs = grp._docs;
+              const outputDoc = { _id: grp._id };
+              for (const field in groupSpec) {
+                if (field === '_id') continue;
+                const fieldSpec = groupSpec[field];
+                if (fieldSpec && typeof fieldSpec === 'object') {
+                  if (fieldSpec.$sum !== undefined) {
+                    const sumExpr = fieldSpec.$sum;
+                    let sum = 0;
+                    for (const d of docs) {
+                      if (sumExpr === 1) {
+                        sum += 1;
+                      } else {
+                        const val = Number(resolveValue(d, sumExpr));
+                        if (!isNaN(val)) sum += val;
+                      }
+                    }
+                    outputDoc[field] = sum;
+                  } else if (fieldSpec.$first !== undefined) {
+                    const firstExpr = fieldSpec.$first;
+                    outputDoc[field] = docs.length > 0 ? resolveValue(docs[0], firstExpr) : null;
+                  }
+                }
+              }
+              groupResults.push(outputDoc);
+            }
+            result = groupResults;
+          }
+          if (stage.$sort) {
+            const sortSpec = stage.$sort;
+            result.sort((a, b) => {
+              for (const key in sortSpec) {
+                const dir = sortSpec[key];
+                const valA = a[key];
+                const valB = b[key];
+                if (valA < valB) return dir === 1 ? -1 : 1;
+                if (valA > valB) return dir === 1 ? 1 : -1;
+              }
+              return 0;
+            });
+          }
+          if (stage.$limit) {
+            result = result.slice(0, stage.$limit);
+          }
+        }
+        return result;
+      });
     }
   };
 

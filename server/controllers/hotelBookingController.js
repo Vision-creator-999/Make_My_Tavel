@@ -34,7 +34,7 @@ exports.createBooking = async (req, res) => {
     const bookingId = 'HTL' + Date.now();
 
     // Create booking
-    const booking = new HotelBooking({
+    const booking = await HotelBooking.create({
       bookingId,
       user: req.user._id,
       hotel: hotelId,
@@ -61,8 +61,6 @@ exports.createBooking = async (req, res) => {
       guestPhone: guestPhone || req.user.phone || '',
       specialRequests: specialRequests || ''
     });
-
-    await booking.save();
 
     // Reduce available room count
     room.availableRooms -= roomsRequested;
