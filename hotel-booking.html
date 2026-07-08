@@ -364,7 +364,10 @@
   <!-- MAIN CONTENT -->
   <div class="hotel-page">
     <div class="page-breadcrumb">
-      <a href="landing.html">Home</a> &nbsp;›&nbsp; Hotels
+      <a href="landing.html" style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-primary); font-weight: 700; text-decoration: none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 14px; height: 14px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back to Home
+      </a>
     </div>
     <div class="page-title-bar">
       <h1>🏨 Browse Hotels</h1>
@@ -917,6 +920,7 @@
 
         const data = await res.json();
         if (res.ok) {
+          alert("Your hotel is booked successfully!");
           document.getElementById('booking-form-section').classList.remove('active');
           document.getElementById('booking-success').classList.add('active');
           document.getElementById('success-booking-id').textContent = `Booking ID: ${data.bookingId}`;
