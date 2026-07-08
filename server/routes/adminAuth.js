@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 // Simple in-memory session tracking for custom dashboard
@@ -48,7 +49,10 @@ router.post('/login', async (req, res) => {
     // Set session cookie manually
     res.setHeader('Set-Cookie', `admin_token=${token}; Path=/; HttpOnly; Max-Age=${60 * 60 * 4}; SameSite=Lax`);
 
-    return res.json({ success: true, message: 'Login successful.' });
+    // Generate JWT token as well
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'makemytravel_jwt_secret_2026', { expiresIn: '7d' });
+
+    return res.json({ success: true, message: 'Login successful.', token: jwtToken });
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ success: false, message: 'Server error. Please try again.' });

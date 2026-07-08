@@ -98,6 +98,9 @@ function matchQuery(doc, query) {
       }
     } else {
       if (docVal !== queryVal) {
+        if (key === 'isActive' && queryVal === true && docVal === undefined) {
+          continue;
+        }
         // Allow check by string comparison if one is ID/ObjectId
         if (docVal && queryVal && docVal.toString() === queryVal.toString()) {
           continue;
@@ -327,6 +330,12 @@ function enhanceDocument(doc, modelName) {
   if (!doc) return doc;
   
   const enhanced = { ...doc };
+
+  if (modelName.toLowerCase() === 'hotel') {
+    if (enhanced.isActive === undefined) {
+      enhanced.isActive = true;
+    }
+  }
 
   // save() method
   enhanced.save = async function() {

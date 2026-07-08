@@ -10,22 +10,22 @@ router.get('/', async (req, res) => {
     const listB = await Booking.find();
 
     const formattedA = listA.map(b => ({
-      _id: b._id,
-      id: b.bookingId || b._id.toString(),
+      _id: b._id || b.id,
+      id: b.bookingId || (b._id || b.id || '').toString(),
       customerName: b.guestName || (b.user ? b.user.name : 'Unknown Guest'),
       phone: b.guestPhone || 'N/A',
-      date: b.createdAt ? b.createdAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      date: b.createdAt ? new Date(b.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
       amount: b.totalAmount || 0,
       status: b.bookingStatus === 'checked_in' || b.bookingStatus === 'checked_out' ? 'completed' : b.bookingStatus,
       isHotelBooking: true
     }));
 
     const formattedB = listB.map(b => ({
-      _id: b._id,
-      id: b.bookingId || b._id.toString(),
+      _id: b._id || b.id,
+      id: b.bookingId || (b._id || b.id || '').toString(),
       customerName: b.customerName,
       phone: b.customerPhone,
-      date: b.bookingDate || (b.createdAt ? b.createdAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]),
+      date: b.bookingDate || (b.createdAt ? new Date(b.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]),
       amount: b.amount,
       status: b.status,
       isHotelBooking: false

@@ -107,7 +107,7 @@ exports.getBookingById = async (req, res) => {
 
     // Check ownership or admin access
     const userId = booking.user._id ? booking.user._id.toString() : booking.user.toString();
-    if (userId !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (userId !== (req.user._id || req.user.id || '').toString() && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Not authorized to view this booking' });
     }
 
@@ -131,7 +131,7 @@ exports.cancelBooking = async (req, res) => {
     }
 
     // Check ownership or admin access
-    if (booking.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if ((booking.user._id || booking.user || '').toString() !== (req.user._id || req.user.id || '').toString() && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Not authorized to cancel this booking' });
     }
 

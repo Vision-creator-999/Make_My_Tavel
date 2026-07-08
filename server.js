@@ -151,7 +151,8 @@ app.get('/api/users', async (req, res) => {
     // Map _id to id for backward compatibility with admin.html
     const safeUsers = users.map(u => {
       const obj = u.toObject();
-      obj.id = obj._id.toString();
+      obj.id = obj._id ? obj._id.toString() : (obj.id || '').toString();
+      if (!obj._id) obj._id = obj.id;
       return obj;
     });
     res.json(safeUsers);
@@ -181,7 +182,7 @@ app.post('/api/users/verify', async (req, res) => {
 
     res.json({
       message: 'Verification status updated',
-      user: { id: user._id.toString(), name: user.name, verified: user.verified }
+      user: { id: user._id ? user._id.toString() : (user.id || '').toString(), name: user.name, verified: user.verified }
     });
   } catch (err) {
     console.error('Verify error:', err);

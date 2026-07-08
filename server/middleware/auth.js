@@ -16,7 +16,10 @@ const protect = async (req, res, next) => {
     let token;
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
+      const parts = req.headers.authorization.split(' ');
+      if (parts[1] && parts[1] !== 'null' && parts[1] !== 'undefined') {
+        token = parts[1];
+      }
     }
 
     // Fallback: Check cookies for admin_token session

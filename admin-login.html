@@ -242,6 +242,9 @@
         // Save the JWT token or session state locally so the client maintains access
         localStorage.setItem('adminToken', 'true');
         localStorage.setItem('adminEmail', email);
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
 
         setTimeout(()=>{window.location.href='/admin-dashboard.html';},1000);
       }else{
