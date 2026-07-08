@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver & Cab Registration | Make My Travel</title>
+  <meta name="description" content="Register as a driver or cab operator on Make My Travel. Grow your taxi business, get local bookings, and manage rides.">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Driver Styles -->
+  <style>
+    :root {
+      --secondary-color: var(--color-accent, #E05A47);
+      --secondary-dark: var(--color-secondary, #C54837);
+      --primary-color: var(--color-primary, #006C70);
+      --primary-dark: #004F52;
+      --card-bg: var(--color-card, #FFFFFF);
+      --text-main: var(--color-text-heading, #1E293B);
+      --text-muted: var(--color-text-body, #64748B);
+      --border-color: var(--color-border, #E2E8F0);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      --font-heading: var(--font-sans, sans-serif);
+      --shadow-lg: var(--shadow-lg, 0 10px 30px rgba(23, 55, 94, 0.08));
+      --transition: var(--transition-normal, all 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+    }
+    .driver-hero {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
+      color: #FFFFFF;
+      padding: 80px 20px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .driver-hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .driver-hero h1 {
+      font-family: var(--font-heading);
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+    
+    .driver-hero p {
+      font-size: 1.15rem;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+    
+    .driver-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    
+    .driver-stat-item {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(5px);
+      padding: 15px 25px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      min-width: 180px;
+    }
+    
+    .driver-stat-num {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #FFD700;
+    }
+    
+    .driver-stat-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    
+    .driver-container {
+      max-width: 800px;
+      margin: -40px auto 80px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 5;
+    }
+    
+    .driver-form-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+    }
+    
+    .form-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin: 30px 0 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #FDF2F0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .form-section-title:first-of-type {
+      margin-top: 0;
+    }
+    
+    .driver-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    @media (max-width: 600px) {
+      .driver-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .submit-driver-btn {
+      background-color: var(--secondary-color);
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.15rem;
+      padding: 16px 40px;
+      border-radius: var(--radius-full);
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(224, 90, 71, 0.3);
+      transition: var(--transition);
+      margin-top: 30px;
+    }
+    
+    .submit-driver-btn:hover {
+      background-color: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(224, 90, 71, 0.4);
+    }
+    
+    .upload-box {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #F8FAFC;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .upload-box:hover {
+      border-color: var(--secondary-color);
+      background-color: #FDF2F0;
+    }
+    
+    .upload-box i {
+      font-size: 2.2rem;
+      color: var(--text-muted);
+    }
+    
+    .upload-box:hover i {
+      color: var(--secondary-color);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="top-promo-bar" style="background-color: var(--secondary-color);">
+    <div>
+      <span class="promo-tag" style="background-color: var(--primary-color);">CAB</span>
+      Register your taxi/cab and get bookings today!
+    </div>
+    <div class="top-promo-links">
+      <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to Main Site</a>
+      <a href="#"><i class="fa-solid fa-circle-question"></i> Driver Help</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon" style="background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));"><i class="fa-solid fa-car-side"></i></div>
+        Make<span>myTravel</span>
+      </a>
+      <div style="font-family: var(--font-heading); font-weight: 700; color: var(--primary-color); font-size: 1.1rem; border-left: 2px solid var(--border-color); padding-left: 15px; margin-left: 15px;">
+        Driver Portal
+      </div>
+      <div class="header-actions" style="margin-left: auto;">
+        <a href="index.html" class="wishlist-btn"><i class="fa-solid fa-house"></i> Home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="driver-hero">
+    <div class="driver-hero-content">
+      <h1>Earn More by Driving with Us</h1>
+      <p>Register as a driver or list your cab fleet. Get regular trips, transparent commissions, and daily payouts.</p>
+      
+      <div class="driver-stats">
+        <div class="driver-stat-item">
+          <div class="driver-stat-num">₹35,000+</div>
+          <div class="driver-stat-label">Avg Monthly Earnings</div>
+        </div>
+        <div class="driver-stat-item">
+          <div class="driver-stat-num">10k+</div>
+          <div class="driver-stat-label">Active Rides Weekly</div>
+        </div>
+        <div class="driver-stat-item">
+          <div class="driver-stat-num">24x7</div>
+          <div class="driver-stat-label">Dedicated Support</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <div class="driver-container">
+    <div class="driver-form-card">
+      <form id="driver-registration-form">
+        
+        <!-- Section 1: Driver/Operator Information -->
+        <h3 class="form-section-title"><i class="fa-solid fa-user-tie"></i> Driver / Company Details</h3>
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="driver-name">Driver or Company Name</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-heading"></i>
+            <input type="text" id="driver-name" name="driverName" placeholder="e.g. Ramesh Kumar / Royal Cab Services" required>
+          </div>
+        </div>
+        
+        <div class="driver-grid-2" style="margin-bottom: 20px;">
+          <div class="form-group">
+            <label for="driving-exp">Driving Experience (Years)</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-calendar-check"></i>
+              <input type="number" id="driving-exp" name="driverExp" min="1" max="50" placeholder="e.g. 5" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="license-number">License / Permit Number</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-id-card"></i>
+              <input type="text" id="license-number" name="licenseNum" placeholder="e.g. DL-12201900123" required>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Section 2: Vehicle Information -->
+        <h3 class="form-section-title"><i class="fa-solid fa-car"></i> Vehicle Details</h3>
+        
+        <div class="driver-grid-2" style="margin-bottom: 20px;">
+          <div class="form-group">
+            <label for="cab-model">Vehicle Model Name</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-tag"></i>
+              <input type="text" id="cab-model" name="cabModel" placeholder="e.g. Maruti Suzuki Dzire" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="cab-category">Cab Category</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-car-side"></i>
+              <select id="cab-category" name="cabCategory">
+                <option value="Economy Hatchback">Economy Hatchback</option>
+                <option value="Premium Sedan" selected>Premium Sedan</option>
+                <option value="Luxury SUV">Luxury SUV</option>
+                <option value="Mini Van">Mini Van</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="driver-grid-2" style="margin-bottom: 25px;">
+          <div class="form-group">
+            <label for="plate-number">Registration Plate Number</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-list-ol"></i>
+              <input type="text" id="plate-number" name="plateNumber" placeholder="e.g. MH-12-GP-5678" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="cab-capacity">Seating Capacity (Excl. Driver)</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-users"></i>
+              <select id="cab-capacity" name="cabCapacity">
+                <option value="4 Seater" selected>4 Seater</option>
+                <option value="6 Seater">6 Seater</option>
+                <option value="7 Seater">7 Seater</option>
+                <option value="9+ Seater">9+ Seater</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Section 3: Contact Details & Operating Area -->
+        <h3 class="form-section-title"><i class="fa-solid fa-envelope-open-text"></i> Contact & Operating Details</h3>
+        
+        <div class="driver-grid-2" style="margin-bottom: 20px;">
+          <div class="form-group">
+            <label for="driver-email">Email Address</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="driver-email" name="driverEmail" placeholder="e.g. ramesh@cabs.com" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="driver-phone">Mobile Number</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-phone"></i>
+              <input type="tel" id="driver-phone" name="driverPhone" placeholder="10-digit mobile number" required>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 25px;">
+          <label for="driver-city">Primary Operating City</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-city"></i>
+            <input type="text" id="driver-city" name="driverCity" placeholder="e.g. Goa, Manali, Mumbai" required>
+          </div>
+        </div>
+        
+        <!-- Section 4: Pricing & Media -->
+        <h3 class="form-section-title"><i class="fa-solid fa-indian-rupee-sign"></i> Rates & Documents</h3>
+        
+        <div class="form-group" style="margin-bottom: 25px;">
+          <label for="rate-per-km">Expected Rate per KM (in INR)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+            <input type="number" id="rate-per-km" name="ratePerKm" min="8" max="100" placeholder="e.g. 12" required>
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 30px;">
+          <label>Upload Driving License / RC Book (PDF or Image)</label>
+          <div class="upload-box" id="media-upload-area">
+            <i class="fa-solid fa-file-shield"></i>
+            <span style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Drag & drop your documents here</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">PDF, PNG or JPG (Max size 5MB)</span>
+            <input type="file" id="driver-doc-upload" accept="image/*,application/pdf" style="display: none;">
+          </div>
+        </div>
+        
+        <div class="checkbox-group" style="margin-bottom: 20px;">
+          <input type="checkbox" id="terms-agree" name="termsAgree" required>
+          <label for="terms-agree">I certify that my commercial permit/driver's license is valid and I agree to the Driver Partner Terms.</label>
+        </div>
+        
+        <button type="submit" class="submit-driver-btn">Register My Cab</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="background-color: #0F172A; color: #94A3B8; padding: 60px 0 30px; font-size: 0.95rem;">
+    <div class="footer-container">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <a href="index.html" class="footer-logo">
+          Make<span>myTravel</span>
+        </a>
+        <p style="margin-top: 10px;">Partner with Make My Travel. Grow your fleet, drive customers, and secure regular earnings.</p>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Make My Travel Driver Program. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="index.html">Main Website</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Success Modal -->
+  <div class="modal-overlay" id="driver-success-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="driver-modal-close">&times;</button>
+      <div class="modal-success-icon" style="background-color: #FDF2F0; color: var(--secondary-color);">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h3 class="modal-title">Registration Submitted!</h3>
+      <p class="modal-body">Your driver onboarding registration has been recorded successfully. Our verification department will check your commercial permits and contact you in 24–48 hours to activate your account.</p>
+      
+      <div class="modal-details" id="driver-app-details">
+        <!-- Dynamically filled by JS -->
+      </div>
+      
+      <button class="modal-btn" id="driver-modal-ok" style="background-color: var(--secondary-color);">Done</button>
+    </div>
+  </div>
+
+  <!-- JavaScript File -->
+  <script src="driver.js"></script>
+</body>
+</html>

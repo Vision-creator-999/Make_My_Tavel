@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hotel Management – Admin – Make My Travel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .admin-container { max-width: 1280px; margin: 40px auto; padding: 0 20px; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1.5px solid var(--color-border); padding-bottom: 20px; }
+    .admin-title-area { display: flex; align-items: center; gap: 16px; }
+    .admin-title-area h1 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--color-text-heading); }
+    .admin-badge { background-color: var(--color-secondary); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* Tabs */
+    .admin-tabs { display: flex; gap: 4px; margin-bottom: 28px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px; padding: 4px; }
+    .admin-tab { padding: 10px 24px; font-size: 14px; font-weight: 700; color: var(--color-text-body); cursor: pointer; border-radius: 8px; transition: all var(--transition-fast); border: none; background: transparent; }
+    .admin-tab.active { background: var(--color-primary); color: #fff; box-shadow: 0 2px 8px rgba(15,139,141,0.25); }
+    .admin-tab:hover:not(.active) { color: var(--color-text-heading); background: #fff; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    /* Stats Row */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow-sm); }
+    .stat-card label { font-size: 11px; font-weight: 700; color: var(--color-text-body); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+    .stat-card .val { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--color-text-heading); }
+    .stat-card .val.teal { color: var(--color-primary); }
+    .stat-card .val.green { color: #15803D; }
+    .stat-card .val.orange { color: var(--color-accent); }
+    
+    /* Filter Bar */
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-bar input, .filter-bar select { border: 1.5px solid var(--color-border); border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--color-text-heading); outline: none; }
+    .filter-bar input { flex: 1; min-width: 200px; }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--color-primary); }
+    
+    /* Table */
+    .table-container { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background: #F1F5F9; color: var(--color-text-heading); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 12px 16px; letter-spacing: 0.5px; border-bottom: 1.5px solid var(--color-border); }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--color-border); font-size: 13px; color: var(--color-text-heading); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #FAFBFC; }
+    
+    /* Hotel thumbnail */
+    .hotel-thumb { width: 48px; height: 36px; border-radius: 6px; object-fit: cover; }
+    
+    /* Status badges */
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: capitalize; }
+    .status-badge.confirmed { background: #DBEAFE; color: #1D4ED8; }
+    .status-badge.checked_in { background: #DCFCE7; color: #15803D; }
+    .status-badge.checked_out { background: #F1F5F9; color: #64748B; }
+    .status-badge.cancelled { background: #FEE2E2; color: #DC2626; }
+    .status-badge.no_show { background: #FEF3C7; color: #D97706; }
+    .status-badge.paid { background: #DCFCE7; color: #15803D; }
+    .status-badge.pending { background: #FEF3C7; color: #D97706; }
+    .status-badge.refunded { background: #F1F5F9; color: #64748B; }
+    .status-badge.active { background: #DCFCE7; color: #15803D; }
+    .status-badge.inactive { background: #FEE2E2; color: #DC2626; }
+    
+    /* Action buttons */
+    .action-btn { border: 1.5px solid var(--color-border); background: #fff; color: var(--color-text-heading); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all var(--transition-fast); margin: 0 2px; }
+    .action-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .action-btn.danger:hover { border-color: #EF4444; color: #EF4444; }
+    
+    .action-select { border: 1.5px solid var(--color-border); border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; cursor: pointer; background: #fff; }
+    
+    /* Primary button */
+    .primary-btn { background: var(--color-primary); color: #fff; border: none; border-radius: 10px; padding: 10px 24px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all var(--transition-fast); }
+    .primary-btn:hover { background: #0b6f71; }
+    .secondary-btn { background: transparent; color: var(--color-text-heading); border: 1.5px solid var(--color-border); border-radius: 10px; padding: 10px 24px; font-size: 13px; font-weight: 700; cursor: pointer; }
+    
+    /* Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: var(--color-card); border-radius: 16px; width: 100%; max-width: 720px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--color-border); }
+    .modal-header h3 { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 800; color: var(--color-text-heading); }
+    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--color-border); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text-heading); }
+    .modal-close:hover { background: #FEF2F2; border-color: #EF4444; color: #EF4444; }
+    .modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 11px; font-weight: 700; color: var(--color-text-heading); text-transform: uppercase; letter-spacing: 0.3px; }
+    .form-group input, .form-group select, .form-group textarea { border: 1.5px solid var(--color-border); border-radius: 8px; padding: 9px 12px; font-size: 13px; font-weight: 500; color: var(--color-text-heading); outline: none; font-family: inherit; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--color-primary); }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: 10px; }
+    
+    /* Room builder */
+    .room-builder { margin-top: 12px; }
+    .room-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 0.8fr 1fr 1fr 0.8fr 40px; gap: 8px; align-items: end; margin-bottom: 8px; }
+    .room-row input, .room-row select { font-size: 12px; padding: 7px 8px; }
+    .remove-room-btn { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .add-room-btn { font-size: 12px; font-weight: 700; color: var(--color-primary); cursor: pointer; background: none; border: 1.5px dashed var(--color-primary); border-radius: 8px; padding: 8px; margin-top: 8px; width: 100%; }
+    
+    /* Charts */
+    .charts-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .chart-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow-sm); }
+    .chart-card h4 { font-size: 14px; font-weight: 800; color: var(--color-text-heading); margin-bottom: 16px; }
+    .chart-wrapper { position: relative; height: 280px; }
+    
+    .export-btn { background: #fff; border: 1.5px solid var(--color-border); border-radius: 10px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--color-text-heading); transition: all var(--transition-fast); }
+    .export-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    
+    .empty-state { padding: 40px; text-align: center; color: var(--color-text-body); font-weight: 500; }
+    
+    @media (max-width: 1024px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      .room-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .admin-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .admin-tabs { flex-wrap: wrap; }
+      .filter-bar { flex-direction: column; }
+      .form-grid { grid-template-columns: 1fr; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      tr { border-bottom: 2px solid var(--color-border); padding: 8px 0; }
+      td { border: none; padding: 4px 16px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="admin-title-area">
+        <a href="landing.html" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--color-border); color: var(--color-text-heading);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 16px; height: 16px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </a>
+        <h1>Hotel Management</h1>
+        <span class="admin-badge">Admin</span>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <a href="admin-dashboard.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px; background: var(--color-primary); color: #fff;">📊 Fleet Admin</a>
+        <a href="admin.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">👤 Users</a>
+        <a href="landing.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🏠 Home</a>
+      </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab('hotels')">🏨 Hotels</button>
+      <button class="admin-tab" onclick="switchTab('bookings')">📋 Bookings</button>
+      <button class="admin-tab" onclick="switchTab('analytics')">📊 Analytics</button>
+    </div>
+
+    <!-- ═══════════════ HOTELS TAB ═══════════════ -->
+    <div class="tab-content active" id="tab-hotels">
+      <div class="filter-bar">
+        <input type="text" id="hotel-search" placeholder="Search hotels by name or city..." oninput="filterHotels()"/>
+        <button class="primary-btn" onclick="openHotelModal()">+ Add Hotel</button>
+      </div>
+      <div class="table-container">
+        <table><thead><tr>
+          <th>Image</th><th>Hotel Name</th><th>City</th><th>Price/Night</th><th>Rating</th><th>Rooms</th><th>Status</th><th>Actions</th>
+        </tr></thead><tbody id="hotels-tbody"></tbody></table>
+        <div id="hotels-empty" class="empty-state" style="display:none;">No hotels found.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ BOOKINGS TAB ═══════════════ -->
+    <div class="tab-content" id="tab-bookings">
+      <div class="stats-row" id="booking-stats-row"></div>
+      <div class="filter-bar">
+        <input type="text" id="booking-search" placeholder="Search booking ID or guest name..." oninput="filterBookings()"/>
+        <select id="booking-status-filter" onchange="filterBookings()">
+          <option value="">All Statuses</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="checked_in">Checked In</option>
+          <option value="checked_out">Checked Out</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="no_show">No Show</option>
+        </select>
+        <select id="booking-city-filter" onchange="filterBookings()">
+          <option value="">All Cities</option>
+        </select>
+        <input type="date" id="booking-date-from" onchange="filterBookings()" title="From Date"/>
+        <input type="date" id="booking-date-to" onchange="filterBookings()" title="To Date"/>
+        <button class="export-btn" onclick="exportCSV()">📥 Export CSV</button>
+      </div>
+      <div class="table-container">
+        <table><thead><tr>
+          <th>Booking ID</th><th>Guest</th><th>Hotel</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Nights</th><th>Amount</th><th>Payment</th><th>Status</th><th>Actions</th>
+        </tr></thead><tbody id="bookings-tbody"></tbody></table>
+        <div id="bookings-empty" class="empty-state" style="display:none;">No bookings found.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ ANALYTICS TAB ═══════════════ -->
+    <div class="tab-content" id="tab-analytics">
+      <div class="stats-row" id="analytics-stats-row"></div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>📊 Monthly Revenue (Current Year)</h4>
+          <div class="chart-wrapper"><canvas id="revenueChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>📈 Bookings by Status</h4>
+          <div class="chart-wrapper"><canvas id="statusChart"></canvas></div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="table-container">
+          <table><thead><tr><th>#</th><th>Hotel Name</th><th>Bookings</th><th>Revenue</th></tr></thead>
+          <tbody id="top-hotels-tbody"></tbody></table>
+        </div>
+        <div class="table-container">
+          <table><thead><tr><th>City</th><th>Bookings</th><th>Revenue</th></tr></thead>
+          <tbody id="city-breakdown-tbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hotel Add/Edit Modal -->
+  <div class="modal-overlay" id="hotel-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="hotel-modal-title">Add Hotel</h3>
+        <button class="modal-close" onclick="closeHotelModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Hotel Name *</label><input id="hm-name" placeholder="Sea View Resort"/></div>
+          <div class="form-group"><label>City *</label><input id="hm-city" placeholder="Goa"/></div>
+          <div class="form-group"><label>Location</label><input id="hm-location" placeholder="Candolim Beach"/></div>
+          <div class="form-group"><label>Address</label><input id="hm-address" placeholder="Full address"/></div>
+          <div class="form-group"><label>Price Per Night *</label><input id="hm-price" type="number" placeholder="12999"/></div>
+          <div class="form-group"><label>Rating</label><input id="hm-rating" type="number" step="0.1" min="0" max="5" placeholder="4.5"/></div>
+          <div class="form-group"><label>Badge</label>
+            <select id="hm-badge"><option value="">None</option><option value="Popular Choice">Popular Choice</option><option value="Best Value">Best Value</option><option value="Luxury Pick">Luxury Pick</option><option value="Trending">Trending</option><option value="Adventure">Adventure</option><option value="Cozy Stay">Cozy Stay</option></select>
+          </div>
+          <div class="form-group"><label>Total Reviews</label><input id="hm-reviews" type="number" placeholder="1200"/></div>
+          <div class="form-group full"><label>Description</label><textarea id="hm-desc" placeholder="Hotel description..."></textarea></div>
+          <div class="form-group full"><label>Amenities (comma separated)</label><input id="hm-amenities" placeholder="Free WiFi, Pool, Spa, Restaurant"/></div>
+          <div class="form-group full"><label>Image URLs (comma separated)</label><textarea id="hm-images" placeholder="https://..."></textarea></div>
+        </div>
+        <div class="room-builder">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-text-heading);">Room Types</label>
+          </div>
+          <div id="room-rows"></div>
+          <button class="add-room-btn" onclick="addRoomRow()">+ Add Room Type</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" onclick="closeHotelModal()">Cancel</button>
+        <button class="primary-btn" id="hotel-save-btn" onclick="saveHotel()">Save Hotel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Detail Modal -->
+  <div class="modal-overlay" id="booking-detail-modal">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>Booking Details</h3>
+        <button class="modal-close" onclick="closeBookingDetail()">✕</button>
+      </div>
+      <div class="modal-body" id="booking-detail-body"></div>
+    </div>
+  </div>
+
+  <script>
+    let allHotels = [], allBookings = [], statsData = null;
+    let editingHotelId = null;
+    let revenueChart = null, statusChart = null;
+
+    function getToken() { return localStorage.getItem('token'); }
+    function authHeaders() {
+      return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` };
+    }
+
+    // ═══════════════════════════════════════
+    // TAB SWITCHING
+    // ═══════════════════════════════════════
+    function switchTab(tab) {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.admin-tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+      document.getElementById(`tab-${tab}`).classList.add('active');
+      if (tab === 'bookings') loadBookings();
+      if (tab === 'analytics') loadAnalytics();
+    }
+
+    // ═══════════════════════════════════════
+    // HOTELS TAB
+    // ═══════════════════════════════════════
+    async function loadHotels() {
+      try {
+        const res = await fetch('/api/hotels');
+        if (res.ok) { allHotels = await res.json(); renderHotels(allHotels); }
+      } catch (err) { console.error('Load hotels error:', err); }
+    }
+
+    function renderHotels(hotels) {
+      const tbody = document.getElementById('hotels-tbody');
+      const empty = document.getElementById('hotels-empty');
+      const query = document.getElementById('hotel-search').value.toLowerCase();
+      const filtered = hotels.filter(h => h.name.toLowerCase().includes(query) || h.city.toLowerCase().includes(query));
+
+      if (filtered.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = filtered.map(h => {
+        const available = h.rooms?.reduce((s, r) => s + (r.availableRooms || 0), 0) || 0;
+        const total = h.rooms?.reduce((s, r) => s + (r.totalRooms || 0), 0) || 0;
+        return `<tr>
+          <td><img class="hotel-thumb" src="${h.images?.[0] || 'https://via.placeholder.com/48x36'}" alt=""/></td>
+          <td><strong>${h.name}</strong></td>
+          <td>${h.city}</td>
+          <td>₹${h.pricePerNight?.toLocaleString()}</td>
+          <td>⭐ ${h.rating || 0}</td>
+          <td>${available}/${total}</td>
+          <td><span class="status-badge ${h.isActive ? 'active' : 'inactive'}">${h.isActive ? 'Active' : 'Inactive'}</span></td>
+          <td>
+            <button class="action-btn" onclick="editHotel('${h._id}')">Edit</button>
+            <button class="action-btn danger" onclick="deleteHotel('${h._id}', '${h.name}')">Delete</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function filterHotels() { renderHotels(allHotels); }
+
+    function openHotelModal(hotelId) {
+      editingHotelId = null;
+      document.getElementById('hotel-modal-title').textContent = 'Add Hotel';
+      ['hm-name','hm-city','hm-location','hm-address','hm-price','hm-rating','hm-reviews','hm-desc','hm-amenities','hm-images'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('hm-badge').value = '';
+      document.getElementById('room-rows').innerHTML = '';
+      document.getElementById('hotel-modal').classList.add('active');
+    }
+
+    function closeHotelModal() { document.getElementById('hotel-modal').classList.remove('active'); }
+
+    function editHotel(id) {
+      const hotel = allHotels.find(h => h._id === id);
+      if (!hotel) return;
+      editingHotelId = id;
+      document.getElementById('hotel-modal-title').textContent = 'Edit Hotel';
+      document.getElementById('hm-name').value = hotel.name || '';
+      document.getElementById('hm-city').value = hotel.city || '';
+      document.getElementById('hm-location').value = hotel.location || '';
+      document.getElementById('hm-address').value = hotel.address || '';
+      document.getElementById('hm-price').value = hotel.pricePerNight || '';
+      document.getElementById('hm-rating').value = hotel.rating || '';
+      document.getElementById('hm-reviews').value = hotel.totalReviews || '';
+      document.getElementById('hm-badge').value = hotel.badge || '';
+      document.getElementById('hm-desc').value = hotel.description || '';
+      document.getElementById('hm-amenities').value = (hotel.amenities || []).join(', ');
+      document.getElementById('hm-images').value = (hotel.images || []).join(', ');
+      
+      const roomRows = document.getElementById('room-rows');
+      roomRows.innerHTML = '';
+      (hotel.rooms || []).forEach(r => addRoomRow(r));
+      document.getElementById('hotel-modal').classList.add('active');
+    }
+
+    function addRoomRow(data) {
+      const container = document.getElementById('room-rows');
+      const row = document.createElement('div');
+      row.className = 'room-row';
+      row.innerHTML = `
+        <div class="form-group"><input placeholder="Room Name" value="${data?.name || ''}"/></div>
+        <div class="form-group"><select><option value="deluxe" ${data?.type==='deluxe'?'selected':''}>Deluxe</option><option value="executive" ${data?.type==='executive'?'selected':''}>Executive</option><option value="suite" ${data?.type==='suite'?'selected':''}>Suite</option><option value="presidential" ${data?.type==='presidential'?'selected':''}>Presidential</option></select></div>
+        <div class="form-group"><input type="number" placeholder="Price" value="${data?.pricePerNight || ''}"/></div>
+        <div class="form-group"><input type="number" placeholder="Cap." value="${data?.capacity || ''}"/></div>
+        <div class="form-group"><input placeholder="Bed Type" value="${data?.bedType || ''}"/></div>
+        <div class="form-group"><input type="number" placeholder="Size" value="${data?.size || ''}"/></div>
+        <div class="form-group"><input type="number" placeholder="Total" value="${data?.totalRooms || ''}"/></div>
+        <button class="remove-room-btn" onclick="this.parentElement.remove()">×</button>
+      `;
+      container.appendChild(row);
+    }
+
+    async function saveHotel() {
+      const name = document.getElementById('hm-name').value.trim();
+      const city = document.getElementById('hm-city').value.trim();
+      const pricePerNight = parseFloat(document.getElementById('hm-price').value);
+      if (!name || !city || !pricePerNight) { alert('Name, City, and Price are required.'); return; }
+
+      const rooms = [];
+      document.querySelectorAll('#room-rows .room-row').forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        const selects = row.querySelectorAll('select');
+        const totalR = parseInt(inputs[5]?.value) || 0;
+        rooms.push({
+          name: inputs[0]?.value || '', type: selects[0]?.value || 'deluxe',
+          pricePerNight: parseFloat(inputs[1]?.value) || 0, capacity: parseInt(inputs[2]?.value) || 2,
+          bedType: inputs[3]?.value || '1 King Bed', size: parseInt(inputs[4]?.value) || 0,
+          totalRooms: totalR, availableRooms: totalR, features: [], freeCancellation: true
+        });
+      });
+
+      const body = {
+        name, city, pricePerNight, rooms,
+        location: document.getElementById('hm-location').value,
+        address: document.getElementById('hm-address').value,
+        description: document.getElementById('hm-desc').value,
+        rating: parseFloat(document.getElementById('hm-rating').value) || 0,
+        totalReviews: parseInt(document.getElementById('hm-reviews').value) || 0,
+        badge: document.getElementById('hm-badge').value || undefined,
+        amenities: document.getElementById('hm-amenities').value.split(',').map(a => a.trim()).filter(Boolean),
+        images: document.getElementById('hm-images').value.split(',').map(a => a.trim()).filter(Boolean)
+      };
+
+      try {
+        const url = editingHotelId ? `/api/hotels/${editingHotelId}` : '/api/hotels';
+        const method = editingHotelId ? 'PUT' : 'POST';
+        const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+        if (res.ok) { closeHotelModal(); loadHotels(); }
+        else { const d = await res.json(); alert(d.error || 'Failed to save hotel'); }
+      } catch (err) { alert('Connection error'); }
+    }
+
+    async function deleteHotel(id, name) {
+      if (!confirm(`Delete "${name}"? This will soft-delete the hotel.`)) return;
+      try {
+        const res = await fetch(`/api/hotels/${id}`, { method: 'DELETE', headers: authHeaders() });
+        if (res.ok) loadHotels();
+        else alert('Failed to delete hotel');
+      } catch (err) { alert('Connection error'); }
+    }
+
+    // ═══════════════════════════════════════
+    // BOOKINGS TAB
+    // ═══════════════════════════════════════
+    async function loadBookings() {
+      try {
+        const res = await fetch('/api/hotel-bookings/admin/all', { headers: authHeaders() });
+        if (res.ok) {
+          allBookings = await res.json();
+          renderBookingStats();
+          renderBookings(allBookings);
+          populateCityFilter();
+        }
+      } catch (err) { console.error('Load bookings error:', err); }
+    }
+
+    function renderBookingStats() {
+      const stats = {
+        total: allBookings.length,
+        confirmed: allBookings.filter(b => b.bookingStatus === 'confirmed').length,
+        checked_in: allBookings.filter(b => b.bookingStatus === 'checked_in').length,
+        checked_out: allBookings.filter(b => b.bookingStatus === 'checked_out').length,
+        cancelled: allBookings.filter(b => b.bookingStatus === 'cancelled').length,
+        revenue: allBookings.filter(b => b.paymentStatus === 'paid').reduce((s, b) => s + (b.totalAmount || 0), 0)
+      };
+      document.getElementById('booking-stats-row').innerHTML = `
+        <div class="stat-card"><label>Total Bookings</label><div class="val">${stats.total}</div></div>
+        <div class="stat-card"><label>Confirmed</label><div class="val teal">${stats.confirmed}</div></div>
+        <div class="stat-card"><label>Checked In</label><div class="val green">${stats.checked_in}</div></div>
+        <div class="stat-card"><label>Checked Out</label><div class="val">${stats.checked_out}</div></div>
+        <div class="stat-card"><label>Cancelled</label><div class="val orange">${stats.cancelled}</div></div>
+        <div class="stat-card"><label>Total Revenue</label><div class="val green">₹${stats.revenue.toLocaleString()}</div></div>
+      `;
+    }
+
+    function renderBookings(bookings) {
+      const tbody = document.getElementById('bookings-tbody');
+      const empty = document.getElementById('bookings-empty');
+      if (bookings.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = bookings.map(b => {
+        const cin = b.checkIn ? new Date(b.checkIn).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '-';
+        const cout = b.checkOut ? new Date(b.checkOut).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '-';
+        const statusLabel = (b.bookingStatus || '').replace('_', ' ');
+        const payLabel = b.paymentStatus || 'pending';
+        return `<tr>
+          <td><strong style="color: var(--color-primary);">${b.bookingId}</strong></td>
+          <td>${b.guestName || '-'}</td>
+          <td>${b.hotelName || '-'}</td>
+          <td>${b.roomName || b.roomType || '-'}</td>
+          <td>${cin}</td>
+          <td>${cout}</td>
+          <td>${b.nights || '-'}</td>
+          <td>₹${(b.totalAmount || 0).toLocaleString()}</td>
+          <td><span class="status-badge ${payLabel}">${payLabel}</span></td>
+          <td><span class="status-badge ${b.bookingStatus}">${statusLabel}</span></td>
+          <td>
+            <select class="action-select" onchange="handleBookingAction('${b._id}', this.value); this.value='';">
+              <option value="">Action</option>
+              ${b.bookingStatus === 'confirmed' ? '<option value="checked_in">Check In</option>' : ''}
+              ${b.bookingStatus === 'checked_in' ? '<option value="checked_out">Check Out</option>' : ''}
+              ${['confirmed','checked_in'].includes(b.bookingStatus) ? '<option value="no_show">No Show</option>' : ''}
+              ${b.bookingStatus === 'confirmed' ? '<option value="cancelled">Cancel</option>' : ''}
+              <option value="view">View Details</option>
+            </select>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function filterBookings() {
+      const search = document.getElementById('booking-search').value.toLowerCase();
+      const status = document.getElementById('booking-status-filter').value;
+      const city = document.getElementById('booking-city-filter').value;
+      const from = document.getElementById('booking-date-from').value;
+      const to = document.getElementById('booking-date-to').value;
+
+      let filtered = allBookings.filter(b => {
+        if (search && !(b.bookingId || '').toLowerCase().includes(search) && !(b.guestName || '').toLowerCase().includes(search)) return false;
+        if (status && b.bookingStatus !== status) return false;
+        if (city && (b.hotelCity || '').toLowerCase() !== city.toLowerCase()) return false;
+        if (from && new Date(b.createdAt) < new Date(from)) return false;
+        if (to && new Date(b.createdAt) > new Date(to + 'T23:59:59')) return false;
+        return true;
+      });
+      renderBookings(filtered);
+    }
+
+    function populateCityFilter() {
+      const cities = [...new Set(allBookings.map(b => b.hotelCity).filter(Boolean))];
+      const select = document.getElementById('booking-city-filter');
+      select.innerHTML = '<option value="">All Cities</option>' + cities.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    async function handleBookingAction(id, action) {
+      if (!action) return;
+      if (action === 'view') { viewBookingDetail(id); return; }
+      if (action === 'cancelled' && !confirm('Cancel this booking?')) return;
+
+      try {
+        const res = await fetch(`/api/hotel-bookings/${id}/status`, {
+          method: 'PUT', headers: authHeaders(),
+          body: JSON.stringify({ bookingStatus: action })
+        });
+        if (res.ok) loadBookings();
+        else { const d = await res.json(); alert(d.error || 'Failed to update status'); }
+      } catch (err) { alert('Connection error'); }
+    }
+
+    function viewBookingDetail(id) {
+      const b = allBookings.find(x => x._id === id);
+      if (!b) return;
+      const fmt = d => d ? new Date(d).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '-';
+      document.getElementById('booking-detail-body').innerHTML = `
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+          <div><strong>Booking ID</strong><br/><span style="color: var(--color-primary); font-weight: 700;">${b.bookingId}</span></div>
+          <div><strong>Status</strong><br/><span class="status-badge ${b.bookingStatus}">${(b.bookingStatus||'').replace('_',' ')}</span></div>
+          <div><strong>Guest Name</strong><br/>${b.guestName || '-'}</div>
+          <div><strong>Guest Email</strong><br/>${b.guestEmail || '-'}</div>
+          <div><strong>Guest Phone</strong><br/>${b.guestPhone || '-'}</div>
+          <div><strong>Hotel</strong><br/>${b.hotelName} (${b.hotelCity})</div>
+          <div><strong>Room</strong><br/>${b.roomName || b.roomType}</div>
+          <div><strong>Price/Night</strong><br/>₹${(b.pricePerNight||0).toLocaleString()}</div>
+          <div><strong>Check-In</strong><br/>${fmt(b.checkIn)}</div>
+          <div><strong>Check-Out</strong><br/>${fmt(b.checkOut)}</div>
+          <div><strong>Nights</strong><br/>${b.nights}</div>
+          <div><strong>Guests × Rooms</strong><br/>${b.guests} × ${b.rooms}</div>
+          <div><strong>Subtotal</strong><br/>₹${(b.subtotal||0).toLocaleString()}</div>
+          <div><strong>Taxes</strong><br/>₹${(b.taxes||0).toLocaleString()}</div>
+          <div><strong>Discount</strong><br/>₹${(b.discount||0).toLocaleString()} ${b.promoCode ? '('+b.promoCode+')' : ''}</div>
+          <div><strong>Total Amount</strong><br/><span style="font-size: 16px; font-weight: 800;">₹${(b.totalAmount||0).toLocaleString()}</span></div>
+          <div><strong>Payment Method</strong><br/>${(b.paymentMethod||'').replace('_',' ')}</div>
+          <div><strong>Payment Status</strong><br/><span class="status-badge ${b.paymentStatus}">${b.paymentStatus}</span></div>
+          ${b.specialRequests ? `<div style="grid-column:1/-1;"><strong>Special Requests</strong><br/>${b.specialRequests}</div>` : ''}
+          ${b.checkedInAt ? `<div><strong>Checked In At</strong><br/>${fmt(b.checkedInAt)}</div>` : ''}
+          ${b.checkedOutAt ? `<div><strong>Checked Out At</strong><br/>${fmt(b.checkedOutAt)}</div>` : ''}
+          ${b.cancelledAt ? `<div><strong>Cancelled At</strong><br/>${fmt(b.cancelledAt)}</div>` : ''}
+          ${b.cancellationReason ? `<div><strong>Cancellation Reason</strong><br/>${b.cancellationReason}</div>` : ''}
+          <div><strong>Booked On</strong><br/>${fmt(b.createdAt)}</div>
+        </div>
+      `;
+      document.getElementById('booking-detail-modal').classList.add('active');
+    }
+
+    function closeBookingDetail() { document.getElementById('booking-detail-modal').classList.remove('active'); }
+
+    function exportCSV() {
+      if (allBookings.length === 0) { alert('No bookings to export'); return; }
+      const headers = ['Booking ID','Guest Name','Guest Email','Guest Phone','Hotel','City','Room','Check-In','Check-Out','Nights','Guests','Rooms','Subtotal','Taxes','Discount','Total Amount','Promo Code','Payment Method','Payment Status','Booking Status','Booked On'];
+      const rows = allBookings.map(b => [
+        b.bookingId, b.guestName, b.guestEmail, b.guestPhone, b.hotelName, b.hotelCity,
+        b.roomName, b.checkIn?.split('T')[0], b.checkOut?.split('T')[0], b.nights, b.guests, b.rooms,
+        b.subtotal, b.taxes, b.discount, b.totalAmount, b.promoCode,
+        b.paymentMethod, b.paymentStatus, b.bookingStatus, b.createdAt?.split('T')[0]
+      ]);
+      const csv = [headers.join(','), ...rows.map(r => r.map(v => `"${v || ''}"`).join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `hotel-bookings-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click(); URL.revokeObjectURL(url);
+    }
+
+    // ═══════════════════════════════════════
+    // ANALYTICS TAB
+    // ═══════════════════════════════════════
+    async function loadAnalytics() {
+      try {
+        const res = await fetch('/api/hotels/stats', { headers: authHeaders() });
+        if (res.ok) {
+          statsData = await res.json();
+          renderAnalytics();
+        }
+      } catch (err) { console.error('Load analytics error:', err); }
+    }
+
+    function renderAnalytics() {
+      if (!statsData) return;
+      const avgBooking = statsData.totalBookings > 0 ? Math.round(statsData.totalRevenue / statsData.totalBookings) : 0;
+
+      document.getElementById('analytics-stats-row').innerHTML = `
+        <div class="stat-card"><label>Total Revenue</label><div class="val green">₹${statsData.totalRevenue.toLocaleString()}</div></div>
+        <div class="stat-card"><label>Total Bookings</label><div class="val">${statsData.totalBookings}</div></div>
+        <div class="stat-card"><label>Occupancy Rate</label><div class="val teal">${statsData.occupancyRate}%</div></div>
+        <div class="stat-card"><label>Avg Booking Value</label><div class="val orange">₹${avgBooking.toLocaleString()}</div></div>
+      `;
+
+      // Revenue Bar Chart
+      if (revenueChart) revenueChart.destroy();
+      const revCtx = document.getElementById('revenueChart').getContext('2d');
+      revenueChart = new Chart(revCtx, {
+        type: 'bar',
+        data: {
+          labels: statsData.revenueByMonth.map(m => m.month),
+          datasets: [{
+            label: 'Revenue (₹)',
+            data: statsData.revenueByMonth.map(m => m.revenue),
+            backgroundColor: 'rgba(15, 139, 141, 0.75)',
+            borderColor: '#0F8B8D',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: v => '₹' + (v/1000) + 'K' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+
+      // Status Pie Chart
+      if (statusChart) statusChart.destroy();
+      const statCtx = document.getElementById('statusChart').getContext('2d');
+      const bs = statsData.bookingsByStatus;
+      statusChart = new Chart(statCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Confirmed', 'Checked In', 'Checked Out', 'Cancelled', 'No Show'],
+          datasets: [{
+            data: [bs.confirmed, bs.checked_in, bs.checked_out, bs.cancelled, bs.no_show],
+            backgroundColor: ['#3B82F6', '#22C55E', '#94A3B8', '#EF4444', '#F59E0B'],
+            borderWidth: 2, borderColor: '#fff'
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true } } }
+        }
+      });
+
+      // Top Hotels Table
+      const topTbody = document.getElementById('top-hotels-tbody');
+      topTbody.innerHTML = (statsData.topHotels || []).map((h, i) => `
+        <tr>
+          <td><strong>${i + 1}</strong></td>
+          <td>${h.name}${h.city ? ` <span style="color:var(--color-text-body);font-size:11px;">(${h.city})</span>` : ''}</td>
+          <td>${h.bookings}</td>
+          <td>₹${(h.revenue || 0).toLocaleString()}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="4" class="empty-state">No data</td></tr>';
+
+      // City Breakdown Table
+      const cityTbody = document.getElementById('city-breakdown-tbody');
+      cityTbody.innerHTML = (statsData.cityBreakdown || []).map(c => `
+        <tr>
+          <td><strong>${c.city || 'Unknown'}</strong></td>
+          <td>${c.bookings}</td>
+          <td>₹${(c.revenue || 0).toLocaleString()}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="3" class="empty-state">No data</td></tr>';
+    }
+
+    // ═══════════════════════════════════════
+    // MODALS
+    // ═══════════════════════════════════════
+    document.getElementById('hotel-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeHotelModal(); });
+    document.getElementById('booking-detail-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeBookingDetail(); });
+
+    // ═══════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════
+    loadHotels();
+  </script>
+</body>
+</html>

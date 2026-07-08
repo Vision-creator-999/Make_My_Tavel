@@ -1,0 +1,19 @@
+{
+  "name": "makemytravel-backend",
+  "version": "1.0.0",
+  "description": "Full-stack authentication and user verification list for Make My Travel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.7.4"
+  },
+  "author": "Antigravity",
+  "license": "ISC"
+}

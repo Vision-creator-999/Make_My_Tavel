@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make My Travel – Journey Beyond Dreams</title>
+  <!-- Google Fonts: Inter and Outfit -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- TOP PROMO BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      🎁 Get Up to 30% OFF on Hotel Bookings &nbsp;|&nbsp; Use Code: <span class="promo-code">TRAVEL30</span>
+    </div>
+    <div class="topbar-right">
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+          <line x1="12" y1="18" x2="12.01" y2="18"></line>
+        </svg>
+        Download App
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        Help
+      </a>
+      <a href="#">
+        INR ▾
+      </a>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="logo">
+      <div class="logo-icon-wrapper">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" fill="#17375E" />
+          <path d="M15 80 C 35 70, 70 50, 85 25" stroke="#F97316" stroke-width="8" stroke-linecap="round" />
+          <path d="M15 80 C 35 70, 70 50, 85 25" stroke="#FBBF24" stroke-width="4" stroke-linecap="round" />
+          <g transform="translate(68, 15) rotate(45) scale(0.65)">
+            <path d="M25 0 L29 15 L45 22 L29 25 L25 40 L21 25 L5 22 L21 15 Z" fill="#FFFFFF" />
+          </g>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <strong>Make<span class="accent">my</span>Travel</strong>
+        <span class="tagline">Journey Beyond Dreams</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+        </svg>
+        Flights
+      </a>
+      <a href="hotel-booking.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        Hotels
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="3" width="22" height="13" rx="2" ry="2"></rect>
+          <path d="M7 21h0a2 2 0 0 1-2-2v-3h14v3a2 2 0 0 1-2 2h0"></path>
+        </svg>
+        Cars
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="8" width="18" height="14" rx="2" ry="2"></rect>
+          <path d="M7 8V5a3 3 0 0 1 6 0v3"></path>
+        </svg>
+        Holiday Packages
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        Offers
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+        Travel Guide
+      </a>
+      <a href="driver-register.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path>
+          <circle cx="7" cy="17" r="2"></circle>
+          <path d="M9 17h6"></path>
+          <circle cx="17" cy="17" r="2"></circle>
+        </svg>
+        Partner with Us
+      </a>
+    </div>
+    <div class="nav-right" id="nav-auth-area">
+      <a href="#" class="wishlist-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path
+            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+          </path>
+        </svg>
+        Wishlist
+      </a>
+      <!-- Shown when NOT logged in -->
+      <a href="login.html" class="login-btn" id="nav-login-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Login / Sign Up
+      </a>
+      <!-- Shown when logged in -->
+      <a href="profile.html" class="login-btn" id="nav-profile-btn" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span id="nav-user-greeting">My Profile</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <h1>Journey Beyond Dreams</h1>
+    <p class="hero-sub">Book Hotels, Cars &amp; Holiday Packages – All in One Place</p>
+
+    <div class="hero-badge">
+      <div class="badge-item best-price">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Best Price Guarantee
+      </div>
+      <div class="badge-item secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Secure Booking
+      </div>
+      <div class="badge-item support">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        24/7 Customer Support
+      </div>
+    </div>
+
+    <!-- SEARCH CARD -->
+    <div class="search-card">
+      <div class="search-tabs">
+        <div class="tab tab-hotels active" data-type="hotels">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Hotels
+        </div>
+        <div class="tab tab-cars" data-type="cars">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="22" height="13" rx="2" ry="2"></rect>
+            <path d="M7 21h0a2 2 0 0 1-2-2v-3h14v3a2 2 0 0 1-2 2h0"></path>
+          </svg>
+          Cars
+        </div>
+        <div class="tab tab-packages" data-type="packages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="8" width="18" height="14" rx="2" ry="2"></rect>
+            <path d="M7 8V5a3 3 0 0 1 6 0v3"></path>
+          </svg>
+          Holiday Packages
+        </div>
+      </div>
+
+      <div class="search-fields">
+        <div class="field field-dest">
+          <label>Destination</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <input type="text" placeholder="Where are you going?" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Check-in</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <input type="text" placeholder="Select date" onfocus="(this.type='date')" onblur="(this.type='text')" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Check-out</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <input type="text" placeholder="Select date" onfocus="(this.type='date')" onblur="(this.type='text')" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Guests &amp; Rooms</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <select>
+              <option>2 Guests, 1 Room</option>
+              <option>1 Guest, 1 Room</option>
+              <option>3 Guests, 2 Rooms</option>
+              <option>4 Guests, 2 Rooms</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-bottom">
+        <div class="travel-work-container">
+          <label class="travel-work">
+            <input type="checkbox" /> I'm travelling for work
+          </label>
+        </div>
+        <div class="search-btn-container">
+          <button class="search-btn">
+            Search Hotels
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPULAR DESTINATIONS -->
+  <section class="dest-section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">
+          Popular Destinations
+          <svg class="dotted-trail" width="100" height="24" viewBox="0 0 100 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-left: 8px;">
+            <path d="M5 18 C 25 2, 75 2, 85 14" stroke="#64748B" stroke-width="2" stroke-dasharray="4,4" fill="none" />
+            <path d="M85 14 L89 12 L87 9 L83 11 Z" fill="#0F8B8D" transform="rotate(30, 85, 14)" />
+          </svg>
+        </div>
+      </div>
+      <a href="#" class="view-all">View All
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <div class="carousel-wrapper">
+      <button class="slider-arrow prev" id="dest-prev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="dest-scroll" id="dest-scroll">
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&q=80" alt="Goa" />
+          <div class="dest-info"><strong>📍 Goa</strong><span>From ₹2,999</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&q=80" alt="Manali" />
+          <div class="dest-info"><strong>📍 Manali</strong><span>From ₹3,499</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=400&q=80" alt="Dubai" />
+          <div class="dest-info"><strong>📍 Dubai</strong><span>From ₹11,999</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400&q=80" alt="Thailand" />
+          <div class="dest-info"><strong>📍 Thailand</strong><span>From ₹15,999</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&q=80" alt="Kerala" />
+          <div class="dest-info"><strong>📍 Kerala</strong><span>From ₹2,499</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&q=80" alt="Jaipur" />
+          <div class="dest-info"><strong>📍 Jaipur</strong><span>From ₹2,199</span></div>
+        </div>
+      </div>
+
+      <button class="slider-arrow next" id="dest-next">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- BOOK MORE SAVE MORE (SERVICES) -->
+  <section style="padding-top: 60px;">
+    <div class="section-title">
+      Book More, Save More
+      <svg class="sparkle" viewBox="0 0 24 24" fill="none" stroke="#0F8B8D" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" style="width:22px;height:22px;margin-left: 6px;">
+        <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z"></path>
+      </svg>
+    </div>
+
+    <div class="modules">
+      <!-- Stay Comfortable (Hotels) -->
+      <div class="mod-card card-hotels">
+        <div class="mod-content">
+          <div>
+            <div class="mod-icon-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              </svg>
+              Stay Comfortable
+            </div>
+            <div class="mod-heading">Hotels</div>
+            <p class="mod-desc">Find the best hotels at unbeatable prices</p>
+          </div>
+          <button class="mod-btn btn-teal" onclick="window.location.href='hotel-booking.html'">Explore Hotels →</button>
+        </div>
+        <div class="mod-img">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80" alt="Cozy hotel room" />
+        </div>
+      </div>
+
+      <!-- Drive Your Way (Cars) -->
+      <div class="mod-card card-cars">
+        <div class="mod-content">
+          <div>
+            <div class="mod-icon-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="3" width="22" height="13" rx="2" ry="2"></rect>
+              </svg>
+              Drive Your Way
+            </div>
+            <div class="mod-heading">Cars</div>
+            <p class="mod-desc">Choose from a wide range of cars for your trip</p>
+          </div>
+          <button class="mod-btn btn-orange">Book Cars →</button>
+        </div>
+        <div class="mod-img">
+          <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&q=80" alt="Luxury car" />
+        </div>
+      </div>
+
+      <!-- Holiday Packages -->
+      <div class="mod-card card-packages">
+        <div class="mod-content">
+          <div>
+            <div class="mod-icon-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="8" width="18" height="14" rx="2" ry="2"></rect>
+                <path d="M7 8V5a3 3 0 0 1 6 0v3"></path>
+              </svg>
+              Holiday Packages
+            </div>
+            <div class="mod-heading">Packages</div>
+            <p class="mod-desc">Handpicked packages just for you</p>
+          </div>
+          <button class="mod-btn btn-teal">Explore Packages →</button>
+        </div>
+        <div class="mod-img">
+          <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80"
+            alt="Beautiful travel couple" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXCLUSIVE OFFERS -->
+  <section class="offers-section">
+    <div class="offers-banner">
+      <div class="offers-label">Best<br />Deals</div>
+      <div class="offer-intro">
+        <strong>Exclusive Offers for You</strong>
+        <span>Save More on Your Next Trip</span>
+      </div>
+
+      <div class="offers-cards-row">
+        <!-- Card 1 -->
+        <div class="offer-item hotel-offer">
+          <span class="off">FLAT 20% OFF</span>
+          <span class="on">on Hotel Bookings</span>
+          <div class="code-wrapper">
+            <span class="code">Code: HOTEL20</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="offer-item car-offer">
+          <span class="off">UP TO 15% OFF</span>
+          <span class="on">on Car Rentals</span>
+          <div class="code-wrapper">
+            <span class="code">Code: CAR15</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="offer-item package-offer">
+          <span class="off">UP TO 30% OFF</span>
+          <span class="on">on Holiday Packages</span>
+          <div class="code-wrapper">
+            <span class="code">Code: TRAVEL30</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE US -->
+  <section class="why-section">
+    <div class="section-title" style="justify-content: center; margin-bottom: 8px;">Why Choose Make my Travel?</div>
+    <div class="why-grid">
+      <!-- 1 -->
+      <div class="why-item">
+        <div class="why-icon teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+        </div>
+        <strong>Best Price Guarantee</strong>
+      </div>
+      <!-- 2 -->
+      <div class="why-item">
+        <div class="why-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <strong>Secure &amp; Easy Booking</strong>
+      </div>
+      <!-- 3 -->
+      <div class="why-item">
+        <div class="why-icon purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path
+              d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z">
+            </path>
+          </svg>
+        </div>
+        <strong>24/7 Support</strong>
+      </div>
+      <!-- 4 -->
+      <div class="why-item">
+        <div class="why-icon orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        </div>
+        <strong>No Hidden Charges</strong>
+      </div>
+      <!-- 5 -->
+      <div class="why-item">
+        <div class="why-icon red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+        </div>
+        <strong>Trusted by Millions</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-section">
+    <div class="section-title" style="justify-content: center;">What Travelers Say</div>
+    <div class="section-sub" style="text-align: center; margin-bottom: 32px;">Real experiences from real travelers</div>
+
+    <div class="testimonials-container">
+      <button class="slider-arrow prev" id="testi-prev" style="top: 45%;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="testimonials">
+        <!-- 1 -->
+        <div class="testi-card">
+          <div>
+            <div class="stars">★★★★★</div>
+            <p class="testi-text">"Amazing experience! Booking was easy and hassle-free. Got the best hotel at the
+              lowest price. Highly recommend Make My Travel to everyone!"</p>
+          </div>
+          <div class="testi-user">
+            <div class="avatar"><img src="https://i.pravatar.cc/80?img=11" alt="Rahul" /></div>
+            <div>
+              <div class="testi-name">Rahul Mehta</div>
+              <div class="testi-loc">Mumbai</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="testi-card">
+          <div>
+            <div class="stars">★★★★★</div>
+            <p class="testi-text">"Best holiday package at the best price. The itinerary was perfect, hotels were great
+              and cab service was on time. Highly recommended!"</p>
+          </div>
+          <div class="testi-user">
+            <div class="avatar"><img src="https://i.pravatar.cc/80?img=47" alt="Sneha" /></div>
+            <div>
+              <div class="testi-name">Sneha Kapoor</div>
+              <div class="testi-loc">Delhi</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="testi-card">
+          <div>
+            <div class="stars">★★★★★</div>
+            <p class="testi-text">"Great deals on hotels and cars. The whole booking process was smooth and transparent.
+              Will definitely book again for my next trip!"</p>
+          </div>
+          <div class="testi-user">
+            <div class="avatar"><img src="https://i.pravatar.cc/80?img=68" alt="Arjun" /></div>
+            <div>
+              <div class="testi-name">Arjun Desai</div>
+              <div class="testi-loc">Bangalore</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="slider-arrow next" id="testi-next" style="top: 45%;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <div class="carousel-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter-wrapper">
+    <div class="newsletter">
+      <div class="newsletter-left">
+        <div class="nl-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+        </div>
+        <div class="nl-text">
+          <strong>Get Best Travel Deals in Your Inbox</strong>
+          <span>Subscribe &amp; never miss an exclusive offer!</span>
+        </div>
+      </div>
+      <div class="nl-form-container">
+        <div class="nl-form">
+          <input type="email" placeholder="Enter your email address" />
+          <button>Subscribe ✈</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <strong>✈ Make<span class="accent">my</span>Travel</strong>
+      <p>Your all-in-one platform to book flights, hotels, cars &amp; holiday packages at the best prices. Journey
+        beyond dreams with us.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About Us</a>
+      <a href="#">Careers</a>
+      <a href="#">Blog</a>
+      <a href="#">Press</a>
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Help Center</a>
+      <a href="#">FAQs</a>
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Cancellation Policy</a>
+    </div>
+    <div class="footer-col">
+      <h4>Top Destinations</h4>
+      <a href="#">Goa</a>
+      <a href="#">Manali</a>
+      <a href="#">Dubai</a>
+      <a href="#">Kerala</a>
+      <a href="#">Thailand</a>
+    </div>
+    <div class="footer-col">
+      <h4>Download App</h4>
+      <div class="store-badges-container">
+        <a href="#" class="store-badge-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.21.67-2.93 1.49-.62.69-1.16 1.84-1.01 2.96 1.12.09 2.27-.57 2.95-1.39z" />
+          </svg>
+          <div class="store-badge-text">
+            <span>Download on the</span>
+            <strong>App Store</strong>
+          </div>
+        </a>
+        <a href="#" class="store-badge-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M3 20.29v-16.58a1.5 1.5 0 0 1 2.27-1.3L20.88 11.2a1.5 1.5 0 0 1 0 2.6L5.27 21.59A1.5 1.5 0 0 1 3 20.29z" />
+          </svg>
+          <div class="store-badge-text">
+            <span>Get it on</span>
+            <strong>Google Play</strong>
+          </div>
+        </a>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+  </footer>
+
+  <div class="footer-bottom-container">
+    <div class="footer-bottom-content">
+      <div>© 2026 Make My Travel. All Rights Reserved.</div>
+      <div class="footer-bottom-left">
+        <a href="#">Privacy Policy</a>
+        <span>|</span>
+        <a href="#">Terms of Use</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-top-btn" id="scroll-top" aria-label="Scroll to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script>
+    // Tab switching logic
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+
+        const type = this.getAttribute('data-type');
+        const searchBtn = document.querySelector('.search-btn');
+        const destLabel = document.querySelector('.field-dest label');
+        const destInput = document.querySelector('.field-dest input');
+
+        if (type === 'hotels') {
+          searchBtn.innerHTML = 'Search Hotels <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
+          destLabel.textContent = 'Destination';
+          destInput.placeholder = 'Where are you going?';
+        } else if (type === 'cars') {
+          searchBtn.innerHTML = 'Search Cars <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
+          destLabel.textContent = 'Pick-up Location';
+          destInput.placeholder = 'Where do you need a car?';
+        } else if (type === 'packages') {
+          searchBtn.innerHTML = 'Search Packages <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
+          destLabel.textContent = 'Package Destination';
+          destInput.placeholder = 'Where do you want to tour?';
+        }
+      });
+    });
+
+    // Destination scroll button logic
+    const destScroll = document.getElementById('dest-scroll');
+    document.getElementById('dest-next').addEventListener('click', () => {
+      destScroll.scrollBy({ left: 320, behavior: 'smooth' });
+    });
+    document.getElementById('dest-prev').addEventListener('click', () => {
+      destScroll.scrollBy({ left: -320, behavior: 'smooth' });
+    });
+
+    // Testimonials slider logic (responsive dot selector & navigation buttons)
+    const cards = document.querySelectorAll('.testi-card');
+    const dots = document.querySelectorAll('.testimonials-section .dot');
+    let activeIndex = 0;
+
+    function updateTestimonials(index) {
+      activeIndex = index;
+      dots.forEach((dot, dIdx) => {
+        if (dIdx === index) dot.classList.add('active');
+        else dot.classList.remove('active');
+      });
+
+      // Mobile check - display only the active card
+      if (window.innerWidth <= 1024) {
+        cards.forEach((card, cIdx) => {
+          if (cIdx === index) card.style.display = 'flex';
+          else card.style.display = 'none';
+        });
+      } else {
+        cards.forEach(card => card.style.display = 'flex');
+      }
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        updateTestimonials(index);
+      });
+    });
+
+    document.getElementById('testi-next').addEventListener('click', () => {
+      let nextIndex = (activeIndex + 1) % cards.length;
+      updateTestimonials(nextIndex);
+    });
+
+    document.getElementById('testi-prev').addEventListener('click', () => {
+      let prevIndex = (activeIndex - 1 + cards.length) % cards.length;
+      updateTestimonials(prevIndex);
+    });
+
+    // Re-adjust display on window resize
+    window.addEventListener('resize', () => {
+      updateTestimonials(activeIndex);
+    });
+
+    // Run once on load
+    updateTestimonials(0);
+
+    // Scroll to Top logic
+    const scrollTopBtn = document.getElementById('scroll-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+    });
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Check login state and render profile dropdown
+    function checkLoginState() {
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
+      const loginBtn = document.getElementById('nav-login-btn');
+      const profileBtn = document.getElementById('nav-profile-btn');
+      
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          if (loginBtn) loginBtn.style.display = 'none';
+          if (profileBtn) profileBtn.style.display = 'none';
+          
+          const navRight = document.querySelector('.nav-right');
+          if (navRight && !navRight.querySelector('.user-menu')) {
+            const userMenu = document.createElement('div');
+            userMenu.className = 'user-menu';
+            
+            // Build the user dropdown menu linking to profile.html
+            let dropdownHTML = `
+              <a href="profile.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;margin-right:8px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                My Profile
+              </a>
+            `;
+            
+            if (user.role === 'admin') {
+              dropdownHTML += `
+                <a href="admin-dashboard.html">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;margin-right:8px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  Admin Dashboard
+                </a>
+              `;
+            }
+            
+            userMenu.innerHTML = `
+              <img src="${user.picture || 'https://i.pravatar.cc/80'}" alt="${user.name}"/>
+              <span class="user-name">${user.name}</span>
+              <div class="user-dropdown">
+                ${dropdownHTML}
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.08); margin: 6px 0;"/>
+                <a href="#" id="logout-link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;margin-right:8px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  Log Out
+                </a>
+              </div>
+            `;
+            
+            // Replaces or appends userMenu
+            if (loginBtn && loginBtn.parentNode === navRight) {
+              navRight.replaceChild(userMenu, loginBtn);
+            } else {
+              navRight.appendChild(userMenu);
+            }
+            
+            // Setup logout click
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+              logoutLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.reload();
+              });
+            }
+            
+            // Toggle dropdown on click (for mobile, touch, and click interactions)
+            const userDropdown = userMenu.querySelector('.user-dropdown');
+            userMenu.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const isDisplayed = window.getComputedStyle(userDropdown).display === 'flex';
+              userDropdown.style.display = isDisplayed ? 'none' : 'flex';
+            });
+            
+            // Hide dropdown if clicked outside
+            document.addEventListener('click', () => {
+              if (userDropdown) userDropdown.style.display = '';
+            });
+            
+            // Re-sync hover styles on mouse movements
+            userMenu.addEventListener('mouseenter', () => {
+              if (userDropdown) userDropdown.style.display = 'flex';
+            });
+            userMenu.addEventListener('mouseleave', () => {
+              if (userDropdown) userDropdown.style.display = '';
+            });
+          }
+        } catch (err) {
+          console.error('Error parsing login user state:', err);
+        }
+      } else {
+        if (loginBtn) loginBtn.style.display = 'flex';
+        if (profileBtn) profileBtn.style.display = 'none';
+      }
+    }
+    
+    // Run login state check on load
+    checkLoginState();
+
+  </script>
+</body>
+
+</html>

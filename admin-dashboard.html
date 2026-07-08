@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Make My Travel Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --sidebar-w:250px;
+      --primary:#1a73e8;--primary-dark:#1557b0;--primary-light:#e8f0fe;
+      --green:#0F9D58;--green-light:#e6f4ea;--green-dark:#0b7a44;
+      --orange:#F9AB00;--orange-light:#fef7e0;
+      --red:#EA4335;--red-light:#fce8e6;
+      --purple:#9334E6;--purple-light:#f3e8fd;
+      --bg:#f0f2f5;--white:#fff;--text:#1a1a2e;--muted:#6b7280;
+      --border:#e5e7eb;--hover:#f8f9fa;
+      --shadow:0 1px 3px rgba(0,0,0,.08);--shadow-lg:0 4px 16px rgba(0,0,0,.1);
+    }
+    html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text)}
+
+    /* ── Sidebar ── */
+    .sidebar{
+      position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+      background:linear-gradient(180deg,#0a1628 0%,#111d35 100%);
+      color:#fff;display:flex;flex-direction:column;z-index:100;
+      transition:transform .3s;overflow-y:auto;
+    }
+    .sidebar-brand{padding:20px 20px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .sidebar-brand .icon{width:40px;height:40px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .sidebar-brand .icon .material-icons-outlined{font-size:22px}
+    .sidebar-brand .text{font-size:15px;font-weight:700;line-height:1.2}
+    .sidebar-brand .text span{font-size:11px;font-weight:400;opacity:.6;display:block}
+
+    .sidebar-section{padding:16px 0 4px 20px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:.35}
+    .sidebar-nav{list-style:none;padding:4px 10px}
+    .sidebar-nav li a{
+      display:flex;align-items:center;gap:12px;padding:10px 14px;
+      border-radius:10px;color:rgba(255,255,255,.7);font-size:13px;font-weight:500;
+      text-decoration:none;transition:all .15s;margin-bottom:2px;
+    }
+    .sidebar-nav li a:hover{background:rgba(255,255,255,.08);color:#fff}
+    .sidebar-nav li a.active{background:var(--primary);color:#fff;box-shadow:0 4px 12px rgba(26,115,232,.4)}
+    .sidebar-nav li a .material-icons-outlined{font-size:20px}
+    .sidebar-nav li a .badge-count{
+      margin-left:auto;background:var(--red);color:#fff;
+      font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;
+    }
+
+    /* ── Main ── */
+    .main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
+
+    /* Top bar */
+    .topbar{
+      background:var(--white);border-bottom:1px solid var(--border);
+      padding:0 28px;height:64px;display:flex;align-items:center;gap:16px;
+      position:sticky;top:0;z-index:50;
+    }
+    .hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--text);padding:4px}
+    .topbar-title{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700}
+    .topbar-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+    .topbar-icon{
+      width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
+      background:var(--white);display:flex;align-items:center;justify-content:center;
+      cursor:pointer;position:relative;transition:all .15s;color:var(--muted);
+    }
+    .topbar-icon:hover{background:var(--bg);color:var(--text)}
+    .topbar-icon .dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--white)}
+    .admin-profile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 10px;border-radius:10px;transition:background .15s}
+    .admin-profile:hover{background:var(--bg)}
+    .admin-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--green));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px}
+    .admin-info{font-size:13px;font-weight:600;line-height:1.3}
+    .admin-info span{font-size:11px;font-weight:400;color:var(--muted);display:block}
+
+    /* Content */
+    .content{padding:24px 28px;flex:1}
+
+    /* ── Stat Cards ── */
+    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-bottom:28px}
+    .stat-card{
+      background:var(--white);border-radius:14px;padding:20px;
+      border:1px solid var(--border);box-shadow:var(--shadow);
+      display:flex;justify-content:space-between;align-items:flex-start;
+      transition:all .2s;cursor:pointer;position:relative;overflow:hidden;
+    }
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .stat-card:nth-child(1)::before{background:var(--primary)}
+    .stat-card:nth-child(2)::before{background:var(--green)}
+    .stat-card:nth-child(3)::before{background:var(--orange)}
+    .stat-card:nth-child(4)::before{background:var(--red)}
+    .stat-card:nth-child(5)::before{background:var(--purple)}
+    .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+    .stat-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+    .stat-card:nth-child(1) .stat-label{color:var(--primary)}
+    .stat-card:nth-child(2) .stat-label{color:var(--green)}
+    .stat-card:nth-child(3) .stat-label{color:var(--orange)}
+    .stat-card:nth-child(4) .stat-label{color:var(--red)}
+    .stat-card:nth-child(5) .stat-label{color:var(--purple)}
+    .stat-value{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px}
+    .stat-link{font-size:11px;font-weight:500;margin-top:8px;display:flex;align-items:center;gap:4px;cursor:pointer}
+    .stat-card:nth-child(1) .stat-link{color:var(--primary)}
+    .stat-card:nth-child(2) .stat-link{color:var(--green)}
+    .stat-card:nth-child(3) .stat-link{color:var(--orange)}
+    .stat-card:nth-child(4) .stat-link{color:var(--red)}
+    .stat-card:nth-child(5) .stat-link{color:var(--purple)}
+    .stat-icon{
+      width:48px;height:48px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .stat-card:nth-child(1) .stat-icon{background:var(--primary-light);color:var(--primary)}
+    .stat-card:nth-child(2) .stat-icon{background:var(--green-light);color:var(--green)}
+    .stat-card:nth-child(3) .stat-icon{background:var(--orange-light);color:var(--orange)}
+    .stat-card:nth-child(4) .stat-icon{background:var(--red-light);color:var(--red)}
+    .stat-card:nth-child(5) .stat-icon{background:var(--purple-light);color:var(--purple)}
+
+    /* ── Table Section ── */
+    .table-section{
+      background:var(--white);border-radius:14px;
+      border:1px solid var(--border);box-shadow:var(--shadow);
+      margin-bottom:24px;overflow:hidden;
+    }
+    .table-header{
+      padding:18px 22px;display:flex;align-items:center;gap:14px;
+      border-bottom:1px solid var(--border);flex-wrap:wrap;
+    }
+    .table-header h3{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;white-space:nowrap}
+    .table-header h3 .material-icons-outlined{font-size:22px;color:var(--primary)}
+    .table-actions{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .search-box{
+      display:flex;align-items:center;gap:6px;padding:8px 12px;
+      border:1px solid var(--border);border-radius:8px;background:var(--bg);
+      font-size:13px;min-width:180px;
+    }
+    .search-box input{border:none;background:none;outline:none;font-family:'Inter';font-size:13px;color:var(--text);width:100%}
+    .search-box .material-icons-outlined{font-size:18px;color:var(--muted)}
+    .filter-select{
+      padding:8px 12px;border:1px solid var(--border);border-radius:8px;
+      background:var(--white);font-family:'Inter';font-size:13px;color:var(--text);
+      cursor:pointer;outline:none;
+    }
+    .btn-add{
+      padding:8px 16px;background:var(--green);color:#fff;border:none;
+      border-radius:8px;font-family:'Inter';font-size:13px;font-weight:600;
+      cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;
+    }
+    .btn-add:hover{background:var(--green-dark);transform:translateY(-1px)}
+
+    /* Table */
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;min-width:800px}
+    thead th{
+      padding:12px 16px;text-align:left;font-size:12px;font-weight:600;
+      text-transform:uppercase;letter-spacing:.5px;color:var(--muted);
+      background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap;
+    }
+    tbody td{
+      padding:12px 16px;font-size:13px;border-bottom:1px solid #f3f4f6;
+      white-space:nowrap;vertical-align:middle;
+    }
+    tbody tr{transition:background .1s}
+    tbody tr:hover{background:#f8fafc}
+    .img-cell{width:36px;height:36px;border-radius:8px;object-fit:cover;background:var(--bg)}
+    .badge-status{
+      padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;
+      display:inline-block;
+    }
+    .badge-approved{background:#dcfce7;color:#15803d}
+    .badge-pending{background:#fef3c7;color:#b45309}
+    .badge-rejected{background:#fce8e6;color:#dc2626}
+    .badge-confirmed{background:#dbeafe;color:#1d4ed8}
+    .badge-completed{background:#dcfce7;color:#15803d}
+    .badge-cancelled{background:#fce8e6;color:#dc2626}
+    .badge-star{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;color:#fff}
+    .star-5{background:var(--green)}
+    .star-4{background:var(--primary)}
+    .star-3{background:var(--orange)}
+    .star-2{background:#f59e0b}
+    .star-1{background:var(--red)}
+    .action-btns{display:flex;gap:6px}
+    .action-btn{
+      width:30px;height:30px;border-radius:7px;border:1px solid var(--border);
+      background:var(--white);display:flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:all .15s;color:var(--muted);
+    }
+    .action-btn:hover{background:var(--bg);color:var(--text)}
+    .action-btn.view:hover{color:var(--primary);border-color:var(--primary)}
+    .action-btn.edit:hover{color:var(--green);border-color:var(--green)}
+    .action-btn.delete:hover{color:var(--red);border-color:var(--red)}
+
+    /* ── Modal ── */
+    .modal-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+      display:none;align-items:center;justify-content:center;padding:20px;
+      backdrop-filter:blur(4px);
+    }
+    .modal-overlay.show{display:flex}
+    .modal{
+      background:var(--white);border-radius:16px;width:100%;max-width:560px;
+      max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);
+      animation:modalIn .3s ease;
+    }
+    @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .modal-head{
+      padding:20px 24px;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .modal-head h3{font-size:18px;font-weight:700}
+    .modal-close{background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;border-radius:6px}
+    .modal-close:hover{background:var(--bg);color:var(--text)}
+    .modal-body{padding:24px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .form-row.full{grid-template-columns:1fr}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-group label{font-size:13px;font-weight:600;color:#374151}
+    .form-group input,.form-group select,.form-group textarea{
+      padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;
+      font-family:'Inter';font-size:13px;outline:none;transition:border .2s;
+    }
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary)}
+    .modal-foot{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+    .btn-cancel{
+      padding:10px 20px;border:1px solid var(--border);border-radius:8px;
+      background:var(--white);font-family:'Inter';font-size:13px;font-weight:600;
+      cursor:pointer;color:var(--muted);
+    }
+    .btn-save{
+      padding:10px 24px;background:var(--primary);color:#fff;border:none;
+      border-radius:8px;font-family:'Inter';font-size:13px;font-weight:600;
+      cursor:pointer;transition:all .15s;
+    }
+    .btn-save:hover{background:var(--primary-dark)}
+    .btn-save.green{background:var(--green)}
+    .btn-save.green:hover{background:var(--green-dark)}
+
+    /* ── Footer ── */
+    .footer{padding:20px 28px;text-align:center;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--white)}
+
+    /* ── Toast ── */
+    .toast-container{position:fixed;top:80px;right:28px;z-index:300;display:flex;flex-direction:column;gap:8px}
+    .toast{
+      padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;
+      display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-lg);
+      animation:toastIn .3s ease,toastOut .3s ease 2.7s forwards;
+      max-width:340px;
+    }
+    .toast-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d}
+    .toast-error{background:#fef2f2;border:1px solid #fecaca;color:#dc2626}
+    @keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes toastOut{to{opacity:0;transform:translateX(30px)}}
+
+    /* ── Responsive ── */
+    @media(max-width:1200px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:900px){
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .main{margin-left:0}
+      .hamburger{display:flex}
+      .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;display:none}
+      .sidebar-overlay.show{display:block}
+    }
+    @media(max-width:600px){
+      .stats-grid{grid-template-columns:1fr}
+      .content{padding:16px 14px}
+      .topbar{padding:0 14px}
+      .table-header{padding:14px}
+      .form-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="icon"><span class="material-icons-outlined">flight</span></div>
+    <div class="text">Make My Travel<span>Admin Panel</span></div>
+  </div>
+
+  <ul class="sidebar-nav" style="margin-top:8px">
+    <li><a href="#" class="active" id="nav-dashboard"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+  </ul>
+
+  <div class="sidebar-section">Hotel Management</div>
+  <ul class="sidebar-nav">
+    <li><a href="#hotels-section" id="nav-hotels"><span class="material-icons-outlined">hotel</span>Hotels List</a></li>
+    <li><a href="#" onclick="openModal('hotel')"><span class="material-icons-outlined">add_business</span>Add Hotel</a></li>
+  </ul>
+
+  <div class="sidebar-section">Cab Management</div>
+  <ul class="sidebar-nav">
+    <li><a href="#cabs-section" id="nav-cabs"><span class="material-icons-outlined">directions_car</span>Cabs List</a></li>
+    <li><a href="#" onclick="openModal('cab')"><span class="material-icons-outlined">add_circle</span>Add Cab</a></li>
+  </ul>
+
+  <div class="sidebar-section">Holiday Packages</div>
+  <ul class="sidebar-nav">
+    <li><a href="#packages-section" id="nav-packages"><span class="material-icons-outlined">inventory_2</span>Packages List</a></li>
+    <li><a href="#" onclick="openModal('package')"><span class="material-icons-outlined">add_box</span>Add Package</a></li>
+  </ul>
+
+  <ul class="sidebar-nav">
+    <li><a href="#bookings-section" id="nav-bookings"><span class="material-icons-outlined">calendar_month</span>Bookings</a></li>
+    <li><a href="#" id="nav-users"><span class="material-icons-outlined">group</span>Users Portal</a></li>
+  </ul>
+
+  <ul class="sidebar-nav" style="margin-top:auto;padding-bottom:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
+    <li><a href="#" id="logoutBtn" style="color:rgba(255,100,100,.8)"><span class="material-icons-outlined">logout</span>Logout</a></li>
+  </ul>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <!-- Top bar -->
+  <div class="topbar">
+    <button class="hamburger" id="hamburgerBtn"><span class="material-icons-outlined" style="font-size:26px">menu</span></button>
+    <div class="topbar-title"><span class="material-icons-outlined">dashboard</span> Dashboard</div>
+    <div class="topbar-right">
+      <div class="topbar-icon"><span class="material-icons-outlined" style="font-size:20px">notifications</span><div class="dot"></div></div>
+      <div class="admin-profile">
+        <div class="admin-avatar">A</div>
+        <div class="admin-info">Admin<span id="admin-name-sub">Super Admin</span></div>
+        <span class="material-icons-outlined" style="font-size:18px;color:var(--muted)">expand_more</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Stat Cards -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card" onclick="scrollToSection('hotels-section')">
+        <div><div class="stat-label">Total Hotels</div><div class="stat-value" id="stat-hotels">0</div><div class="stat-link">View all hotels →</div></div>
+        <div class="stat-icon"><span class="material-icons-outlined">hotel</span></div>
+      </div>
+      <div class="stat-card" onclick="scrollToSection('cabs-section')">
+        <div><div class="stat-label">Total Cabs</div><div class="stat-value" id="stat-cabs">0</div><div class="stat-link">View all cabs →</div></div>
+        <div class="stat-icon"><span class="material-icons-outlined">directions_car</span></div>
+      </div>
+      <div class="stat-card" onclick="scrollToSection('packages-section')">
+        <div><div class="stat-label">Total Packages</div><div class="stat-value" id="stat-packages">0</div><div class="stat-link">View all packages →</div></div>
+        <div class="stat-icon"><span class="material-icons-outlined">inventory_2</span></div>
+      </div>
+      <div class="stat-card" onclick="scrollToSection('bookings-section')">
+        <div><div class="stat-label">Total Bookings</div><div class="stat-value" id="stat-bookings">0</div><div class="stat-link">View all bookings →</div></div>
+        <div class="stat-icon"><span class="material-icons-outlined">calendar_month</span></div>
+      </div>
+      <div class="stat-card" onclick="window.location.href='/admin.html'">
+        <div><div class="stat-label">User Accounts</div><div class="stat-value" id="stat-users">0</div><div class="stat-link">Users Portal →</div></div>
+        <div class="stat-icon"><span class="material-icons-outlined">group</span></div>
+      </div>
+    </div>
+
+    <!-- Hotels Table -->
+    <div class="table-section" id="hotels-section">
+      <div class="table-header">
+        <h3><span class="material-icons-outlined">hotel</span> Hotels List</h3>
+        <div class="table-actions">
+          <div class="search-box">
+            <span class="material-icons-outlined">search</span>
+            <input type="text" placeholder="Search hotel..." id="hotelSearch" oninput="filterTable('hotels')"/>
+          </div>
+          <select class="filter-select" id="hotelFilter" onchange="filterTable('hotels')">
+            <option value="">All Status</option>
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+          <button class="btn-add" onclick="openModal('hotel')"><span class="material-icons-outlined" style="font-size:18px">add</span> Add Hotel</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Hotel ID</th><th></th><th>Hotel Name</th><th>Hotel Type</th><th>City</th>
+              <th>Owner Name</th><th>Mobile</th><th>Email</th><th>Aadhaar No.</th>
+              <th>GST No.</th><th>No. of Rooms</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="hotelsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Cabs Table -->
+    <div class="table-section" id="cabs-section">
+      <div class="table-header">
+        <h3><span class="material-icons-outlined">directions_car</span> Cabs List</h3>
+        <div class="table-actions">
+          <div class="search-box">
+            <span class="material-icons-outlined">search</span>
+            <input type="text" placeholder="Search cab..." id="cabSearch" oninput="filterTable('cabs')"/>
+          </div>
+          <select class="filter-select" id="cabFilter" onchange="filterTable('cabs')">
+            <option value="">All Status</option>
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+          <button class="btn-add" onclick="openModal('cab')"><span class="material-icons-outlined" style="font-size:18px">add</span> Add Cab</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Cab ID</th><th></th><th>Owner Name</th><th>Driver Name</th><th>Mobile</th>
+              <th>Vehicle Type</th><th>Number Plate</th><th>Aadhaar No.</th><th>DL No.</th>
+              <th>RC No.</th><th>Insurance No.</th><th>Seats</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="cabsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Packages Table -->
+    <div class="table-section" id="packages-section">
+      <div class="table-header">
+        <h3><span class="material-icons-outlined">inventory_2</span> Holiday Packages List</h3>
+        <div class="table-actions">
+          <div class="search-box">
+            <span class="material-icons-outlined">search</span>
+            <input type="text" placeholder="Search package..." id="packageSearch" oninput="filterTable('packages')"/>
+          </div>
+          <select class="filter-select" id="packageFilter" onchange="filterTable('packages')">
+            <option value="">All Status</option>
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+          <button class="btn-add" onclick="openModal('package')"><span class="material-icons-outlined" style="font-size:18px">add</span> Add Package</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Package ID</th><th></th><th>Package Name</th><th>Destination</th>
+              <th>Days / Nights</th><th>Price (₹)</th><th>Inclusions</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="packagesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="table-section" id="bookings-section">
+      <div class="table-header">
+        <h3><span class="material-icons-outlined">calendar_month</span> Bookings List</h3>
+        <div class="table-actions">
+          <div class="search-box">
+            <span class="material-icons-outlined">search</span>
+            <input type="text" placeholder="Search booking..." id="bookingSearch" oninput="filterTable('bookings')"/>
+          </div>
+          <select class="filter-select" id="bookingFilter" onchange="filterTable('bookings')">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th><th>Customer Name</th><th>Phone</th>
+              <th>Booking Date</th><th>Amount (₹)</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">© 2025 Make My Travel. All Rights Reserved.</div>
+</div>
+
+<!-- ── Add Hotel Modal ── -->
+<div class="modal-overlay" id="modal-hotel">
+  <div class="modal">
+    <div class="modal-head"><h3>Add New Hotel</h3><button class="modal-close" onclick="closeModal('hotel')"><span class="material-icons-outlined">close</span></button></div>
+    <form id="hotelForm" onsubmit="saveHotel(event)">
+      <div class="modal-body">
+        <div class="form-row"><div class="form-group"><label>Hotel Name *</label><input name="hotelName" required/></div><div class="form-group"><label>City *</label><input name="city" required/></div></div>
+        <div class="form-row"><div class="form-group"><label>Hotel Type</label><select name="hotelType"><option>5 Star</option><option>4 Star</option><option>3 Star</option><option>2 Star</option><option>1 Star</option></select></div><div class="form-group"><label>No. of Rooms *</label><input name="rooms" type="number" required/></div></div>
+        <div class="form-row"><div class="form-group"><label>Owner Name *</label><input name="ownerName" required/></div><div class="form-group"><label>Mobile *</label><input name="mobile" required/></div></div>
+        <div class="form-row"><div class="form-group"><label>Email</label><input name="email" type="email"/></div><div class="form-group"><label>Aadhaar No.</label><input name="aadhaar"/></div></div>
+        <div class="form-row"><div class="form-group"><label>GST No.</label><input name="gst"/></div><div class="form-group"><label>Status</label><select name="status"><option>Approved</option><option>Pending</option><option>Rejected</option></select></div></div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn-cancel" onclick="closeModal('hotel')">Cancel</button><button type="submit" class="btn-save green">Save Hotel</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Add Cab Modal ── -->
+<div class="modal-overlay" id="modal-cab">
+  <div class="modal">
+    <div class="modal-head"><h3>Add New Cab</h3><button class="modal-close" onclick="closeModal('cab')"><span class="material-icons-outlined">close</span></button></div>
+    <form id="cabForm" onsubmit="saveCab(event)">
+      <div class="modal-body">
+        <div class="form-row"><div class="form-group"><label>Owner Name *</label><input name="ownerName" required/></div><div class="form-group"><label>Driver Name *</label><input name="driverName" required/></div></div>
+        <div class="form-row"><div class="form-group"><label>Mobile *</label><input name="mobile" required/></div><div class="form-group"><label>Vehicle Type</label><select name="vehicleType"><option>Toyota Innova</option><option>Maruti Ertiga</option><option>Honda City</option><option>Swift Dzire</option><option>Tempo Traveller</option></select></div></div>
+        <div class="form-row"><div class="form-group"><label>Number Plate *</label><input name="numberPlate" required/></div><div class="form-group"><label>Seats *</label><input name="seats" type="number" required/></div></div>
+        <div class="form-row"><div class="form-group"><label>Aadhaar No.</label><input name="aadhaar"/></div><div class="form-group"><label>DL No.</label><input name="dl"/></div></div>
+        <div class="form-row"><div class="form-group"><label>RC No.</label><input name="rc"/></div><div class="form-group"><label>Insurance No.</label><input name="insurance"/></div></div>
+        <div class="form-row"><div class="form-group"><label>Status</label><select name="status"><option>Approved</option><option>Pending</option><option>Rejected</option></select></div></div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn-cancel" onclick="closeModal('cab')">Cancel</button><button type="submit" class="btn-save green">Save Cab</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Add Package Modal ── -->
+<div class="modal-overlay" id="modal-package">
+  <div class="modal">
+    <div class="modal-head"><h3>Add New Package</h3><button class="modal-close" onclick="closeModal('package')"><span class="material-icons-outlined">close</span></button></div>
+    <form id="packageForm" onsubmit="savePackage(event)">
+      <div class="modal-body">
+        <div class="form-row"><div class="form-group"><label>Package Name *</label><input name="packageName" required/></div><div class="form-group"><label>Destination *</label><input name="destination" required/></div></div>
+        <div class="form-row"><div class="form-group"><label>Days</label><input name="days" type="number" value="3"/></div><div class="form-group"><label>Nights</label><input name="nights" type="number" value="2"/></div></div>
+        <div class="form-row"><div class="form-group"><label>Price (₹) *</label><input name="price" type="number" required/></div><div class="form-group"><label>Status</label><select name="status"><option>Approved</option><option>Pending</option><option>Rejected</option></select></div></div>
+        <div class="form-row full"><div class="form-group"><label>Inclusions</label><input name="inclusions" placeholder="Hotel, Cab, Breakfast, Sightseeing"/></div></div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn-cancel" onclick="closeModal('package')">Cancel</button><button type="submit" class="btn-save green">Save Package</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- ── View Details Modal ── -->
+<div class="modal-overlay" id="modal-view">
+  <div class="modal">
+    <div class="modal-head"><h3 id="viewTitle">Details</h3><button class="modal-close" onclick="closeModal('view')"><span class="material-icons-outlined">close</span></button></div>
+    <div class="modal-body" id="viewBody"></div>
+    <div class="modal-foot"><button class="btn-cancel" onclick="closeModal('view')">Close</button></div>
+  </div>
+</div>
+
+<!-- ── Edit Status Modal ── -->
+<div class="modal-overlay" id="modal-edit-status">
+  <div class="modal" style="max-width: 400px;">
+    <div class="modal-head"><h3>Edit Status</h3><button class="modal-close" onclick="closeModal('edit-status')"><span class="material-icons-outlined">close</span></button></div>
+    <form id="editStatusForm" onsubmit="saveStatus(event)">
+      <div class="modal-body">
+        <div class="form-row full"><div class="form-group">
+          <label>Status</label>
+          <select id="editStatusSelect" name="status">
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div></div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn-cancel" onclick="closeModal('edit-status')">Cancel</button><button type="submit" class="btn-save green">Save</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ══════════════════════════════════════════
+   AUTH CHECK & REAL-TIME LOAD
+   ══════════════════════════════════════════ */
+let hotels=[], cabs=[], packages=[], bookings=[], users=[];
+
+async function checkAuth(){
+  try{
+    const r=await fetch('/api/admin/check',{credentials:'include'});
+    if(!r.ok) throw new Error();
+    const data = await r.json();
+    if(data.admin && data.admin.name) {
+      document.getElementById('admin-name-sub').textContent = data.admin.name;
+    }
+    // Load database values
+    await loadData();
+  }catch(err){
+    console.error('Auth verification failed, redirecting:', err);
+    window.location.href='/admin-login.html';
+  }
+}
+
+// Initial authorization check
+checkAuth();
+
+/* ══════════════════════════════════════════
+   FETCH DATA FROM DATABASE APIs
+   ══════════════════════════════════════════ */
+async function loadData() {
+  try {
+    // 1. Hotels
+    const resHotels = await fetch('/api/hotels');
+    if (resHotels.ok) {
+      const data = await resHotels.json();
+      hotels = data.map(h => ({
+        _id: h._id,
+        id: h.hotelId || h._id.toString().substring(18).toUpperCase(),
+        name: h.hotelName || h.name,
+        type: h.category || '3 Star',
+        city: h.city,
+        owner: h.ownerName || 'Admin Assigned',
+        mobile: h.mobile || '9999999999',
+        email: h.email || 'n/a',
+        aadhaar: h.aadhaar || 'n/a',
+        gst: h.gst || 'n/a',
+        rooms: h.rooms ? h.rooms.reduce((acc, r) => acc + (r.totalRooms || 0), 0) || 50 : 50,
+        status: h.status || 'Approved'
+      }));
+    }
+
+    // 2. Cabs
+    const resCabs = await fetch('/api/cabs');
+    if (resCabs.ok) {
+      const data = await resCabs.json();
+      cabs = data.map(c => ({
+        _id: c._id,
+        id: c.cabId || c._id.toString().substring(18).toUpperCase(),
+        owner: c.owner,
+        driver: c.driver,
+        mobile: c.mobile,
+        vehicle: c.vehicle,
+        plate: c.plate,
+        seats: c.seats,
+        aadhaar: c.aadhaar || 'n/a',
+        dl: c.dl || 'n/a',
+        rc: c.rc || 'n/a',
+        insurance: c.insurance || 'n/a',
+        status: c.status || 'Approved'
+      }));
+    }
+
+    // 3. Trip Packages
+    const resPackages = await fetch('/api/trip-bundles');
+    if (resPackages.ok) {
+      const data = await resPackages.json();
+      packages = data.map(p => ({
+        _id: p._id,
+        id: p.packageId || p._id.toString().substring(18).toUpperCase(),
+        name: p.name,
+        destination: p.destination,
+        days: p.days,
+        nights: p.nights,
+        price: p.price,
+        inclusions: p.inclusions || 'n/a',
+        status: p.status || 'Approved'
+      }));
+    }
+
+    // 4. Bookings
+    const resBookings = await fetch('/api/bookings');
+    if (resBookings.ok) {
+      const data = await resBookings.json();
+      bookings = data.map(b => ({
+        _id: b._id,
+        id: b.id,
+        customer: b.customerName,
+        phone: b.phone,
+        date: b.date,
+        amount: b.amount,
+        status: b.status || 'pending',
+        isHotelBooking: b.isHotelBooking
+      }));
+    }
+
+    // 5. Users List
+    const resUsers = await fetch('/api/users');
+    if (resUsers.ok) {
+      users = await resUsers.json();
+    }
+
+    // Render components
+    renderAll();
+  } catch (err) {
+    console.error('Error fetching database tables:', err);
+    showToast('Failed to sync tables from database', 'error');
+  }
+}
+
+/* ══════════════════════════════════════════
+   RENDER FUNCTIONS
+   ══════════════════════════════════════════ */
+function updateStats(){
+  document.getElementById('stat-hotels').textContent=hotels.length;
+  document.getElementById('stat-cabs').textContent=cabs.length;
+  document.getElementById('stat-packages').textContent=packages.length;
+  document.getElementById('stat-bookings').textContent=bookings.length;
+  document.getElementById('stat-users').textContent=users.length;
+}
+
+function starClass(type){
+  const s=type.charAt(0);
+  return isNaN(parseInt(s)) ? 'star-3' : 'star-'+s;
+}
+
+function statusBadge(st){
+  const s=st.toLowerCase();
+  if(s==='approved'||s==='completed') return 'badge-approved';
+  if(s==='pending') return 'badge-pending';
+  if(s==='rejected'||s==='cancelled') return 'badge-rejected';
+  if(s==='confirmed') return 'badge-confirmed';
+  return 'badge-pending';
+}
+
+function renderHotels(){
+  const tb=document.getElementById('hotelsBody');
+  tb.innerHTML=hotels.map((h,i)=>`
+    <tr data-search="${(h.name+h.city+h.owner+h.email).toLowerCase()}" data-status="${h.status}">
+      <td><strong>${h.id}</strong></td>
+      <td><div class="img-cell" style="background:linear-gradient(135deg,#e8f0fe,#dbeafe);display:flex;align-items:center;justify-content:center"><span class="material-icons-outlined" style="font-size:18px;color:var(--primary)">hotel</span></div></td>
+      <td><strong>${h.name}</strong></td>
+      <td><span class="badge-star ${starClass(h.type)}">⭐ ${h.type}</span></td>
+      <td>${h.city}</td><td>${h.owner}</td><td>${h.mobile}</td><td>${h.email}</td>
+      <td>${h.aadhaar}</td><td>${h.gst}</td><td>${h.rooms}</td>
+      <td><span class="badge-status ${statusBadge(h.status)}">${h.status}</span></td>
+      <td><div class="action-btns">
+        <button class="action-btn view" onclick="viewItem('hotel',${i})" title="View"><span class="material-icons-outlined" style="font-size:16px">visibility</span></button>
+        <button class="action-btn edit" onclick="editStatus('hotel',${i})" title="Edit"><span class="material-icons-outlined" style="font-size:16px">edit</span></button>
+        <button class="action-btn delete" onclick="deleteItem('hotels',${i})" title="Delete"><span class="material-icons-outlined" style="font-size:16px">delete</span></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+function renderCabs(){
+  const tb=document.getElementById('cabsBody');
+  tb.innerHTML=cabs.map((c,i)=>`
+    <tr data-search="${(c.owner+c.driver+c.plate+c.vehicle).toLowerCase()}" data-status="${c.status}">
+      <td><strong>${c.id}</strong></td>
+      <td><div class="img-cell" style="background:linear-gradient(135deg,#e6f4ea,#d1fae5);display:flex;align-items:center;justify-content:center"><span class="material-icons-outlined" style="font-size:18px;color:var(--green)">directions_car</span></div></td>
+      <td>${c.owner}</td><td>${c.driver}</td><td>${c.mobile}</td>
+      <td>${c.vehicle}</td><td>${c.plate}</td><td>${c.aadhaar}</td>
+      <td>${c.dl}</td><td>${c.rc}</td><td>${c.insurance}</td><td>${c.seats}</td>
+      <td><span class="badge-status ${statusBadge(c.status)}">${c.status}</span></td>
+      <td><div class="action-btns">
+        <button class="action-btn view" onclick="viewItem('cab',${i})" title="View"><span class="material-icons-outlined" style="font-size:16px">visibility</span></button>
+        <button class="action-btn edit" onclick="editStatus('cab',${i})" title="Edit"><span class="material-icons-outlined" style="font-size:16px">edit</span></button>
+        <button class="action-btn delete" onclick="deleteItem('cabs',${i})" title="Delete"><span class="material-icons-outlined" style="font-size:16px">delete</span></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+function renderPackages(){
+  const tb=document.getElementById('packagesBody');
+  tb.innerHTML=packages.map((p,i)=>`
+    <tr data-search="${(p.name+p.destination+p.inclusions).toLowerCase()}" data-status="${p.status}">
+      <td><strong>${p.id}</strong></td>
+      <td><div class="img-cell" style="background:linear-gradient(135deg,#fef3c7,#fef9c3);display:flex;align-items:center;justify-content:center"><span class="material-icons-outlined" style="font-size:18px;color:var(--orange)">inventory_2</span></div></td>
+      <td><strong>${p.name}</strong></td><td>${p.destination}</td>
+      <td>${p.days}D / ${p.nights}N</td>
+      <td>₹ ${p.price.toLocaleString()}</td>
+      <td style="white-space:normal;max-width:220px">${p.inclusions}</td>
+      <td><span class="badge-status ${statusBadge(p.status)}">${p.status}</span></td>
+      <td><div class="action-btns">
+        <button class="action-btn view" onclick="viewItem('package',${i})" title="View"><span class="material-icons-outlined" style="font-size:16px">visibility</span></button>
+        <button class="action-btn edit" onclick="editStatus('package',${i})" title="Edit"><span class="material-icons-outlined" style="font-size:16px">edit</span></button>
+        <button class="action-btn delete" onclick="deleteItem('packages',${i})" title="Delete"><span class="material-icons-outlined" style="font-size:16px">delete</span></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+function renderBookings(){
+  const tb=document.getElementById('bookingsBody');
+  tb.innerHTML=bookings.map((b,i)=>`
+    <tr data-search="${(b.customer+b.phone+b.id).toLowerCase()}" data-status="${b.status}">
+      <td><strong>${b.id}</strong></td><td>${b.customer}</td><td>${b.phone}</td>
+      <td>${b.date}</td><td>₹ ${b.amount.toLocaleString()}</td>
+      <td><span class="badge-status ${statusBadge(b.status)}">${b.status.charAt(0).toUpperCase()+b.status.slice(1)}</span></td>
+      <td><div class="action-btns">
+        <button class="action-btn view" onclick="viewItem('booking',${i})" title="View"><span class="material-icons-outlined" style="font-size:16px">visibility</span></button>
+        <button class="action-btn edit" onclick="editStatus('booking',${i})" title="Edit"><span class="material-icons-outlined" style="font-size:16px">edit</span></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+function renderAll(){ updateStats(); renderHotels(); renderCabs(); renderPackages(); renderBookings(); }
+
+/* ══════════════════════════════════════════
+   SEARCH & FILTER
+   ══════════════════════════════════════════ */
+function filterTable(type){
+  let searchId,filterId,bodyId;
+  if(type==='hotels'){searchId='hotelSearch';filterId='hotelFilter';bodyId='hotelsBody';}
+  else if(type==='cabs'){searchId='cabSearch';filterId='cabFilter';bodyId='cabsBody';}
+  else if(type==='packages'){searchId='packageSearch';filterId='packageFilter';bodyId='packagesBody';}
+  else if(type==='bookings'){searchId='bookingSearch';filterId='bookingFilter';bodyId='bookingsBody';}
+  const q=document.getElementById(searchId).value.toLowerCase();
+  const f=document.getElementById(filterId).value;
+  const rows=document.getElementById(bodyId).querySelectorAll('tr');
+  rows.forEach(r=>{
+    const matchSearch=!q||r.dataset.search.includes(q);
+    const matchFilter=!f||r.dataset.status.toLowerCase()===f.toLowerCase();
+    r.style.display=(matchSearch&&matchFilter)?'':'none';
+  });
+}
+
+/* ══════════════════════════════════════════
+   MODALS
+   ══════════════════════════════════════════ */
+function openModal(type){ document.getElementById('modal-'+type).classList.add('show'); }
+function closeModal(type){ document.getElementById('modal-'+type).classList.remove('show'); }
+
+// close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o) o.classList.remove('show');});
+});
+
+/* ══════════════════════════════════════════
+   SAVE (ADD) ITEMS TO DATABASE
+   ══════════════════════════════════════════ */
+async function saveHotel(e){
+  e.preventDefault();
+  const f=new FormData(e.target);
+  const hotelId = 'HTL' + Math.floor(100 + Math.random() * 900);
+  
+  const payload = {
+    hotelId,
+    hotelName: f.get('hotelName'),
+    category: f.get('hotelType'),
+    city: f.get('city'),
+    ownerName: f.get('ownerName'),
+    mobile: f.get('mobile'),
+    email: f.get('email') || '',
+    aadhaar: f.get('aadhaar') || '',
+    gst: f.get('gst') || '',
+    pricePerNight: f.get('hotelType') === '5 Star' ? 8500 : (f.get('hotelType') === '4 Star' ? 5500 : 3500),
+    status: f.get('status')
+  };
+
+  try {
+    const res = await fetch('/api/hotels', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}` // use token if present, fallback to cookie session
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      e.target.reset();
+      closeModal('hotel');
+      showToast('Hotel saved to database!', 'success');
+      await loadData();
+    } else {
+      const err = await res.json();
+      showToast(err.error || 'Failed to save hotel', 'error');
+    }
+  } catch (err) {
+    showToast('Network error saving hotel', 'error');
+  }
+}
+
+async function saveCab(e){
+  e.preventDefault();
+  const f=new FormData(e.target);
+  const cabId = 'CAB' + Math.floor(100 + Math.random() * 900);
+  
+  const payload = {
+    cabId,
+    owner: f.get('ownerName'),
+    driver: f.get('driverName'),
+    mobile: f.get('mobile'),
+    vehicle: f.get('vehicleType'),
+    plate: f.get('numberPlate'),
+    seats: parseInt(f.get('seats')) || 4,
+    aadhaar: f.get('aadhaar') || '',
+    dl: f.get('dl') || '',
+    rc: f.get('rc') || '',
+    insurance: f.get('insurance') || '',
+    status: f.get('status')
+  };
+
+  try {
+    const res = await fetch('/api/cabs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      e.target.reset();
+      closeModal('cab');
+      showToast('Cab fleet record saved!', 'success');
+      await loadData();
+    } else {
+      showToast('Failed to save cab record', 'error');
+    }
+  } catch (err) {
+    showToast('Network error saving cab', 'error');
+  }
+}
+
+async function savePackage(e){
+  e.preventDefault();
+  const f=new FormData(e.target);
+  const packageId = 'PKG' + Math.floor(100 + Math.random() * 900);
+  
+  const payload = {
+    packageId,
+    name: f.get('packageName'),
+    destination: f.get('destination'),
+    days: parseInt(f.get('days')) || 3,
+    nights: parseInt(f.get('nights')) || 2,
+    price: parseInt(f.get('price')) || 0,
+    inclusions: f.get('inclusions') || '',
+    status: f.get('status')
+  };
+
+  try {
+    const res = await fetch('/api/trip-bundles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      e.target.reset();
+      closeModal('package');
+      showToast('Package saved successfully!', 'success');
+      await loadData();
+    } else {
+      showToast('Failed to save package', 'error');
+    }
+  } catch (err) {
+    showToast('Network error saving package', 'error');
+  }
+}
+
+/* ══════════════════════════════════════════
+   VIEW DETAILS
+   ══════════════════════════════════════════ */
+function viewItem(type,idx){
+  let title='', html='';
+  if(type==='hotel'){
+    const h=hotels[idx]; title='Hotel Details — '+h.name;
+    html=detailRows({ID:h.id,Name:h.name,Type:h.type,City:h.city,Owner:h.owner,Mobile:h.mobile,Email:h.email,'Aadhaar':h.aadhaar,'GST':h.gst,Rooms:h.rooms,Status:h.status});
+  }else if(type==='cab'){
+    const c=cabs[idx]; title='Cab Details — '+c.plate;
+    html=detailRows({ID:c.id,Owner:c.owner,Driver:c.driver,Mobile:c.mobile,Vehicle:c.vehicle,Plate:c.plate,'Aadhaar':c.aadhaar,'DL No':c.dl,'RC No':c.rc,Insurance:c.insurance,Seats:c.seats,Status:c.status});
+  }else if(type==='package'){
+    const p=packages[idx]; title='Package Details — '+p.name;
+    html=detailRows({ID:p.id,Name:p.name,Destination:p.destination,Duration:p.days+'D / '+p.nights+'N',Price:'₹ '+p.price.toLocaleString(),Inclusions:p.inclusions,Status:p.status});
+  }else if(type==='booking'){
+    const b=bookings[idx]; title='Booking Details — '+b.id;
+    html=detailRows({ID:b.id,Customer:b.customer,Phone:b.phone,Date:b.date,Amount:'₹ '+b.amount.toLocaleString(),Status:b.status});
+  }
+  document.getElementById('viewTitle').textContent=title;
+  document.getElementById('viewBody').innerHTML=html;
+  openModal('view');
+}
+
+function detailRows(obj){
+  return '<div style="display:grid;gap:12px">'+Object.entries(obj).map(([k,v])=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8f9fa;border-radius:8px">
+      <span style="font-size:13px;font-weight:600;color:#6b7280;min-width:100px">${k}</span>
+      <span style="font-size:14px;font-weight:500;color:#1a1a2e">${
+        k==='Status'?`<span class="badge-status ${statusBadge(v)}">${v}</span>`:v
+      }</span>
+    </div>
+  `).join('')+'</div>';
+}
+
+/* ══════════════════════════════════════════
+   EDIT STATUS IN DATABASE
+   ══════════════════════════════════════════ */
+let currentEditType = null, currentEditIdx = -1;
+function editStatus(type, idx) {
+  currentEditType = type; currentEditIdx = idx;
+  let item = null;
+  if(type === 'hotel') item = hotels[idx];
+  else if(type === 'cab') item = cabs[idx];
+  else if(type === 'package') item = packages[idx];
+  else if(type === 'booking') item = bookings[idx];
+  
+  const select = document.getElementById('editStatusSelect');
+  for(let i=0; i<select.options.length; i++) {
+    if(select.options[i].value.toLowerCase() === item.status.toLowerCase()) {
+      select.selectedIndex = i; break;
+    }
+  }
+  openModal('edit-status');
+}
+
+async function saveStatus(e) {
+  e.preventDefault();
+  const newStatus = document.getElementById('editStatusSelect').value;
+  let url = '';
+  let itemId = '';
+
+  if (currentEditType === 'hotel') {
+    url = `/api/hotels/${hotels[currentEditIdx]._id}`;
+    itemId = hotels[currentEditIdx]._id;
+  } else if (currentEditType === 'cab') {
+    url = `/api/cabs/${cabs[currentEditIdx]._id}`;
+    itemId = cabs[currentEditIdx]._id;
+  } else if (currentEditType === 'package') {
+    url = `/api/trip-bundles/${packages[currentEditIdx]._id}`;
+    itemId = packages[currentEditIdx]._id;
+  } else if (currentEditType === 'booking') {
+    url = `/api/bookings/${bookings[currentEditIdx]._id || bookings[currentEditIdx].id}`;
+    itemId = bookings[currentEditIdx]._id || bookings[currentEditIdx].id;
+  }
+
+  try {
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ status: newStatus })
+    });
+
+    if (res.ok) {
+      closeModal('edit-status');
+      showToast('Status updated successfully in DB!', 'success');
+      await loadData();
+    } else {
+      showToast('Failed to update status', 'error');
+    }
+  } catch (err) {
+    showToast('Network error updating status', 'error');
+  }
+}
+
+/* ══════════════════════════════════════════
+   DELETE ITEM FROM DATABASE
+   ══════════════════════════════════════════ */
+async function deleteItem(type,idx){
+  if(!confirm('Are you sure you want to delete this item?')) return;
+  let url = '';
+  if(type==='hotels') url = `/api/hotels/${hotels[idx]._id}`;
+  else if(type==='cabs') url = `/api/cabs/${cabs[idx]._id}`;
+  else if(type==='packages') url = `/api/trip-bundles/${packages[idx]._id}`;
+
+  try {
+    const res = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (res.ok) {
+      showToast('Item deleted successfully from database!', 'success');
+      await loadData();
+    } else {
+      showToast('Failed to delete item', 'error');
+    }
+  } catch (err) {
+    showToast('Network error deleting item', 'error');
+  }
+}
+
+/* ══════════════════════════════════════════
+   TOAST NOTIFICATIONS
+   ══════════════════════════════════════════ */
+function showToast(msg,type='success'){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div');
+  t.className='toast toast-'+type;
+  t.innerHTML=`<span class="material-icons-outlined" style="font-size:18px">${type==='success'?'check_circle':'error'}</span>${msg}`;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(),3200);
+}
+
+/* ══════════════════════════════════════════
+   SIDEBAR NAVIGATION
+   ══════════════════════════════════════════ */
+function scrollToSection(id){
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// sidebar scroll links
+document.querySelectorAll('.sidebar-nav a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const href=a.getAttribute('href');
+    if(href&&href.length>1){
+      e.preventDefault();
+      scrollToSection(href.substring(1));
+      closeSidebar();
+    }
+  });
+});
+
+/* ══════════════════════════════════════════
+   MOBILE SIDEBAR
+   ══════════════════════════════════════════ */
+const sidebar=document.getElementById('sidebar');
+const overlay=document.getElementById('sidebarOverlay');
+const hamburger=document.getElementById('hamburgerBtn');
+
+hamburger.addEventListener('click',()=>{sidebar.classList.add('open');overlay.classList.add('show');});
+overlay.addEventListener('click',closeSidebar);
+function closeSidebar(){sidebar.classList.remove('open');overlay.classList.remove('show');}
+
+/* ══════════════════════════════════════════
+   LOGOUT
+   ══════════════════════════════════════════ */
+document.getElementById('logoutBtn').addEventListener('click',async(e)=>{
+  e.preventDefault();
+  try{await fetch('/api/admin/logout',{method:'POST',credentials:'include'});}catch{}
+  localStorage.removeItem('adminToken');
+  localStorage.removeItem('adminEmail');
+  window.location.href='/admin-login.html';
+});
+</script>
+</body>
+</html>
