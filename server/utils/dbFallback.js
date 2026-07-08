@@ -15,6 +15,12 @@ function isConnected() {
   return mongoose.connection.readyState === 1;
 }
 
+// Check if a password string is already a bcrypt hash
+function isBcryptHash(pass) {
+  if (typeof pass !== 'string') return false;
+  return pass.startsWith('$2a$') || pass.startsWith('$2b$') || pass.startsWith('$2y$');
+}
+
 // Load collection from local JSON file
 function loadCollection(name) {
   const filePath = path.join(DATA_DIR, `${name.toLowerCase()}s.json`);
@@ -198,7 +204,7 @@ function wrapModel(modelName, realModel) {
         newDoc.updatedAt = newDoc.updatedAt || new Date().toISOString();
 
         // Specific hashing logic for Users
-        if (modelName.toLowerCase() === 'user' && newDoc.password && !newDoc.password.startsWith('$2a$')) {
+        if (modelName.toLowerCase() === 'user' && newDoc.password && !isBcryptHash(newDoc.password)) {
           const salt = await bcrypt.genSalt(10);
           newDoc.password = await bcrypt.hash(newDoc.password, salt);
         }
@@ -234,7 +240,7 @@ function wrapModel(modelName, realModel) {
       const doc = { ...data[index], ...updatedFields, updatedAt: new Date().toISOString() };
       
       // Hash password if modified and plain
-      if (modelName.toLowerCase() === 'user' && doc.password && !doc.password.startsWith('$2a$')) {
+      if (modelName.toLowerCase() === 'user' && doc.password && !isBcryptHash(doc.password)) {
         const salt = await bcrypt.genSalt(10);
         doc.password = await bcrypt.hash(doc.password, salt);
       }
@@ -257,7 +263,7 @@ function wrapModel(modelName, realModel) {
       const updatedFields = update.$set ? { ...update.$set } : { ...update };
       const doc = { ...data[index], ...updatedFields, updatedAt: new Date().toISOString() };
 
-      if (modelName.toLowerCase() === 'user' && doc.password && !doc.password.startsWith('$2a$')) {
+      if (modelName.toLowerCase() === 'user' && doc.password && !isBcryptHash(doc.password)) {
         const salt = await bcrypt.genSalt(10);
         doc.password = await bcrypt.hash(doc.password, salt);
       }
@@ -336,7 +342,7 @@ function enhanceDocument(doc, modelName) {
     enhanced.updatedAt = new Date().toISOString();
 
     // Specific password hashing before saving
-    if (modelName.toLowerCase() === 'user' && enhanced.password && !enhanced.password.startsWith('$2a$')) {
+    if (modelName.toLowerCase() === 'user' && enhanced.password && !isBcryptHash(enhanced.password)) {
       const salt = await bcrypt.genSalt(10);
       enhanced.password = await bcrypt.hash(enhanced.password, salt);
     }
