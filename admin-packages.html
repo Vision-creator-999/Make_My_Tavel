@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Holiday Packages Management – Admin – Make My Travel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .admin-container { max-width: 1280px; margin: 40px auto; padding: 0 20px; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1.5px solid var(--color-border); padding-bottom: 20px; }
+    .admin-title-area { display: flex; align-items: center; gap: 16px; }
+    .admin-title-area h1 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--color-text-heading); }
+    .admin-badge { background-color: var(--color-secondary); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* Stats Row */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow-sm); }
+    .stat-card label { font-size: 11px; font-weight: 700; color: var(--color-text-body); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+    .stat-card .val { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--color-text-heading); }
+    .stat-card .val.teal { color: var(--color-primary); }
+    .stat-card .val.green { color: #15803D; }
+    .stat-card .val.orange { color: var(--color-accent); }
+    .stat-card .val.red { color: #DC2626; }
+    
+    /* Filter Bar */
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-bar input, .filter-bar select { border: 1.5px solid var(--color-border); border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--color-text-heading); outline: none; }
+    .filter-bar input { flex: 1; min-width: 200px; }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--color-primary); }
+    
+    /* Table */
+    .table-container { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background: #F1F5F9; color: var(--color-text-heading); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 12px 16px; letter-spacing: 0.5px; border-bottom: 1.5px solid var(--color-border); }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--color-border); font-size: 13px; color: var(--color-text-heading); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #FAFBFC; }
+    
+    /* Thumbnails */
+    .pkg-thumb { width: 48px; height: 36px; border-radius: 6px; object-fit: cover; }
+    
+    /* Status badges */
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: capitalize; }
+    .status-badge.approved { background: #DCFCE7; color: #15803D; }
+    .status-badge.pending { background: #FEF3C7; color: #D97706; }
+    .status-badge.rejected { background: #FEE2E2; color: #DC2626; }
+    
+    /* Action buttons */
+    .action-btn { border: 1.5px solid var(--color-border); background: #fff; color: var(--color-text-heading); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all var(--transition-fast); margin: 0 2px; }
+    .action-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .action-btn.danger:hover { border-color: #EF4444; color: #EF4444; }
+    
+    .action-select { border: 1.5px solid var(--color-border); border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; cursor: pointer; background: #fff; outline: none; }
+    
+    /* Buttons */
+    .primary-btn { background: var(--color-primary); color: #fff; border: none; border-radius: 10px; padding: 10px 24px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all var(--transition-fast); }
+    .primary-btn:hover { background: #0b6f71; }
+    .secondary-btn { background: transparent; color: var(--color-text-heading); border: 1.5px solid var(--color-border); border-radius: 10px; padding: 10px 24px; font-size: 13px; font-weight: 700; cursor: pointer; }
+    
+    /* Modals */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: var(--color-card); border-radius: 16px; width: 100%; max-width: 680px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--color-border); }
+    .modal-header h3 { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 800; color: var(--color-text-heading); }
+    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--color-border); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text-heading); }
+    .modal-close:hover { background: #FEF2F2; border-color: #EF4444; color: #EF4444; }
+    .modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 11px; font-weight: 700; color: var(--color-text-heading); text-transform: uppercase; letter-spacing: 0.3px; }
+    .form-group input, .form-group select, .form-group textarea { border: 1.5px solid var(--color-border); border-radius: 8px; padding: 9px 12px; font-size: 13px; font-weight: 500; color: var(--color-text-heading); outline: none; font-family: inherit; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--color-primary); }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: 10px; }
+    
+    /* Upload Box & Previews */
+    .upload-box {
+      border: 2px dashed var(--color-border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #F8FAFC;
+      transition: all var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-top: 5px;
+    }
+    .upload-box:hover {
+      border-color: var(--color-primary);
+      background-color: #F0FDFD;
+    }
+    .upload-box i {
+      font-size: 2rem;
+      color: var(--color-text-body);
+    }
+    .upload-box:hover i {
+      color: var(--color-primary);
+    }
+    .preview-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .preview-item {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      border: 1.5px solid var(--color-border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(239, 68, 68, 0.85);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 10px;
+    }
+    .preview-item .remove-btn:hover {
+      background: rgb(220, 38, 38);
+    }
+    
+    .empty-state { padding: 40px; text-align: center; color: var(--color-text-body); font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="admin-title-area">
+        <a href="admin-dashboard.html" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--color-border); color: var(--color-text-heading);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 16px; height: 16px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </a>
+        <h1>Holiday Packages Management</h1>
+        <span class="admin-badge">Admin</span>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="admin-dashboard.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">📊 Dashboard</a>
+        <a href="admin-hotels.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🏨 Hotels</a>
+        <a href="admin-cabs.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🚖 Cabs</a>
+        <a href="admin-packages.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px; background: var(--color-primary); color: #fff;">🌴 Packages</a>
+        <a href="admin.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">👤 Users</a>
+        <a href="landing.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🏠 Home</a>
+      </div>
+    </div>
+    
+    <!-- Stats Row -->
+    <div class="stats-row" id="pkg-stats-row">
+      <div class="stat-card"><label>Total Packages</label><div class="val" id="stat-total">0</div></div>
+      <div class="stat-card"><label>Approved Packages</label><div class="val green" id="stat-approved">0</div></div>
+      <div class="stat-card"><label>Pending Packages</label><div class="val orange" id="stat-pending">0</div></div>
+      <div class="stat-card"><label>Rejected Packages</label><div class="val red" id="stat-rejected">0</div></div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <input type="text" id="pkg-search" placeholder="Search packages by name or destination..." oninput="filterPackages()"/>
+      <select id="pkg-status-filter" onchange="filterPackages()">
+        <option value="">All Statuses</option>
+        <option value="Approved">Approved</option>
+        <option value="Pending">Pending</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+      <button class="primary-btn" onclick="openPkgModal()">+ Add Package</button>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Package Name</th>
+            <th>Destination</th>
+            <th>Price (₹)</th>
+            <th>Duration</th>
+            <th>Inclusions</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="pkgs-tbody">
+          <!-- Populated dynamically -->
+        </tbody>
+      </table>
+      <div id="pkgs-empty" class="empty-state" style="display:none;">No holiday packages found.</div>
+    </div>
+  </div>
+
+  <!-- Package Add/Edit Modal -->
+  <div class="modal-overlay" id="pkg-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="pkg-modal-title">Add Package</h3>
+        <button class="modal-close" onclick="closePkgModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Package Name *</label><input id="pk-name" placeholder="Super Goa Holiday"/></div>
+          <div class="form-group"><label>Destination *</label><input id="pk-destination" placeholder="Goa"/></div>
+          <div class="form-group"><label>Price (INR) *</label><input id="pk-price" type="number" placeholder="18500"/></div>
+          <div class="form-group"><label>Days *</label><input id="pk-days" type="number" placeholder="4" value="4"/></div>
+          <div class="form-group"><label>Nights *</label><input id="pk-nights" type="number" placeholder="3" value="3"/></div>
+          <div class="form-group full"><label>Inclusions (comma separated) *</label><input id="pk-inclusions" placeholder="Hotel, Sightseeing, Airport transfer, Breakfast"/></div>
+          
+          <!-- Image upload -->
+          <div class="form-group full" style="margin-top: 10px;">
+            <label>Upload Destination Photos (Max 4 images)</label>
+            <div class="upload-box" id="admin-pkg-upload-area">
+              <i class="fa-solid fa-images"></i>
+              <span style="font-weight: 600; color: var(--color-text-heading); font-size: 0.9rem;">Click or Drag package photos here</span>
+              <span style="font-size: 0.75rem; color: var(--color-text-body);">PNG, JPG or WebP (Max 4, up to 5MB each)</span>
+              <input type="file" id="admin-pkg-images-upload" accept="image/*" multiple style="display: none;">
+            </div>
+            <div class="preview-gallery" id="admin-pkg-preview-gallery"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" onclick="closePkgModal()">Cancel</button>
+        <button class="primary-btn" id="pkg-save-btn" onclick="savePackage()">Save Package</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allPackages = [];
+    let editingPkgId = null;
+    let adminPkgFiles = [];
+    let existingPkgImages = [];
+
+    function getToken() { return localStorage.getItem('token'); }
+    function authHeaders() {
+      return { 'Authorization': `Bearer ${getToken()}` };
+    }
+
+    async function loadPackages() {
+      try {
+        const res = await fetch('/api/trip-bundles', { headers: authHeaders() });
+        if (res.ok) {
+          allPackages = await res.json();
+          renderPackages(allPackages);
+          updateStats();
+        }
+      } catch (err) { console.error('Failed to load packages:', err); }
+    }
+
+    function updateStats() {
+      document.getElementById('stat-total').textContent = allPackages.length;
+      document.getElementById('stat-approved').textContent = allPackages.filter(p => p.status === 'Approved').length;
+      document.getElementById('stat-pending').textContent = allPackages.filter(p => p.status === 'Pending').length;
+      document.getElementById('stat-rejected').textContent = allPackages.filter(p => p.status === 'Rejected').length;
+    }
+
+    function renderPackages(pkgsList) {
+      const tbody = document.getElementById('pkgs-tbody');
+      const empty = document.getElementById('pkgs-empty');
+      tbody.innerHTML = '';
+
+      if (pkgsList.length === 0) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = pkgsList.map(p => {
+        const firstImg = p.images?.[0] || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=100&q=80';
+        return `
+          <tr>
+            <td><img class="pkg-thumb" src="${firstImg}" alt=""/></td>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.destination}</td>
+            <td>₹${p.price?.toLocaleString()}</td>
+            <td>${p.days} Days / ${p.nights} Nights</td>
+            <td><span style="font-size:11px; color:var(--color-text-body); max-width:200px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${p.inclusions || 'N/A'}</span></td>
+            <td>
+              <select class="action-select status-badge ${p.status?.toLowerCase() || 'pending'}" onchange="updatePkgStatus('${p._id}', this.value)">
+                <option value="Pending" ${p.status==='Pending'?'selected':''}>Pending</option>
+                <option value="Approved" ${p.status==='Approved'?'selected':''}>Approved</option>
+                <option value="Rejected" ${p.status==='Rejected'?'selected':''}>Rejected</option>
+              </select>
+            </td>
+            <td>
+              <button class="action-btn" onclick="editPackage('${p._id}')">Edit</button>
+              <button class="action-btn danger" onclick="deletePackage('${p._id}', '${p.name}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterPackages() {
+      const search = document.getElementById('pkg-search').value.toLowerCase();
+      const status = document.getElementById('pkg-status-filter').value;
+
+      const filtered = allPackages.filter(p => {
+        if (status && p.status !== status) return false;
+        if (search) {
+          const matchName = p.name?.toLowerCase().includes(search);
+          const matchDest = p.destination?.toLowerCase().includes(search);
+          if (!matchName && !matchDest) return false;
+        }
+        return true;
+      });
+
+      renderPackages(filtered);
+    }
+
+    async function updatePkgStatus(id, newStatus) {
+      try {
+        const res = await fetch(`/api/trip-bundles/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders()
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (res.ok) {
+          loadPackages();
+        } else {
+          alert('Failed to update status');
+        }
+      } catch (err) { alert('Network error'); }
+    }
+
+    // Uploader functions
+    function initAdminPkgUploader() {
+      const uploadArea = document.getElementById('admin-pkg-upload-area');
+      const fileInput = document.getElementById('admin-pkg-images-upload');
+      
+      if (!uploadArea || !fileInput) return;
+
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      fileInput.addEventListener('change', (e) => {
+        handleAdminPkgFiles(e.target.files);
+      });
+
+      // Drag & drop handlers
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }, false);
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, () => {
+          uploadArea.style.borderColor = 'var(--color-primary)';
+          uploadArea.style.backgroundColor = '#F0FDFD';
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, () => {
+          uploadArea.style.borderColor = 'var(--color-border)';
+          uploadArea.style.backgroundColor = '#F8FAFC';
+        }, false);
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        handleAdminPkgFiles(e.dataTransfer.files);
+      });
+    }
+
+    function handleAdminPkgFiles(files) {
+      const remainingLimit = 4 - (existingPkgImages.length + adminPkgFiles.length);
+      const filesToAdd = Array.from(files).slice(0, remainingLimit);
+
+      filesToAdd.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        adminPkgFiles.push(file);
+      });
+      renderAdminPkgPreviews();
+    }
+
+    function renderAdminPkgPreviews() {
+      const gallery = document.getElementById('admin-pkg-preview-gallery');
+      if (!gallery) return;
+
+      gallery.innerHTML = '';
+
+      // Existing
+      existingPkgImages.forEach((url, idx) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        const img = document.createElement('img');
+        img.src = url;
+        item.appendChild(img);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          existingPkgImages.splice(idx, 1);
+          renderAdminPkgPreviews();
+        });
+        item.appendChild(removeBtn);
+        gallery.appendChild(item);
+      });
+
+      // New
+      adminPkgFiles.forEach((file, idx) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        const img = document.createElement('img');
+        item.appendChild(img);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          adminPkgFiles.splice(idx, 1);
+          renderAdminPkgPreviews();
+        });
+        item.appendChild(removeBtn);
+
+        const reader = new FileReader();
+        reader.onload = (e) => { img.src = e.target.result; };
+        reader.readAsDataURL(file);
+        gallery.appendChild(item);
+      });
+    }
+
+    function openPkgModal() {
+      editingPkgId = null;
+      document.getElementById('pkg-modal-title').textContent = 'Add Package';
+      ['pk-name','pk-destination','pk-price','pk-days','pk-nights','pk-inclusions'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('pk-days').value = '4';
+      document.getElementById('pk-nights').value = '3';
+
+      adminPkgFiles = [];
+      existingPkgImages = [];
+      renderAdminPkgPreviews();
+
+      document.getElementById('pkg-modal').classList.add('active');
+    }
+
+    function closePkgModal() { document.getElementById('pkg-modal').classList.remove('active'); }
+
+    function editPackage(id) {
+      const pkg = allPackages.find(p => p._id === id);
+      if (!pkg) return;
+      editingPkgId = id;
+      document.getElementById('pkg-modal-title').textContent = 'Edit Package';
+      document.getElementById('pk-name').value = pkg.name || '';
+      document.getElementById('pk-destination').value = pkg.destination || '';
+      document.getElementById('pk-price').value = pkg.price || '';
+      document.getElementById('pk-days').value = pkg.days || '4';
+      document.getElementById('pk-nights').value = pkg.nights || '3';
+      document.getElementById('pk-inclusions').value = pkg.inclusions || '';
+
+      adminPkgFiles = [];
+      existingPkgImages = pkg.images ? [...pkg.images] : [];
+      renderAdminPkgPreviews();
+
+      document.getElementById('pkg-modal').classList.add('active');
+    }
+
+    async function savePackage() {
+      const name = document.getElementById('pk-name').value.trim();
+      const destination = document.getElementById('pk-destination').value.trim();
+      const price = parseFloat(document.getElementById('pk-price').value);
+      const days = parseInt(document.getElementById('pk-days').value);
+      const nights = parseInt(document.getElementById('pk-nights').value);
+      const inclusions = document.getElementById('pk-inclusions').value.trim();
+
+      if (!name || !destination || !price || !days || !nights || !inclusions) {
+        alert('All fields marked * are required.');
+        return;
+      }
+
+      const btn = document.getElementById('pkg-save-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      try {
+        let finalImageUrls = [...existingPkgImages];
+
+        if (adminPkgFiles.length > 0) {
+          const uploadData = new FormData();
+          adminPkgFiles.forEach(file => {
+            uploadData.append('images', file);
+          });
+
+          const uploadRes = await fetch('/api/upload/package', {
+            method: 'POST',
+            body: uploadData
+          });
+
+          if (!uploadRes.ok) {
+            const errData = await uploadRes.json();
+            throw new Error(errData.error || 'Failed to upload images');
+          }
+
+          const uploadResult = await uploadRes.json();
+          finalImageUrls = finalImageUrls.concat(uploadResult.images);
+        }
+
+        const body = {
+          name, destination, price, days, nights, inclusions,
+          images: finalImageUrls,
+          packageId: editingPkgId ? undefined : `MMT-PKG-${Math.floor(100000 + Math.random() * 900000)}`,
+          status: editingPkgId ? undefined : 'Pending'
+        };
+
+        const url = editingPkgId ? `/api/trip-bundles/${editingPkgId}` : '/api/trip-bundles';
+        const method = editingPkgId ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders()
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+          closePkgModal();
+          loadPackages();
+        } else {
+          const d = await res.json();
+          throw new Error(d.error || 'Failed to save package');
+        }
+      } catch (err) {
+        alert(err.message || 'Connection error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Package';
+      }
+    }
+
+    async function deletePackage(id, name) {
+      if (!confirm(`Are you sure you want to delete package: ${name}?`)) return;
+      try {
+        const res = await fetch(`/api/trip-bundles/${id}`, { method: 'DELETE', headers: authHeaders() });
+        if (res.ok) { loadPackages(); }
+        else { alert('Failed to delete package listing'); }
+      } catch (err) { alert('Network error'); }
+    }
+
+    document.getElementById('pkg-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closePkgModal();
+    });
+
+    async function checkAuth() {
+      try {
+        const r = await fetch('/api/admin/check', { credentials: 'include' });
+        if (!r.ok) throw new Error();
+        loadPackages();
+        initAdminPkgUploader();
+      } catch (err) {
+        window.location.href = 'admin-login.html';
+      }
+    }
+
+    checkAuth();
+  </script>
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cab Management – Admin – Make My Travel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .admin-container { max-width: 1280px; margin: 40px auto; padding: 0 20px; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1.5px solid var(--color-border); padding-bottom: 20px; }
+    .admin-title-area { display: flex; align-items: center; gap: 16px; }
+    .admin-title-area h1 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--color-text-heading); }
+    .admin-badge { background-color: var(--color-secondary); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* Stats Row */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow-sm); }
+    .stat-card label { font-size: 11px; font-weight: 700; color: var(--color-text-body); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+    .stat-card .val { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--color-text-heading); }
+    .stat-card .val.teal { color: var(--color-primary); }
+    .stat-card .val.green { color: #15803D; }
+    .stat-card .val.orange { color: var(--color-accent); }
+    .stat-card .val.red { color: #DC2626; }
+    
+    /* Filter Bar */
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-bar input, .filter-bar select { border: 1.5px solid var(--color-border); border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--color-text-heading); outline: none; }
+    .filter-bar input { flex: 1; min-width: 200px; }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--color-primary); }
+    
+    /* Table */
+    .table-container { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background: #F1F5F9; color: var(--color-text-heading); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 12px 16px; letter-spacing: 0.5px; border-bottom: 1.5px solid var(--color-border); }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--color-border); font-size: 13px; color: var(--color-text-heading); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #FAFBFC; }
+    
+    /* Thumbnails */
+    .cab-thumb { width: 48px; height: 36px; border-radius: 6px; object-fit: cover; }
+    
+    /* Status badges */
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: capitalize; }
+    .status-badge.approved { background: #DCFCE7; color: #15803D; }
+    .status-badge.pending { background: #FEF3C7; color: #D97706; }
+    .status-badge.rejected { background: #FEE2E2; color: #DC2626; }
+    
+    /* Action buttons */
+    .action-btn { border: 1.5px solid var(--color-border); background: #fff; color: var(--color-text-heading); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all var(--transition-fast); margin: 0 2px; }
+    .action-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .action-btn.danger:hover { border-color: #EF4444; color: #EF4444; }
+    
+    .action-select { border: 1.5px solid var(--color-border); border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; cursor: pointer; background: #fff; outline: none; }
+    
+    /* Buttons */
+    .primary-btn { background: var(--color-primary); color: #fff; border: none; border-radius: 10px; padding: 10px 24px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all var(--transition-fast); }
+    .primary-btn:hover { background: #0b6f71; }
+    .secondary-btn { background: transparent; color: var(--color-text-heading); border: 1.5px solid var(--color-border); border-radius: 10px; padding: 10px 24px; font-size: 13px; font-weight: 700; cursor: pointer; }
+    
+    /* Modals */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: var(--color-card); border-radius: 16px; width: 100%; max-width: 680px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--color-border); }
+    .modal-header h3 { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 800; color: var(--color-text-heading); }
+    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--color-border); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text-heading); }
+    .modal-close:hover { background: #FEF2F2; border-color: #EF4444; color: #EF4444; }
+    .modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 11px; font-weight: 700; color: var(--color-text-heading); text-transform: uppercase; letter-spacing: 0.3px; }
+    .form-group input, .form-group select, .form-group textarea { border: 1.5px solid var(--color-border); border-radius: 8px; padding: 9px 12px; font-size: 13px; font-weight: 500; color: var(--color-text-heading); outline: none; font-family: inherit; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--color-primary); }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: 10px; }
+    
+    /* Upload Box & Previews */
+    .upload-box {
+      border: 2px dashed var(--color-border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #F8FAFC;
+      transition: all var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-top: 5px;
+    }
+    .upload-box:hover {
+      border-color: var(--color-primary);
+      background-color: #F0FDFD;
+    }
+    .upload-box i {
+      font-size: 2rem;
+      color: var(--color-text-body);
+    }
+    .upload-box:hover i {
+      color: var(--color-primary);
+    }
+    .preview-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .preview-item {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      border: 1.5px solid var(--color-border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(239, 68, 68, 0.85);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 10px;
+    }
+    .preview-item .remove-btn:hover {
+      background: rgb(220, 38, 38);
+    }
+    
+    .empty-state { padding: 40px; text-align: center; color: var(--color-text-body); font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="admin-title-area">
+        <a href="admin-dashboard.html" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--color-border); color: var(--color-text-heading);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 16px; height: 16px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </a>
+        <h1>Cab Management</h1>
+        <span class="admin-badge">Admin</span>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="admin-dashboard.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">📊 Dashboard</a>
+        <a href="admin-hotels.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🏨 Hotels</a>
+        <a href="admin-cabs.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px; background: var(--color-primary); color: #fff;">🚖 Cabs</a>
+        <a href="admin-packages.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🌴 Packages</a>
+        <a href="admin.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">👤 Users</a>
+        <a href="landing.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🏠 Home</a>
+      </div>
+    </div>
+    
+    <!-- Stats Row -->
+    <div class="stats-row" id="cab-stats-row">
+      <div class="stat-card"><label>Total Cabs</label><div class="val" id="stat-total">0</div></div>
+      <div class="stat-card"><label>Approved Cabs</label><div class="val green" id="stat-approved">0</div></div>
+      <div class="stat-card"><label>Pending Cabs</label><div class="val orange" id="stat-pending">0</div></div>
+      <div class="stat-card"><label>Rejected Cabs</label><div class="val red" id="stat-rejected">0</div></div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <input type="text" id="cab-search" placeholder="Search cabs by driver, vehicle or plate..." oninput="filterCabs()"/>
+      <select id="cab-status-filter" onchange="filterCabs()">
+        <option value="">All Statuses</option>
+        <option value="Approved">Approved</option>
+        <option value="Pending">Pending</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+      <button class="primary-btn" onclick="openCabModal()">+ Add Cab</button>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Driver Name</th>
+            <th>Vehicle Model</th>
+            <th>Plate Number</th>
+            <th>Seating</th>
+            <th>Rate / KM</th>
+            <th>Operating City</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="cabs-tbody">
+          <!-- Populated dynamically -->
+        </tbody>
+      </table>
+      <div id="cabs-empty" class="empty-state" style="display:none;">No cabs found.</div>
+    </div>
+  </div>
+
+  <!-- Cab Add/Edit Modal -->
+  <div class="modal-overlay" id="cab-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="cab-modal-title">Add Cab</h3>
+        <button class="modal-close" onclick="closeCabModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Driver Name *</label><input id="cb-driver" placeholder="Ramesh Kumar"/></div>
+          <div class="form-group"><label>Driver Experience (Years)</label><input id="cb-driver-exp" type="number" placeholder="5"/></div>
+          <div class="form-group"><label>License Number</label><input id="cb-license" placeholder="DL-1234567890"/></div>
+          <div class="form-group"><label>Vehicle Model *</label><input id="cb-vehicle" placeholder="Premium Sedan (Dzire)"/></div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="cb-category">
+              <option value="Economy Hatchback">Economy Hatchback</option>
+              <option value="Premium Sedan" selected>Premium Sedan</option>
+              <option value="Luxury SUV">Luxury SUV</option>
+              <option value="Mini Van">Mini Van</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Plate Number *</label><input id="cb-plate" placeholder="DL-1RT-5678"/></div>
+          <div class="form-group">
+            <label>Seating Capacity</label>
+            <select id="cb-seats">
+              <option value="4 Seater" selected>4 Seater</option>
+              <option value="6 Seater">6 Seater</option>
+              <option value="7 Seater">7 Seater</option>
+              <option value="9+ Seater">9+ Seater</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Operating City *</label><input id="cb-city" placeholder="Goa"/></div>
+          <div class="form-group"><label>Rate Per KM (₹) *</label><input id="cb-rate" type="number" placeholder="12"/></div>
+          <div class="form-group"><label>Driver Email</label><input id="cb-email" type="email" placeholder="driver@cabs.com"/></div>
+          <div class="form-group"><label>Mobile Number *</label><input id="cb-mobile" placeholder="9876543210"/></div>
+          
+          <!-- Image upload -->
+          <div class="form-group full" style="margin-top: 10px;">
+            <label>Upload Car Photos (Max 3 images)</label>
+            <div class="upload-box" id="admin-cab-upload-area">
+              <i class="fa-solid fa-car"></i>
+              <span style="font-weight: 600; color: var(--color-text-heading); font-size: 0.9rem;">Click or Drag car photos here</span>
+              <span style="font-size: 0.75rem; color: var(--color-text-body);">PNG, JPG or WebP (Max 3, up to 5MB each)</span>
+              <input type="file" id="admin-cab-images-upload" accept="image/*" multiple style="display: none;">
+            </div>
+            <div class="preview-gallery" id="admin-cab-preview-gallery"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" onclick="closeCabModal()">Cancel</button>
+        <button class="primary-btn" id="cab-save-btn" onclick="saveCab()">Save Cab</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allCabs = [];
+    let editingCabId = null;
+    let adminCabFiles = [];
+    let existingCabImages = [];
+
+    function getToken() { return localStorage.getItem('token'); }
+    function authHeaders() {
+      return { 'Authorization': `Bearer ${getToken()}` };
+    }
+
+    async function loadCabs() {
+      try {
+        const res = await fetch('/api/cabs', { headers: authHeaders() });
+        if (res.ok) {
+          allCabs = await res.json();
+          renderCabs(allCabs);
+          updateStats();
+        }
+      } catch (err) { console.error('Failed to load cabs:', err); }
+    }
+
+    function updateStats() {
+      document.getElementById('stat-total').textContent = allCabs.length;
+      document.getElementById('stat-approved').textContent = allCabs.filter(c => c.status === 'Approved').length;
+      document.getElementById('stat-pending').textContent = allCabs.filter(c => c.status === 'Pending').length;
+      document.getElementById('stat-rejected').textContent = allCabs.filter(c => c.status === 'Rejected').length;
+    }
+
+    function renderCabs(cabsList) {
+      const tbody = document.getElementById('cabs-tbody');
+      const empty = document.getElementById('cabs-empty');
+      tbody.innerHTML = '';
+
+      if (cabsList.length === 0) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = cabsList.map(c => {
+        const firstImg = c.images?.[0] || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=100&q=80';
+        return `
+          <tr>
+            <td><img class="cab-thumb" src="${firstImg}" alt=""/></td>
+            <td><strong>${c.driver}</strong></td>
+            <td>${c.vehicle} (${c.category || 'Standard'})</td>
+            <td><span style="font-family:monospace; font-weight:700; background:#f1f5f9; padding:2px 6px; border-radius:4px;">${c.plate}</span></td>
+            <td>${c.seats || '4 Seater'}</td>
+            <td>₹${c.ratePerKm}/KM</td>
+            <td>${c.city || 'N/A'}</td>
+            <td>
+              <select class="action-select status-badge ${c.status?.toLowerCase() || 'pending'}" onchange="updateCabStatus('${c._id}', this.value)">
+                <option value="Pending" ${c.status==='Pending'?'selected':''}>Pending</option>
+                <option value="Approved" ${c.status==='Approved'?'selected':''}>Approved</option>
+                <option value="Rejected" ${c.status==='Rejected'?'selected':''}>Rejected</option>
+              </select>
+            </td>
+            <td>
+              <button class="action-btn" onclick="editCab('${c._id}')">Edit</button>
+              <button class="action-btn danger" onclick="deleteCab('${c._id}', '${c.vehicle}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterCabs() {
+      const search = document.getElementById('cab-search').value.toLowerCase();
+      const status = document.getElementById('cab-status-filter').value;
+
+      const filtered = allCabs.filter(c => {
+        if (status && c.status !== status) return false;
+        if (search) {
+          const matchDriver = c.driver?.toLowerCase().includes(search);
+          const matchVehicle = c.vehicle?.toLowerCase().includes(search);
+          const matchPlate = c.plate?.toLowerCase().includes(search);
+          const matchCity = c.city?.toLowerCase().includes(search);
+          if (!matchDriver && !matchVehicle && !matchPlate && !matchCity) return false;
+        }
+        return true;
+      });
+
+      renderCabs(filtered);
+    }
+
+    async function updateCabStatus(id, newStatus) {
+      try {
+        const res = await fetch(`/api/cabs/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders()
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (res.ok) {
+          loadCabs();
+        } else {
+          alert('Failed to update status');
+        }
+      } catch (err) { alert('Network error'); }
+    }
+
+    // Cab upload functionality
+    function initAdminCabUploader() {
+      const uploadArea = document.getElementById('admin-cab-upload-area');
+      const fileInput = document.getElementById('admin-cab-images-upload');
+      
+      if (!uploadArea || !fileInput) return;
+
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      fileInput.addEventListener('change', (e) => {
+        handleAdminCabFiles(e.target.files);
+      });
+
+      // Drag & drop handlers
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }, false);
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, () => {
+          uploadArea.style.borderColor = 'var(--color-primary)';
+          uploadArea.style.backgroundColor = '#F0FDFD';
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, () => {
+          uploadArea.style.borderColor = 'var(--color-border)';
+          uploadArea.style.backgroundColor = '#F8FAFC';
+        }, false);
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        handleAdminCabFiles(e.dataTransfer.files);
+      });
+    }
+
+    function handleAdminCabFiles(files) {
+      const remainingLimit = 3 - (existingCabImages.length + adminCabFiles.length);
+      const filesToAdd = Array.from(files).slice(0, remainingLimit);
+
+      filesToAdd.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        adminCabFiles.push(file);
+      });
+      renderAdminCabPreviews();
+    }
+
+    function renderAdminCabPreviews() {
+      const gallery = document.getElementById('admin-cab-preview-gallery');
+      if (!gallery) return;
+
+      gallery.innerHTML = '';
+
+      // Existing
+      existingCabImages.forEach((url, idx) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        const img = document.createElement('img');
+        img.src = url;
+        item.appendChild(img);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          existingCabImages.splice(idx, 1);
+          renderAdminCabPreviews();
+        });
+        item.appendChild(removeBtn);
+        gallery.appendChild(item);
+      });
+
+      // New Files
+      adminCabFiles.forEach((file, idx) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        const img = document.createElement('img');
+        item.appendChild(img);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          adminCabFiles.splice(idx, 1);
+          renderAdminCabPreviews();
+        });
+        item.appendChild(removeBtn);
+
+        const reader = new FileReader();
+        reader.onload = (e) => { img.src = e.target.result; };
+        reader.readAsDataURL(file);
+        gallery.appendChild(item);
+      });
+    }
+
+    function openCabModal() {
+      editingCabId = null;
+      document.getElementById('cab-modal-title').textContent = 'Add Cab';
+      ['cb-driver','cb-driver-exp','cb-license','cb-vehicle','cb-plate','cb-city','cb-rate','cb-email','cb-mobile'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('cb-category').value = 'Premium Sedan';
+      document.getElementById('cb-seats').value = '4 Seater';
+      
+      adminCabFiles = [];
+      existingCabImages = [];
+      renderAdminCabPreviews();
+
+      document.getElementById('cab-modal').classList.add('active');
+    }
+
+    function closeCabModal() { document.getElementById('cab-modal').classList.remove('active'); }
+
+    function editCab(id) {
+      const cab = allCabs.find(c => c._id === id);
+      if (!cab) return;
+      editingCabId = id;
+      document.getElementById('cab-modal-title').textContent = 'Edit Cab';
+      document.getElementById('cb-driver').value = cab.driver || '';
+      document.getElementById('cb-driver-exp').value = cab.driverExp || '';
+      document.getElementById('cb-license').value = cab.licenseNum || '';
+      document.getElementById('cb-vehicle').value = cab.vehicle || '';
+      document.getElementById('cb-category').value = cab.category || 'Premium Sedan';
+      document.getElementById('cb-plate').value = cab.plate || '';
+      document.getElementById('cb-seats').value = cab.seats || '4 Seater';
+      document.getElementById('cb-city').value = cab.city || '';
+      document.getElementById('cb-rate').value = cab.ratePerKm || '';
+      document.getElementById('cb-email').value = cab.driverEmail || '';
+      document.getElementById('cb-mobile').value = cab.mobile || '';
+
+      adminCabFiles = [];
+      existingCabImages = cab.images ? [...cab.images] : [];
+      renderAdminCabPreviews();
+
+      document.getElementById('cab-modal').classList.add('active');
+    }
+
+    async function saveCab() {
+      const driver = document.getElementById('cb-driver').value.trim();
+      const vehicle = document.getElementById('cb-vehicle').value.trim();
+      const plate = document.getElementById('cb-plate').value.trim();
+      const city = document.getElementById('cb-city').value.trim();
+      const ratePerKm = parseFloat(document.getElementById('cb-rate').value);
+      const mobile = document.getElementById('cb-mobile').value.trim();
+
+      if (!driver || !vehicle || !plate || !city || !ratePerKm || !mobile) {
+        alert('All fields marked * are required.');
+        return;
+      }
+
+      const btn = document.getElementById('cab-save-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      try {
+        let finalImageUrls = [...existingCabImages];
+
+        if (adminCabFiles.length > 0) {
+          const uploadData = new FormData();
+          carSelectedFiles = adminCabFiles; // compatibility
+          adminCabFiles.forEach(file => {
+            uploadData.append('images', file);
+          });
+
+          const uploadRes = await fetch('/api/upload/cab', {
+            method: 'POST',
+            body: uploadData
+          });
+
+          if (!uploadRes.ok) {
+            const errData = await uploadRes.json();
+            throw new Error(errData.error || 'Failed to upload images');
+          }
+
+          const uploadResult = await uploadRes.json();
+          finalImageUrls = finalImageUrls.concat(uploadResult.images);
+        }
+
+        const body = {
+          driver, vehicle, plate, city, ratePerKm, mobile,
+          driverExp: parseInt(document.getElementById('cb-driver-exp').value) || 3,
+          licenseNum: document.getElementById('cb-license').value,
+          category: document.getElementById('cb-category').value,
+          seats: document.getElementById('cb-seats').value,
+          driverEmail: document.getElementById('cb-email').value,
+          images: finalImageUrls,
+          cabId: editingCabId ? undefined : `MMT-DRV-${Math.floor(100000 + Math.random() * 900000)}`,
+          status: editingCabId ? undefined : 'Pending'
+        };
+
+        const url = editingCabId ? `/api/cabs/${editingCabId}` : '/api/cabs';
+        const method = editingCabId ? 'PUT' : 'POST';
+        
+        const res = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders()
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+          closeCabModal();
+          loadCabs();
+        } else {
+          const d = await res.json();
+          throw new Error(d.error || 'Failed to save cab');
+        }
+      } catch (err) {
+        alert(err.message || 'Connection error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Cab';
+      }
+    }
+
+    async function deleteCab(id, name) {
+      if (!confirm(`Are you sure you want to remove vehicle: ${name}?`)) return;
+      try {
+        const res = await fetch(`/api/cabs/${id}`, { method: 'DELETE', headers: authHeaders() });
+        if (res.ok) { loadCabs(); }
+        else { alert('Failed to delete cab listing'); }
+      } catch (err) { alert('Network error'); }
+    }
+
+    document.getElementById('cab-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeCabModal();
+    });
+
+    async function checkAuth() {
+      try {
+        const r = await fetch('/api/admin/check', { credentials: 'include' });
+        if (!r.ok) throw new Error();
+        loadCabs();
+        initAdminCabUploader();
+      } catch (err) {
+        window.location.href = 'admin-login.html';
+      }
+    }
+
+    checkAuth();
+  </script>
+</body>
+</html>

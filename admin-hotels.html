@@ -123,6 +123,72 @@
       tr { border-bottom: 2px solid var(--color-border); padding: 8px 0; }
       td { border: none; padding: 4px 16px; font-size: 12px; }
     }
+    
+    /* Upload Gallery styling */
+    .upload-box {
+      border: 2px dashed var(--color-border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #F8FAFC;
+      transition: all var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-top: 5px;
+    }
+    .upload-box:hover {
+      border-color: var(--color-primary);
+      background-color: #F0FDFD;
+    }
+    .upload-box i {
+      font-size: 2rem;
+      color: var(--color-text-body);
+    }
+    .upload-box:hover i {
+      color: var(--color-primary);
+    }
+    .preview-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .preview-item {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      border: 1.5px solid var(--color-border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(239, 68, 68, 0.85);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 10px;
+      transition: all var(--transition-fast);
+    }
+    .preview-item .remove-btn:hover {
+      background: rgb(220, 38, 38);
+    }
   </style>
 </head>
 <body>
@@ -136,8 +202,11 @@
         <h1>Hotel Management</h1>
         <span class="admin-badge">Admin</span>
       </div>
-      <div style="display: flex; gap: 10px;">
-        <a href="admin-dashboard.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px; background: var(--color-primary); color: #fff;">📊 Fleet Admin</a>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="admin-dashboard.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">📊 Dashboard</a>
+        <a href="admin-hotels.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px; background: var(--color-primary); color: #fff;">🏨 Hotels</a>
+        <a href="admin-cabs.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🚖 Cabs</a>
+        <a href="admin-packages.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🌴 Packages</a>
         <a href="admin.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">👤 Users</a>
         <a href="landing.html" class="secondary-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;">🏠 Home</a>
       </div>
@@ -239,7 +308,16 @@
           <div class="form-group"><label>Total Reviews</label><input id="hm-reviews" type="number" placeholder="1200"/></div>
           <div class="form-group full"><label>Description</label><textarea id="hm-desc" placeholder="Hotel description..."></textarea></div>
           <div class="form-group full"><label>Amenities (comma separated)</label><input id="hm-amenities" placeholder="Free WiFi, Pool, Spa, Restaurant"/></div>
-          <div class="form-group full"><label>Image URLs (comma separated)</label><textarea id="hm-images" placeholder="https://..."></textarea></div>
+          <div class="form-group full" style="margin-top: 10px;">
+            <label>Upload Hotel Photos (Max 4 images)</label>
+            <div class="upload-box" id="admin-hotel-upload-area">
+              <i class="fa-solid fa-images"></i>
+              <span style="font-weight: 600; color: var(--color-text-heading); font-size: 0.9rem;">Click or Drag hotel photos here</span>
+              <span style="font-size: 0.75rem; color: var(--color-text-body);">PNG, JPG or WebP (Max 4, up to 5MB each)</span>
+              <input type="file" id="admin-hotel-images-upload" accept="image/*" multiple style="display: none;">
+            </div>
+            <div class="preview-gallery" id="admin-hotel-preview-gallery"></div>
+          </div>
         </div>
         <div class="room-builder">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -329,12 +407,135 @@
 
     function filterHotels() { renderHotels(allHotels); }
 
+    // Admin Hotel Image upload variables and handlers
+    let adminHotelFiles = [];
+    let existingImages = [];
+
+    function initAdminHotelUploader() {
+      const uploadArea = document.getElementById('admin-hotel-upload-area');
+      const fileInput = document.getElementById('admin-hotel-images-upload');
+      
+      if (!uploadArea || !fileInput) return;
+
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      fileInput.addEventListener('change', (e) => {
+        handleAdminHotelFiles(e.target.files);
+      });
+
+      // Drag & drop handlers
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }, false);
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, () => {
+          uploadArea.style.borderColor = 'var(--color-primary)';
+          uploadArea.style.backgroundColor = '#F0FDFD';
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, () => {
+          uploadArea.style.borderColor = 'var(--color-border)';
+          uploadArea.style.backgroundColor = '#F8FAFC';
+        }, false);
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        handleAdminHotelFiles(e.dataTransfer.files);
+      });
+    }
+
+    function handleAdminHotelFiles(files) {
+      const remainingLimit = 4 - (existingImages.length + adminHotelFiles.length);
+      const filesToAdd = Array.from(files).slice(0, remainingLimit);
+
+      filesToAdd.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        adminHotelFiles.push(file);
+      });
+      renderAdminHotelPreviews();
+    }
+
+    function renderAdminHotelPreviews() {
+      const gallery = document.getElementById('admin-hotel-preview-gallery');
+      if (!gallery) return;
+
+      gallery.innerHTML = '';
+
+      // Render existing database URLs
+      existingImages.forEach((url, idx) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        
+        const img = document.createElement('img');
+        img.src = url;
+        item.appendChild(img);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          existingImages.splice(idx, 1);
+          renderAdminHotelPreviews();
+        });
+        item.appendChild(removeBtn);
+        
+        gallery.appendChild(item);
+      });
+
+      // Render newly selected local files
+      adminHotelFiles.forEach((file, idx) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        
+        const img = document.createElement('img');
+        item.appendChild(img);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => {
+          adminHotelFiles.splice(idx, 1);
+          renderAdminHotelPreviews();
+        });
+        item.appendChild(removeBtn);
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        
+        gallery.appendChild(item);
+      });
+    }
+
+    // Call initialization on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminHotelUploader();
+    });
+
     function openHotelModal(hotelId) {
       editingHotelId = null;
       document.getElementById('hotel-modal-title').textContent = 'Add Hotel';
-      ['hm-name','hm-city','hm-location','hm-address','hm-price','hm-rating','hm-reviews','hm-desc','hm-amenities','hm-images'].forEach(id => document.getElementById(id).value = '');
+      ['hm-name','hm-city','hm-location','hm-address','hm-price','hm-rating','hm-reviews','hm-desc','hm-amenities'].forEach(id => {
+        const elem = document.getElementById(id);
+        if (elem) elem.value = '';
+      });
       document.getElementById('hm-badge').value = '';
       document.getElementById('room-rows').innerHTML = '';
+      
+      adminHotelFiles = [];
+      existingImages = [];
+      renderAdminHotelPreviews();
+
       document.getElementById('hotel-modal').classList.add('active');
     }
 
@@ -355,7 +556,10 @@
       document.getElementById('hm-badge').value = hotel.badge || '';
       document.getElementById('hm-desc').value = hotel.description || '';
       document.getElementById('hm-amenities').value = (hotel.amenities || []).join(', ');
-      document.getElementById('hm-images').value = (hotel.images || []).join(', ');
+      
+      adminHotelFiles = [];
+      existingImages = hotel.images ? [...hotel.images] : [];
+      renderAdminHotelPreviews();
       
       const roomRows = document.getElementById('room-rows');
       roomRows.innerHTML = '';
@@ -386,6 +590,15 @@
       const pricePerNight = parseFloat(document.getElementById('hm-price').value);
       if (!name || !city || !pricePerNight) { alert('Name, City, and Price are required.'); return; }
 
+      if (adminHotelFiles.length === 0 && existingImages.length === 0) {
+        alert('Please upload at least one photo of the hotel.');
+        return;
+      }
+
+      const btn = document.getElementById('hotel-save-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
       const rooms = [];
       document.querySelectorAll('#room-rows .room-row').forEach(row => {
         const inputs = row.querySelectorAll('input');
@@ -399,25 +612,67 @@
         });
       });
 
-      const body = {
-        name, city, pricePerNight, rooms,
-        location: document.getElementById('hm-location').value,
-        address: document.getElementById('hm-address').value,
-        description: document.getElementById('hm-desc').value,
-        rating: parseFloat(document.getElementById('hm-rating').value) || 0,
-        totalReviews: parseInt(document.getElementById('hm-reviews').value) || 0,
-        badge: document.getElementById('hm-badge').value || undefined,
-        amenities: document.getElementById('hm-amenities').value.split(',').map(a => a.trim()).filter(Boolean),
-        images: document.getElementById('hm-images').value.split(',').map(a => a.trim()).filter(Boolean)
-      };
-
       try {
+        let finalImageUrls = [...existingImages];
+
+        // 1. Upload new image files if any
+        if (adminHotelFiles.length > 0) {
+          const uploadData = new FormData();
+          adminHotelFiles.forEach(file => {
+            uploadData.append('images', file);
+          });
+
+          const uploadRes = await fetch('/api/upload/hotel', {
+            method: 'POST',
+            body: uploadData
+          });
+
+          if (!uploadRes.ok) {
+            const errData = await uploadRes.json();
+            throw new Error(errData.error || 'Failed to upload images');
+          }
+
+          const uploadResult = await uploadRes.json();
+          finalImageUrls = finalImageUrls.concat(uploadResult.images);
+        }
+
+        // 2. Submit the hotel listing update/creation payload
+        const body = {
+          name, city, pricePerNight, rooms,
+          location: document.getElementById('hm-location').value,
+          address: document.getElementById('hm-address').value,
+          description: document.getElementById('hm-desc').value,
+          rating: parseFloat(document.getElementById('hm-rating').value) || 4.2,
+          totalReviews: parseInt(document.getElementById('hm-reviews').value) || 18,
+          badge: document.getElementById('hm-badge').value || 'Popular Choice',
+          amenities: document.getElementById('hm-amenities').value.split(',').map(a => a.trim()).filter(Boolean),
+          images: finalImageUrls
+        };
+
         const url = editingHotelId ? `/api/hotels/${editingHotelId}` : '/api/hotels';
         const method = editingHotelId ? 'PUT' : 'POST';
-        const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
-        if (res.ok) { closeHotelModal(); loadHotels(); }
-        else { const d = await res.json(); alert(d.error || 'Failed to save hotel'); }
-      } catch (err) { alert('Connection error'); }
+        const res = await fetch(url, { 
+          method, 
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders()
+          }, 
+          body: JSON.stringify(body) 
+        });
+
+        if (res.ok) { 
+          closeHotelModal(); 
+          loadHotels(); 
+        } else { 
+          const d = await res.json(); 
+          throw new Error(d.error || 'Failed to save hotel'); 
+        }
+      } catch (err) { 
+        alert(err.message || 'Connection error'); 
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Hotel';
+      }
     }
 
     async function deleteHotel(id, name) {
