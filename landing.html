@@ -26,7 +26,11 @@
     }
     #fields-packages {
       display: grid;
-      grid-template-columns: 2fr 1.2fr 0.7fr 0.7fr 1.2fr 0.8fr 0.8fr;
+      grid-template-columns: repeat(4, 1fr);
+      row-gap: 16px;
+    }
+    #fields-packages .field-dest-pkg {
+      grid-column: span 2;
     }
     .trip-type-row {
       grid-column: 1 / -1;
@@ -406,7 +410,7 @@
 
       <div class="search-fields" id="fields-packages" style="display: none;">
         <!-- Package Destination -->
-        <div class="field">
+        <div class="field field-dest-pkg">
           <label>Package Destination</label>
           <div class="field-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
