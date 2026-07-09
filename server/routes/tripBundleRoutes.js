@@ -6,7 +6,11 @@ const TripBundle = require('../models/TripBundle');
 router.get('/', async (req, res) => {
   try {
     const filter = {};
-    const bundles = await TripBundle.find(filter);
+    let bundles = await TripBundle.find(filter);
+    if (req.query.destination) {
+      const destQuery = req.query.destination.toLowerCase().trim();
+      bundles = bundles.filter(b => b.destination && b.destination.toLowerCase().includes(destQuery));
+    }
     res.json(bundles);
   } catch (err) {
     res.status(500).json({ error: err.message });

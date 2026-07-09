@@ -10,6 +10,68 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Styling for Search Widget Tabs & Field Grids */
+    #fields-hotels {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr 1.2fr;
+    }
+    #fields-cars.oneway {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+    #fields-cars.roundtrip {
+      display: grid;
+      grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+    }
+    #fields-packages {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 0.7fr 0.7fr 1.2fr 0.8fr 0.8fr;
+    }
+    .trip-type-row {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 24px;
+      margin-bottom: 8px;
+    }
+    .trip-type-row label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-heading);
+      cursor: pointer;
+    }
+    .trip-type-row input[type="radio"] {
+      accent-color: var(--color-primary);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .package-family-row {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .package-family-row label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-heading);
+      cursor: pointer;
+    }
+    .package-family-row input[type="checkbox"] {
+      accent-color: var(--color-primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
@@ -200,7 +262,7 @@
         </div>
       </div>
 
-      <div class="search-fields">
+      <div class="search-fields" id="fields-hotels">
         <div class="field field-dest">
           <label>Destination</label>
           <div class="field-icon">
@@ -208,7 +270,7 @@
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
-            <input type="text" placeholder="Where are you going?" />
+            <input type="text" id="hotel-destination" placeholder="Where are you going?" required />
           </div>
         </div>
         <div class="field">
@@ -220,7 +282,7 @@
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            <input type="text" placeholder="Select date" onfocus="(this.type='date')" onblur="(this.type='text')" />
+            <input type="date" id="hotel-checkin" required />
           </div>
         </div>
         <div class="field">
@@ -232,7 +294,7 @@
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            <input type="text" placeholder="Select date" onfocus="(this.type='date')" onblur="(this.type='text')" />
+            <input type="date" id="hotel-checkout" required />
           </div>
         </div>
         <div class="field">
@@ -244,13 +306,200 @@
               <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
               <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
-            <select>
+            <select id="hotel-guests-rooms">
               <option>2 Guests, 1 Room</option>
               <option>1 Guest, 1 Room</option>
               <option>3 Guests, 2 Rooms</option>
               <option>4 Guests, 2 Rooms</option>
             </select>
           </div>
+        </div>
+      </div>
+
+      <div class="search-fields oneway" id="fields-cars" style="display: none;">
+        <!-- Trip Type Switcher -->
+        <div class="trip-type-row">
+          <label>
+            <input type="radio" name="car-trip-type" value="One-way" checked onchange="toggleCarTripType('One-way')" /> One-way
+          </label>
+          <label>
+            <input type="radio" name="car-trip-type" value="Round-trip" onchange="toggleCarTripType('Round-trip')" /> Round-trip
+          </label>
+        </div>
+
+        <!-- Pick-up Location -->
+        <div class="field">
+          <label>Pick-up Location</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <input type="text" id="car-pickup" placeholder="Where do you need a car?" required />
+          </div>
+        </div>
+
+        <!-- Drop-off Location -->
+        <div class="field" id="field-car-dropoff" style="display: none;">
+          <label>Drop-off Location</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <input type="text" id="car-dropoff" placeholder="Drop-off location" />
+          </div>
+        </div>
+
+        <!-- Pick-up Date -->
+        <div class="field">
+          <label>Pick-up Date</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <input type="date" id="car-pickup-date" required />
+          </div>
+        </div>
+
+        <!-- Pick-up Time -->
+        <div class="field">
+          <label>Pick-up Time</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <input type="time" id="car-pickup-time" value="10:00" required />
+          </div>
+        </div>
+
+        <!-- Return Date -->
+        <div class="field" id="field-car-return-date" style="display: none;">
+          <label>Return Date</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <input type="date" id="car-return-date" />
+          </div>
+        </div>
+
+        <!-- Return Time -->
+        <div class="field" id="field-car-return-time" style="display: none;">
+          <label>Return Time</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <input type="time" id="car-return-time" value="17:00" />
+          </div>
+        </div>
+      </div>
+
+      <div class="search-fields" id="fields-packages" style="display: none;">
+        <!-- Package Destination -->
+        <div class="field">
+          <label>Package Destination</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <input type="text" id="package-destination" placeholder="Where do you want to tour?" required />
+          </div>
+        </div>
+
+        <!-- Start Date -->
+        <div class="field">
+          <label>Start Date</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <input type="date" id="package-start-date" required onchange="updatePackageEndDate()" />
+          </div>
+        </div>
+
+        <!-- Days -->
+        <div class="field">
+          <label>Days</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            <input type="number" id="package-days" value="3" min="1" required oninput="updatePackageEndDate()" />
+          </div>
+        </div>
+
+        <!-- Nights -->
+        <div class="field">
+          <label>Nights</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <input type="number" id="package-nights" value="2" min="0" required />
+          </div>
+        </div>
+
+        <!-- End Date (Read-only) -->
+        <div class="field">
+          <label>End Date</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <input type="text" id="package-end-date" readonly placeholder="Auto-calculated" />
+          </div>
+        </div>
+
+        <!-- Adults -->
+        <div class="field">
+          <label>Adults</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input type="number" id="package-adults" value="2" min="1" required />
+          </div>
+        </div>
+
+        <!-- Children -->
+        <div class="field">
+          <label>Children</label>
+          <div class="field-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <input type="number" id="package-children" value="0" min="0" required />
+          </div>
+        </div>
+
+        <!-- Traveling as a family Checkbox -->
+        <div class="package-family-row">
+          <label>
+            <input type="checkbox" id="package-family" /> Traveling as a family
+          </label>
         </div>
       </div>
 
@@ -698,23 +947,251 @@
 
         const type = this.getAttribute('data-type');
         const searchBtn = document.querySelector('.search-btn');
-        const destLabel = document.querySelector('.field-dest label');
-        const destInput = document.querySelector('.field-dest input');
+
+        // Hide all fields first
+        document.getElementById('fields-hotels').style.display = 'none';
+        document.getElementById('fields-cars').style.display = 'none';
+        document.getElementById('fields-packages').style.display = 'none';
 
         if (type === 'hotels') {
           searchBtn.innerHTML = 'Search Hotels <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
-          destLabel.textContent = 'Destination';
-          destInput.placeholder = 'Where are you going?';
+          document.getElementById('fields-hotels').style.display = '';
         } else if (type === 'cars') {
           searchBtn.innerHTML = 'Search Cars <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
-          destLabel.textContent = 'Pick-up Location';
-          destInput.placeholder = 'Where do you need a car?';
+          document.getElementById('fields-cars').style.display = '';
         } else if (type === 'packages') {
           searchBtn.innerHTML = 'Search Packages <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
-          destLabel.textContent = 'Package Destination';
-          destInput.placeholder = 'Where do you want to tour?';
+          document.getElementById('fields-packages').style.display = '';
         }
       });
+    });
+
+    // Date constraints setup
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('hotel-checkin').min = todayStr;
+    document.getElementById('hotel-checkout').min = todayStr;
+    document.getElementById('car-pickup-date').min = todayStr;
+    document.getElementById('car-return-date').min = todayStr;
+    document.getElementById('package-start-date').min = todayStr;
+
+    // Set default dates
+    document.getElementById('hotel-checkin').value = todayStr;
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    document.getElementById('hotel-checkout').value = tomorrowStr;
+    document.getElementById('car-pickup-date').value = todayStr;
+    document.getElementById('car-return-date').value = tomorrowStr;
+    document.getElementById('package-start-date').value = todayStr;
+
+    // Toggle Car Trip Type
+    function toggleCarTripType(tripType) {
+      const dropoffField = document.getElementById('field-car-dropoff');
+      const returnDateField = document.getElementById('field-car-return-date');
+      const returnTimeField = document.getElementById('field-car-return-time');
+      const fieldsCars = document.getElementById('fields-cars');
+
+      if (tripType === 'Round-trip') {
+        dropoffField.style.display = '';
+        returnDateField.style.display = '';
+        returnTimeField.style.display = '';
+        fieldsCars.className = 'search-fields roundtrip';
+        
+        document.getElementById('car-dropoff').required = true;
+        document.getElementById('car-return-date').required = true;
+        document.getElementById('car-return-time').required = true;
+      } else {
+        dropoffField.style.display = 'none';
+        returnDateField.style.display = 'none';
+        returnTimeField.style.display = 'none';
+        fieldsCars.className = 'search-fields oneway';
+
+        document.getElementById('car-dropoff').required = false;
+        document.getElementById('car-return-date').required = false;
+        document.getElementById('car-return-time').required = false;
+      }
+    }
+
+    // Update package end date
+    function updatePackageEndDate() {
+      const startDateVal = document.getElementById('package-start-date').value;
+      const daysVal = parseInt(document.getElementById('package-days').value) || 0;
+      const endDateInput = document.getElementById('package-end-date');
+
+      if (startDateVal && daysVal > 0) {
+        const start = new Date(startDateVal);
+        start.setDate(start.getDate() + daysVal);
+        const yyyy = start.getFullYear();
+        const mm = String(start.getMonth() + 1).padStart(2, '0');
+        const dd = String(start.getDate()).padStart(2, '0');
+        endDateInput.value = `${yyyy}-${mm}-${dd}`;
+      } else {
+        endDateInput.value = '';
+      }
+    }
+    updatePackageEndDate();
+
+    // Search button submission and validation logic
+    document.querySelector('.search-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const activeTab = document.querySelector('.tab.active');
+      if (!activeTab) return;
+      const type = activeTab.getAttribute('data-type');
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (type === 'hotels') {
+        const dest = document.getElementById('hotel-destination').value.trim();
+        const checkin = document.getElementById('hotel-checkin').value;
+        const checkout = document.getElementById('hotel-checkout').value;
+        const guestsRooms = document.getElementById('hotel-guests-rooms').value;
+
+        if (!dest) {
+          alert('Please enter a destination.');
+          return;
+        }
+        if (!checkin) {
+          alert('Please select a check-in date.');
+          return;
+        }
+        if (!checkout) {
+          alert('Please select a check-out date.');
+          return;
+        }
+
+        const cinDate = new Date(checkin);
+        const coutDate = new Date(checkout);
+        cinDate.setHours(0,0,0,0);
+        coutDate.setHours(0,0,0,0);
+
+        if (cinDate < today) {
+          alert('Check-in date cannot be in the past.');
+          return;
+        }
+        if (coutDate <= cinDate) {
+          alert('Check-out date must be after check-in date.');
+          return;
+        }
+
+        const guestsMatch = guestsRooms.match(/(\d+)\s+Guest/i);
+        const roomsMatch = guestsRooms.match(/(\d+)\s+Room/i);
+        const guests = guestsMatch ? guestsMatch[1] : 2;
+        const rooms = roomsMatch ? roomsMatch[1] : 1;
+
+        window.location.href = `hotel-booking.html?city=${encodeURIComponent(dest)}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&rooms=${rooms}`;
+
+      } else if (type === 'cars') {
+        const pickup = document.getElementById('car-pickup').value.trim();
+        const tripType = document.querySelector('input[name="car-trip-type"]:checked').value;
+        const pickupDate = document.getElementById('car-pickup-date').value;
+        const pickupTime = document.getElementById('car-pickup-time').value;
+        
+        if (!pickup) {
+          alert('Please enter a pick-up location.');
+          return;
+        }
+        if (!pickupDate) {
+          alert('Please select a pick-up date.');
+          return;
+        }
+        if (!pickupTime) {
+          alert('Please select a pick-up time.');
+          return;
+        }
+
+        const pDate = new Date(pickupDate);
+        pDate.setHours(0,0,0,0);
+        if (pDate < today) {
+          alert('Pick-up date cannot be in the past.');
+          return;
+        }
+
+        let drop = '';
+        let returnDate = '';
+        let returnTime = '';
+
+        if (tripType === 'Round-trip') {
+          drop = document.getElementById('car-dropoff').value.trim();
+          returnDate = document.getElementById('car-return-date').value;
+          returnTime = document.getElementById('car-return-time').value;
+
+          if (!drop) {
+            alert('Please enter a drop-off location.');
+            return;
+          }
+          if (!returnDate) {
+            alert('Please select a return date.');
+            return;
+          }
+          if (!returnTime) {
+            alert('Please select a return time.');
+            return;
+          }
+
+          const rDate = new Date(returnDate);
+          rDate.setHours(0,0,0,0);
+          if (rDate < today) {
+            alert('Return date cannot be in the past.');
+            return;
+          }
+          if (rDate < pDate) {
+            alert('Return date cannot be before pick-up date.');
+            return;
+          }
+          if (rDate.getTime() === pDate.getTime()) {
+            if (returnTime <= pickupTime) {
+              alert('Return time must be after pick-up time on the same day.');
+              return;
+            }
+          }
+        }
+
+        window.location.href = `cabs-search.html?pickup=${encodeURIComponent(pickup)}&drop=${encodeURIComponent(drop)}&tripType=${tripType}&pickupDate=${pickupDate}&pickupTime=${pickupTime}&returnDate=${returnDate}&returnTime=${returnTime}`;
+
+      } else if (type === 'packages') {
+        const dest = document.getElementById('package-destination').value.trim();
+        const startDate = document.getElementById('package-start-date').value;
+        const days = parseInt(document.getElementById('package-days').value) || 0;
+        const nights = parseInt(document.getElementById('package-nights').value) || 0;
+        const adults = parseInt(document.getElementById('package-adults').value) || 0;
+        const children = parseInt(document.getElementById('package-children').value) || 0;
+
+        if (!dest) {
+          alert('Please enter a package destination.');
+          return;
+        }
+        if (!startDate) {
+          alert('Please select a start date.');
+          return;
+        }
+        if (days < 1) {
+          alert('Days must be at least 1.');
+          return;
+        }
+        if (nights < 0) {
+          alert('Nights cannot be negative.');
+          return;
+        }
+        if (adults < 1) {
+          alert('There must be at least 1 adult.');
+          return;
+        }
+        if (children < 0) {
+          alert('Children count cannot be negative.');
+          return;
+        }
+
+        const sDate = new Date(startDate);
+        sDate.setHours(0,0,0,0);
+        if (sDate < today) {
+          alert('Start date cannot be in the past.');
+          return;
+        }
+
+        window.location.href = `packages-search.html?destination=${encodeURIComponent(dest)}&startDate=${startDate}&days=${days}&nights=${nights}&adults=${adults}&children=${children}`;
+      }
     });
 
     // Destination scroll button logic

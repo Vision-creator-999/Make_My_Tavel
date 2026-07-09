@@ -533,7 +533,16 @@
         const res = await fetch('/api/hotels');
         if (res.ok) {
           allHotels = await res.json();
-          renderHotels(allHotels);
+          
+          // Read query parameters
+          const params = new URLSearchParams(window.location.search);
+          const cityParam = params.get('city');
+          if (cityParam) {
+            document.getElementById('filter-search').value = cityParam;
+            applyFilters();
+          } else {
+            renderHotels(allHotels);
+          }
         }
       } catch (err) {
         console.error('Failed to load hotels:', err);

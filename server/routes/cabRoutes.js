@@ -14,6 +14,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/cabs/search
+router.get('/search', async (req, res) => {
+  try {
+    let cabs = await Cab.find({ status: 'Approved' });
+    if (req.query.pickup) {
+      const pickupQuery = req.query.pickup.toLowerCase().trim();
+      cabs = cabs.filter(c => c.city && c.city.toLowerCase().includes(pickupQuery));
+    }
+    res.json(cabs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/cabs/:id
 router.get('/:id', async (req, res) => {
   try {
