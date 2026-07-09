@@ -16,28 +16,34 @@
       display: grid;
       grid-template-columns: 1.8fr 1fr 1fr 1.2fr;
     }
+
     #fields-cars.oneway {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
     }
+
     #fields-cars.roundtrip {
       display: grid;
       grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
     }
+
     #fields-packages {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       row-gap: 16px;
     }
+
     #fields-packages .field-dest-pkg {
       grid-column: span 2;
     }
+
     .trip-type-row {
       grid-column: 1 / -1;
       display: flex;
       gap: 24px;
       margin-bottom: 8px;
     }
+
     .trip-type-row label {
       display: flex;
       align-items: center;
@@ -47,12 +53,14 @@
       color: var(--color-text-heading);
       cursor: pointer;
     }
+
     .trip-type-row input[type="radio"] {
       accent-color: var(--color-primary);
       width: 18px;
       height: 18px;
       cursor: pointer;
     }
+
     .package-family-row {
       grid-column: 1 / -1;
       display: flex;
@@ -60,6 +68,7 @@
       gap: 8px;
       margin-top: 8px;
     }
+
     .package-family-row label {
       display: flex;
       align-items: center;
@@ -69,6 +78,7 @@
       color: var(--color-text-heading);
       cursor: pointer;
     }
+
     .package-family-row input[type="checkbox"] {
       accent-color: var(--color-primary);
       width: 16px;
@@ -128,13 +138,7 @@
       </div>
     </div>
     <div class="nav-links">
-      <a href="#" class="active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
-        </svg>
-        Flights
-      </a>
-      <a href="hotel-booking.html">
+      <a href="hotel-booking.html" class="active">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -168,17 +172,6 @@
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
         </svg>
         Travel Guide
-      </a>
-      <a href="partner-with-us.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path
-            d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2">
-          </path>
-          <circle cx="7" cy="17" r="2"></circle>
-          <path d="M9 17h6"></path>
-          <circle cx="17" cy="17" r="2"></circle>
-        </svg>
-        Partner with Us
       </a>
     </div>
     <div class="nav-right" id="nav-auth-area">
@@ -324,10 +317,12 @@
         <!-- Trip Type Switcher -->
         <div class="trip-type-row">
           <label>
-            <input type="radio" name="car-trip-type" value="One-way" checked onchange="toggleCarTripType('One-way')" /> One-way
+            <input type="radio" name="car-trip-type" value="One-way" checked onchange="toggleCarTripType('One-way')" />
+            One-way
           </label>
           <label>
-            <input type="radio" name="car-trip-type" value="Round-trip" onchange="toggleCarTripType('Round-trip')" /> Round-trip
+            <input type="radio" name="car-trip-type" value="Round-trip" onchange="toggleCarTripType('Round-trip')" />
+            Round-trip
           </label>
         </div>
 
@@ -533,12 +528,15 @@
         <div class="section-title" style="display: flex; align-items: center; gap: 8px;">
           Popular Destinations
           <svg class="dotted-trail" width="100" height="24" viewBox="0 0 100 24" fill="none"
-            xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-left: 8px;">
+            xmlns="http://www.w3.org/2000/svg" style="display: none;">
             <path d="M5 18 C 25 2, 75 2, 85 14" stroke="#64748B" stroke-width="2" stroke-dasharray="4,4" fill="none" />
             <path d="M85 14 L89 12 L87 9 L83 11 Z" fill="#0F8B8D" transform="rotate(30, 85, 14)" />
           </svg>
-          <button id="dest-motion-toggle" class="motion-toggle-btn" aria-label="Pause destinations auto-scroll" title="Pause auto-scroll" style="margin-left: 12px; background: none; border: 1.5px solid var(--color-border); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--color-text-body); transition: all var(--transition-fast);">
-            <svg id="dest-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 14px; height: 14px;">
+          <button id="dest-motion-toggle" class="motion-toggle-btn" aria-label="Pause destinations auto-scroll"
+            title="Pause auto-scroll"
+            style="display: none;">
+            <svg id="dest-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              style="width: 14px; height: 14px;">
               <line x1="18" y1="4" x2="18" y2="20"></line>
               <line x1="6" y1="4" x2="6" y2="20"></line>
             </svg>
@@ -591,7 +589,7 @@
           <div class="dest-info"><strong>📍 Udaipur</strong><span>From ₹3,999</span></div>
         </div>
         <div class="dest-card">
-          <img src="https://images.unsplash.com/photo-1588725835471-e945c2f3d611?w=400&q=80" alt="Shimla" />
+          <img src="https://media.istockphoto.com/id/1492080164/photo/rampur-bushahr-town-himachal-pradesh-india.jpg?s=612x612&w=0&k=20&c=mUG_jCG7RYY3tpgVHAor_70IwnnFxdH1LoWNpPmY5CA=" alt="Shimla" />
           <div class="dest-info"><strong>📍 Shimla</strong><span>From ₹2,899</span></div>
         </div>
         <div class="dest-card">
@@ -603,12 +601,28 @@
           <div class="dest-info"><strong>📍 Bali</strong><span>From ₹19,999</span></div>
         </div>
         <div class="dest-card">
-          <img src="https://images.unsplash.com/photo-1598977123418-45f04b01d4ec?w=400&q=80" alt="Rishikesh" />
+          <img src="https://www.shutterstock.com/image-photo/rishikesh-yoga-city-india-gange-260nw-1137990866.jpg" alt="Rishikesh" />
           <div class="dest-info"><strong>📍 Rishikesh</strong><span>From ₹1,999</span></div>
         </div>
         <div class="dest-card">
-          <img src="https://images.unsplash.com/photo-1596701062351-df5f8a02e355?w=400&q=80" alt="Ladakh" />
+          <img src="https://i0.wp.com/lahimalaya.com/wp-content/uploads/2019/08/Ladakh-trip.jpg?fit=960%2C640&ssl=1" alt="Ladakh" />
           <div class="dest-info"><strong>📍 Ladakh</strong><span>From ₹8,999</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&q=80" alt="Varanasi" />
+          <div class="dest-info"><strong>📍 Varanasi</strong><span>From ₹2,499</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1592639296346-560c37a0f711?w=400&q=80" alt="Ooty" />
+          <div class="dest-info"><strong>📍 Ooty</strong><span>From ₹3,299</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=80" alt="Agra" />
+          <div class="dest-info"><strong>📍 Agra</strong><span>From ₹1,799</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=80" alt="Maldives" />
+          <div class="dest-info"><strong>📍 Maldives</strong><span>From ₹34,999</span></div>
         </div>
 
         <!-- Duplicated Set for Infinite Drift -->
@@ -641,7 +655,7 @@
           <div class="dest-info"><strong>📍 Udaipur</strong><span>From ₹3,999</span></div>
         </div>
         <div class="dest-card" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1588725835471-e945c2f3d611?w=400&q=80" alt="" />
+          <img src="https://media.istockphoto.com/id/1492080164/photo/rampur-bushahr-town-himachal-pradesh-india.jpg?s=612x612&w=0&k=20&c=mUG_jCG7RYY3tpgVHAor_70IwnnFxdH1LoWNpPmY5CA=" alt="" />
           <div class="dest-info"><strong>📍 Shimla</strong><span>From ₹2,899</span></div>
         </div>
         <div class="dest-card" aria-hidden="true" tabindex="-1">
@@ -653,12 +667,30 @@
           <div class="dest-info"><strong>📍 Bali</strong><span>From ₹19,999</span></div>
         </div>
         <div class="dest-card" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1598977123418-45f04b01d4ec?w=400&q=80" alt="" />
+          <img src="https://www.shutterstock.com/image-photo/rishikesh-yoga-city-india-gange-260nw-1137990866.jpg"
+            alt="" />
           <div class="dest-info"><strong>📍 Rishikesh</strong><span>From ₹1,999</span></div>
         </div>
         <div class="dest-card" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1596701062351-df5f8a02e355?w=400&q=80" alt="" />
+          <img src="https://i0.wp.com/lahimalaya.com/wp-content/uploads/2019/08/Ladakh-trip.jpg?fit=960%2C640&ssl=1"
+            alt="" />
           <div class="dest-info"><strong>📍 Ladakh</strong><span>From ₹8,999</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Varanasi</strong><span>From ₹2,499</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1592639296346-560c37a0f711?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Ooty</strong><span>From ₹3,299</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Agra</strong><span>From ₹1,799</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Maldives</strong><span>From ₹34,999</span></div>
         </div>
       </div>
 
@@ -1081,7 +1113,7 @@
         returnDateField.style.display = '';
         returnTimeField.style.display = '';
         fieldsCars.className = 'search-fields roundtrip';
-        
+
         document.getElementById('car-dropoff').required = true;
         document.getElementById('car-return-date').required = true;
         document.getElementById('car-return-time').required = true;
@@ -1117,13 +1149,13 @@
     updatePackageEndDate();
 
     // Search button submission and validation logic
-    document.querySelector('.search-btn').addEventListener('click', function(e) {
+    document.querySelector('.search-btn').addEventListener('click', function (e) {
       e.preventDefault();
-      
+
       const activeTab = document.querySelector('.tab.active');
       if (!activeTab) return;
       const type = activeTab.getAttribute('data-type');
-      
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
@@ -1148,8 +1180,8 @@
 
         const cinDate = new Date(checkin);
         const coutDate = new Date(checkout);
-        cinDate.setHours(0,0,0,0);
-        coutDate.setHours(0,0,0,0);
+        cinDate.setHours(0, 0, 0, 0);
+        coutDate.setHours(0, 0, 0, 0);
 
         if (cinDate < today) {
           alert('Check-in date cannot be in the past.');
@@ -1172,7 +1204,7 @@
         const tripType = document.querySelector('input[name="car-trip-type"]:checked').value;
         const pickupDate = document.getElementById('car-pickup-date').value;
         const pickupTime = document.getElementById('car-pickup-time').value;
-        
+
         if (!pickup) {
           alert('Please enter a pick-up location.');
           return;
@@ -1187,7 +1219,7 @@
         }
 
         const pDate = new Date(pickupDate);
-        pDate.setHours(0,0,0,0);
+        pDate.setHours(0, 0, 0, 0);
         if (pDate < today) {
           alert('Pick-up date cannot be in the past.');
           return;
@@ -1216,7 +1248,7 @@
           }
 
           const rDate = new Date(returnDate);
-          rDate.setHours(0,0,0,0);
+          rDate.setHours(0, 0, 0, 0);
           if (rDate < today) {
             alert('Return date cannot be in the past.');
             return;
@@ -1269,7 +1301,7 @@
         }
 
         const sDate = new Date(startDate);
-        sDate.setHours(0,0,0,0);
+        sDate.setHours(0, 0, 0, 0);
         if (sDate < today) {
           alert('Start date cannot be in the past.');
           return;
@@ -1289,7 +1321,7 @@
 
     function setInitialScroll() {
       if (destScroll.scrollWidth > 0) {
-        destScroll.scrollLeft = destScroll.scrollWidth / 2;
+        destScroll.scrollLeft = 0;
         initialScrollSet = true;
       }
     }
@@ -1370,9 +1402,9 @@
       const isOverlayActive = !!document.querySelector('.dest-preview-backdrop');
 
       if (!manualPauseOverride && !autoDriftPaused && !isHovered && !isOverlayActive) {
-        let newScroll = destScroll.scrollLeft - 0.5; // slow left-to-right drift (0.5px per frame)
-        if (newScroll <= 0) {
-          newScroll = destScroll.scrollWidth / 2;
+        let newScroll = destScroll.scrollLeft + 1.2; // right-to-left drift (1.2px per frame for smooth continuous feel)
+        if (newScroll >= destScroll.scrollWidth / 2) {
+          newScroll = 0;
         }
         destScroll.scrollLeft = newScroll;
       }
@@ -1380,155 +1412,137 @@
     }
     requestAnimationFrame(autoScrollStep);
 
-    // Press-to-preview overlay, 8px drag threshold, and timing-safe redirect
+    // Click-to-preview overlay with "Book Now" button
     let currentBackdrop = null;
     let currentClone = null;
-    let isPressing = false;
-    let didDrag = false;
-    let startX = 0;
-    let startY = 0;
-    let cardRect = null;
-    let pressTargetCard = null;
+    let currentBookBtn = null;
+    let previewOpen = false;
+    let previewCityName = '';
+    let previewCardRect = null;
 
-    function startPress(card, clientX, clientY) {
-      if (isPressing) return;
-      isPressing = true;
-      didDrag = false;
-      startX = clientX;
-      startY = clientY;
-      pressTargetCard = card;
-      cardRect = card.getBoundingClientRect();
+    function openPreview(card) {
+      if (previewOpen) return;
+      previewOpen = true;
 
-      // Pause movement instantly
+      const rect = card.getBoundingClientRect();
+      previewCardRect = rect;
+
+      // Pause carousel
       triggerPause();
 
-      // Create preview elements
+      // Extract city name
+      const strongText = card.querySelector('.dest-info strong').textContent;
+      previewCityName = strongText.replace(/📍/g, '').trim();
+
+      // Create backdrop
       currentBackdrop = document.createElement('div');
       currentBackdrop.className = 'dest-preview-backdrop';
       document.body.appendChild(currentBackdrop);
 
+      // Create clone (the zoomed card)
       currentClone = card.cloneNode(true);
       currentClone.className = 'dest-preview-clone dest-card';
-      currentClone.style.width = cardRect.width + 'px';
-      currentClone.style.height = cardRect.height + 'px';
-      currentClone.style.top = cardRect.top + 'px';
-      currentClone.style.left = cardRect.left + 'px';
-      currentClone.style.pointerEvents = 'none';
+      currentClone.style.width = rect.width + 'px';
+      currentClone.style.height = rect.height + 'px';
+      currentClone.style.top = rect.top + 'px';
+      currentClone.style.left = rect.left + 'px';
+      // Allow pointer events on clone so clicking on it does NOT pass through to backdrop
+      currentClone.style.pointerEvents = 'auto';
+      currentClone.style.cursor = 'default';
       document.body.appendChild(currentClone);
 
+      // Block clicks on the zoomed card from closing the popup
+      currentClone.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      // Create "Book Now" button
+      currentBookBtn = document.createElement('button');
+      currentBookBtn.className = 'dest-preview-book-btn';
+      currentBookBtn.innerHTML = '🏨 Book Now';
+      currentBookBtn.style.opacity = '0';
+      document.body.appendChild(currentBookBtn);
+
+      // Animate open
       requestAnimationFrame(() => {
         if (!currentBackdrop || !currentClone) return;
         currentBackdrop.classList.add('active');
 
-        const centerX = (window.innerWidth - cardRect.width) / 2;
-        const centerY = (window.innerHeight - cardRect.height) / 2;
+        const centerX = (window.innerWidth - rect.width) / 2;
+        const centerY = (window.innerHeight - rect.height) / 2;
         currentClone.style.top = centerY + 'px';
         currentClone.style.left = centerX + 'px';
         currentClone.style.transform = 'scale(3)';
-      });
 
-      window.addEventListener('mousemove', handleMove);
-      window.addEventListener('mouseup', handleRelease);
-      window.addEventListener('touchmove', handleTouchMove, { passive: false });
-      window.addEventListener('touchend', handleRelease);
-    }
-
-    function handleMove(e) {
-      if (!isPressing) return;
-      trackMove(e.clientX, e.clientY);
-    }
-
-    function handleTouchMove(e) {
-      if (!isPressing) return;
-      const touch = e.touches[0];
-      trackMove(touch.clientX, touch.clientY);
-    }
-
-    function trackMove(clientX, clientY) {
-      const dx = clientX - startX;
-      const dy = clientY - startY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist > 8) {
-        didDrag = true;
-        cancelPreview();
-      }
-    }
-
-    function cancelPreview() {
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('mouseup', handleRelease);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleRelease);
-
-      if (currentBackdrop) {
-        currentBackdrop.remove();
-        currentBackdrop = null;
-      }
-      if (currentClone) {
-        currentClone.remove();
-        currentClone = null;
-      }
-      isPressing = false;
-      requestResume();
-    }
-
-    function handleRelease() {
-      if (!isPressing) return;
-
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('mouseup', handleRelease);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleRelease);
-
-      isPressing = false;
-
-      if (didDrag) {
-        cancelPreview();
-        return;
-      }
-
-      if (currentClone && currentBackdrop && cardRect && pressTargetCard) {
-        const backdrop = currentBackdrop;
-        const clone = currentClone;
-        const targetCard = pressTargetCard;
-        const originalRect = cardRect;
-
-        // Animate clone back to original captured position
-        clone.classList.add('shrinking');
-        clone.style.transform = 'scale(1)';
-        clone.style.top = originalRect.top + 'px';
-        clone.style.left = originalRect.left + 'px';
-        backdrop.classList.remove('active');
-
-        // Extract clean destination name
-        const strongText = targetCard.querySelector('.dest-info strong').textContent;
-        const cityName = strongText.replace(/📍/g, '').trim();
-
-        // Wait for shrink-back animation to finish, then redirect
+        // Fade in the Book Now button after zoom animation
         setTimeout(() => {
-          backdrop.remove();
-          clone.remove();
-          window.location.href = `hotel-booking.html?city=${encodeURIComponent(cityName)}`;
-        }, 220);
+          if (currentBookBtn) {
+            currentBookBtn.style.opacity = '1';
+          }
+        }, 300);
+      });
 
-        currentBackdrop = null;
-        currentClone = null;
+      // Only close when clicking the dark backdrop area (not the card or button)
+      currentBackdrop.addEventListener('click', closePreview);
+
+      // Book Now button → redirect to booking page
+      currentBookBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closePreview();
+        setTimeout(() => {
+          window.location.href = `hotel-booking.html?city=${encodeURIComponent(previewCityName)}`;
+        }, 280);
+      });
+
+      // Escape key closes preview
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    function handleEscKey(e) {
+      if (e.key === 'Escape') {
+        closePreview();
       }
+    }
+
+    function closePreview() {
+      if (!previewOpen) return;
+
+      document.removeEventListener('keydown', handleEscKey);
+
+      if (currentClone && currentBackdrop && previewCardRect) {
+        currentClone.classList.add('shrinking');
+        currentClone.style.transform = 'scale(1)';
+        currentClone.style.top = previewCardRect.top + 'px';
+        currentClone.style.left = previewCardRect.left + 'px';
+        currentBackdrop.classList.remove('active');
+
+        if (currentBookBtn) {
+          currentBookBtn.style.opacity = '0';
+        }
+
+        setTimeout(() => {
+          if (currentBackdrop) { currentBackdrop.remove(); currentBackdrop = null; }
+          if (currentClone) { currentClone.remove(); currentClone = null; }
+          if (currentBookBtn) { currentBookBtn.remove(); currentBookBtn = null; }
+        }, 260);
+      } else {
+        if (currentBackdrop) { currentBackdrop.remove(); currentBackdrop = null; }
+        if (currentClone) { currentClone.remove(); currentClone = null; }
+        if (currentBookBtn) { currentBookBtn.remove(); currentBookBtn = null; }
+      }
+
+      previewOpen = false;
       requestResume();
     }
 
-    // Attach mouse & touch listeners to all destination cards
+    // Attach click listeners to all destination cards
     document.querySelectorAll('.dest-card').forEach(card => {
-      card.addEventListener('mousedown', (e) => {
-        // Prevent trigger on right clicks or non-primary actions
-        if (e.button !== 0) return;
-        startPress(card, e.clientX, e.clientY);
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!previewOpen) openPreview(card);
       });
-      card.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        startPress(card, touch.clientX, touch.clientY);
-      }, { passive: true });
     });
 
     // Testimonials slider logic (responsive dot selector & navigation buttons)

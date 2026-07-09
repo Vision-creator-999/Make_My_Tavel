@@ -747,6 +747,31 @@ section {
               height 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+.dest-preview-book-btn {
+  position: fixed;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100000;
+  padding: 14px 40px;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #0F8B8D, #0bb4a0);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(15, 139, 141, 0.45);
+  letter-spacing: 0.4px;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.dest-preview-book-btn:hover {
+  transform: translateX(-50%) scale(1.06);
+  box-shadow: 0 8px 32px rgba(15, 139, 141, 0.6);
+}
+
 .dest-card img {
   width: 100%;
   height: 200px;
