@@ -3,30 +3,21 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hotels – Make My Travel</title>
-  <meta name="description" content="Browse and book the best hotels at unbeatable prices. Sea view resorts, mountain retreats, heritage palaces and more."/>
+  <title>Holiday Packages – Make My Travel</title>
+  <meta name="description" content="Explore and book handpicked holiday packages to top destinations. All-inclusive trips with hotels, sightseeing and more."/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
   <style>
-    /* Hotel Booking Page Styles */
-    .hotel-page { max-width: 1280px; margin: 0 auto; padding: 32px 40px; }
-    
-    .page-breadcrumb {
-      font-size: 13px; color: var(--color-text-body); margin-bottom: 8px; font-weight: 500;
-    }
+    .pkg-page { max-width: 1280px; margin: 0 auto; padding: 32px 40px; }
+
+    .page-breadcrumb { font-size: 13px; color: var(--color-text-body); margin-bottom: 8px; font-weight: 500; }
     .page-breadcrumb a { color: var(--color-primary); font-weight: 600; }
     .page-breadcrumb a:hover { text-decoration: underline; }
-    
-    .page-title-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 28px;
-    }
-    .page-title-bar h1 {
-      font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800;
-      color: var(--color-text-heading);
-    }
-    .hotel-count { font-size: 14px; color: var(--color-text-body); font-weight: 600; }
-    
+
+    .page-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+    .page-title-bar h1 { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800; color: var(--color-text-heading); }
+    .pkg-count { font-size: 14px; color: var(--color-text-body); font-weight: 600; }
+
     /* Filter Bar */
     .filter-bar {
       display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px;
@@ -39,9 +30,7 @@
       color: var(--color-text-heading); outline: none; background: #fff;
       transition: border-color var(--transition-fast);
     }
-    .filter-bar input:focus, .filter-bar select:focus {
-      border-color: var(--color-primary);
-    }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--color-primary); }
     .filter-bar input { flex: 1; min-width: 200px; }
     .filter-bar select { min-width: 140px; cursor: pointer; }
     .filter-bar .filter-btn {
@@ -56,79 +45,79 @@
       font-weight: 600; cursor: pointer; transition: all var(--transition-fast);
     }
     .filter-bar .clear-btn:hover { border-color: var(--color-text-heading); color: var(--color-text-heading); }
-    
-    /* Hotel Grid */
-    .hotel-grid {
-      display: grid; grid-template-columns: 1fr; gap: 20px;
-    }
-    
-    .hotel-card {
+
+    /* Package Grid */
+    .pkg-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+    .pkg-card {
       background: var(--color-card); border: 1px solid var(--color-border);
       border-radius: 16px; overflow: hidden; display: flex;
       box-shadow: var(--shadow-sm); transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      cursor: pointer;
     }
-    .hotel-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-    
-    .hotel-card-img {
+    .pkg-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+    .pkg-card-img {
       width: 320px; min-height: 240px; position: relative; overflow: hidden; flex-shrink: 0;
     }
-    .hotel-card-img img {
+    .pkg-card-img img {
       width: 100%; height: 100%; object-fit: cover; display: block;
     }
-    .hotel-badge {
+    .pkg-badge {
       position: absolute; top: 12px; left: 12px;
-      background: linear-gradient(135deg, var(--color-primary), #0b6f71);
+      background: linear-gradient(135deg, #F97316, #EA580C);
       color: #fff; font-size: 11px; font-weight: 700;
       padding: 4px 12px; border-radius: 20px;
       text-transform: uppercase; letter-spacing: 0.3px;
     }
-    
-    .hotel-card-body { flex: 1; padding: 20px 24px; display: flex; flex-direction: column; justify-content: space-between; }
-    
-    .hotel-card-top { margin-bottom: 12px; }
-    .hotel-card-name {
+    .pkg-duration-badge {
+      position: absolute; bottom: 12px; right: 12px;
+      background: rgba(0,0,0,0.65); color: #fff; font-size: 12px; font-weight: 700;
+      padding: 4px 12px; border-radius: 8px; backdrop-filter: blur(4px);
+    }
+
+    .pkg-card-body { flex: 1; padding: 20px 24px; display: flex; flex-direction: column; justify-content: space-between; }
+
+    .pkg-card-top { margin-bottom: 12px; }
+    .pkg-card-name {
       font-size: 20px; font-weight: 800; color: var(--color-text-heading);
       margin-bottom: 4px; font-family: 'Outfit', sans-serif;
     }
-    .hotel-card-loc {
+    .pkg-card-dest {
       font-size: 13px; color: var(--color-text-body); font-weight: 500;
       display: flex; align-items: center; gap: 4px; margin-bottom: 8px;
     }
-    .hotel-card-rating {
+    .pkg-card-duration {
       display: inline-flex; align-items: center; gap: 6px;
-      background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 6px;
-      padding: 3px 10px; font-size: 13px; font-weight: 700; color: #15803D;
+      background: #FFF7ED; border: 1px solid #FDBA74; border-radius: 6px;
+      padding: 3px 10px; font-size: 13px; font-weight: 700; color: #9A3412;
     }
-    .hotel-card-reviews { font-size: 12px; color: var(--color-text-body); font-weight: 500; margin-left: 8px; }
-    
-    .hotel-card-amenities {
-      display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0;
-    }
-    .amenity-tag {
+
+    .pkg-card-inclusions { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+    .inclusion-tag {
       background: var(--color-bg); border: 1px solid var(--color-border);
       border-radius: 6px; padding: 3px 10px; font-size: 11px;
       font-weight: 600; color: var(--color-text-heading);
     }
-    
-    .hotel-card-bottom {
+
+    .pkg-card-bottom {
       display: flex; justify-content: space-between; align-items: flex-end;
       border-top: 1px solid var(--color-border); padding-top: 12px; margin-top: 8px;
     }
-    .hotel-price {
+    .pkg-price {
       font-size: 24px; font-weight: 800; color: var(--color-text-heading);
       font-family: 'Outfit', sans-serif;
     }
-    .hotel-price span { font-size: 14px; font-weight: 500; color: var(--color-text-body); }
-    .hotel-rooms-left { font-size: 12px; color: var(--color-accent); font-weight: 700; }
-    
-    .view-hotel-btn {
+    .pkg-price span { font-size: 14px; font-weight: 500; color: var(--color-text-body); }
+
+    .view-pkg-btn {
       background: var(--color-primary); color: #fff; border: none;
       border-radius: 10px; padding: 10px 28px; font-size: 14px;
       font-weight: 700; cursor: pointer; transition: all var(--transition-fast);
     }
-    .view-hotel-btn:hover { background: #0b6f71; transform: translateY(-1px); }
-    
-    /* Hotel Detail Modal */
+    .view-pkg-btn:hover { background: #0b6f71; transform: translateY(-1px); }
+
+    /* Modal */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.55); z-index: 1000;
@@ -136,7 +125,7 @@
       padding: 40px 20px; overflow-y: auto;
     }
     .modal-overlay.active { display: flex; }
-    
+
     .modal-content {
       background: var(--color-card); border-radius: 20px; width: 100%;
       max-width: 960px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
@@ -146,7 +135,7 @@
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+
     .modal-header {
       display: flex; justify-content: space-between; align-items: center;
       padding: 20px 28px; border-bottom: 1px solid var(--color-border);
@@ -162,17 +151,9 @@
       color: var(--color-text-heading);
     }
     .modal-close:hover { background: #FEF2F2; border-color: #EF4444; color: #EF4444; }
-    
+
     .modal-body { padding: 24px 28px; max-height: 75vh; overflow-y: auto; }
-    
-    /* Detail Images */
-    .detail-images {
-      display: grid; grid-template-columns: 2fr 1fr; gap: 8px;
-      border-radius: 12px; overflow: hidden; margin-bottom: 24px; max-height: 300px;
-    }
-    .detail-images img { width: 100%; height: 100%; object-fit: cover; }
-    .detail-images-side { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; }
-    
+
     /* Detail Info */
     .detail-info-grid {
       display: grid; grid-template-columns: 1.5fr 1fr; gap: 28px; margin-bottom: 24px;
@@ -181,61 +162,29 @@
       font-size: 16px; font-weight: 800; color: var(--color-text-heading);
       margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
     }
-    .detail-amenities { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .detail-amenity {
+    .detail-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid var(--color-border); font-size: 13px;
+    }
+    .detail-item:last-child { border-bottom: none; }
+    .detail-label { font-weight: 600; color: var(--color-text-body); }
+    .detail-value { font-weight: 700; color: var(--color-text-heading); }
+
+    .detail-inclusions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .detail-inclusion {
       display: flex; align-items: center; gap: 6px; background: var(--color-bg);
       border: 1px solid var(--color-border); border-radius: 8px;
       padding: 6px 14px; font-size: 12px; font-weight: 600;
       color: var(--color-text-heading);
     }
-    
-    .detail-attractions { margin-bottom: 20px; }
-    .attraction-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 0; border-bottom: 1px solid var(--color-border);
-      font-size: 13px;
-    }
-    .attraction-item:last-child { border-bottom: none; }
-    .attraction-name { font-weight: 600; color: var(--color-text-heading); }
-    .attraction-dist { font-weight: 700; color: var(--color-primary); }
-    
-    .detail-policies { font-size: 13px; color: var(--color-text-body); line-height: 1.8; }
-    .detail-policies strong { color: var(--color-text-heading); }
-    
-    /* Room Cards */
-    .rooms-section { margin-top: 24px; }
-    .room-card {
-      display: flex; justify-content: space-between; align-items: center;
-      background: var(--color-bg); border: 1px solid var(--color-border);
-      border-radius: 12px; padding: 16px 20px; margin-bottom: 12px;
-      transition: border-color var(--transition-fast);
-    }
-    .room-card:hover { border-color: var(--color-primary); }
-    .room-card-info h4 { font-size: 16px; font-weight: 700; color: var(--color-text-heading); margin-bottom: 4px; }
-    .room-card-meta { display: flex; gap: 16px; font-size: 12px; color: var(--color-text-body); font-weight: 500; margin-bottom: 6px; }
-    .room-card-features { display: flex; flex-wrap: wrap; gap: 6px; }
-    .room-feature-tag { font-size: 11px; background: #E0F2FE; color: #0369A1; border-radius: 4px; padding: 2px 8px; font-weight: 600; }
-    .room-free-cancel { font-size: 11px; color: #15803D; font-weight: 700; margin-top: 4px; }
-    .room-card-right { text-align: right; }
-    .room-price { font-size: 22px; font-weight: 800; color: var(--color-text-heading); font-family: 'Outfit', sans-serif; }
-    .room-price span { font-size: 13px; font-weight: 500; color: var(--color-text-body); }
-    .room-tax-note { font-size: 11px; color: var(--color-text-body); margin-bottom: 8px; }
-    .book-room-btn {
-      background: var(--color-primary); color: #fff; border: none; border-radius: 8px;
-      padding: 8px 24px; font-size: 13px; font-weight: 700; cursor: pointer;
-      transition: background var(--transition-fast);
-    }
-    .book-room-btn:hover { background: #0b6f71; }
-    
+
     /* Booking Form */
     .booking-form-section {
       display: none; margin-top: 24px; border-top: 2px solid var(--color-primary);
       padding-top: 24px;
     }
     .booking-form-section.active { display: block; }
-    .booking-form-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-    }
+    .booking-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1 / -1; }
     .form-group label { font-size: 12px; font-weight: 700; color: var(--color-text-heading); text-transform: uppercase; letter-spacing: 0.3px; }
@@ -249,7 +198,7 @@
       border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(15,139,141,0.1);
     }
     .form-group textarea { resize: vertical; min-height: 70px; }
-    
+
     /* Price Summary */
     .price-summary {
       background: var(--color-bg); border: 1px solid var(--color-border);
@@ -261,7 +210,7 @@
       border-top: 2px solid var(--color-border); margin-top: 8px; padding-top: 12px;
       font-size: 18px; font-weight: 800; color: var(--color-text-heading);
     }
-    
+
     .confirm-booking-btn {
       width: 100%; margin-top: 20px; background: var(--color-primary); color: #fff;
       border: none; border-radius: 12px; padding: 14px; font-size: 16px;
@@ -270,11 +219,9 @@
     }
     .confirm-booking-btn:hover { background: #0b6f71; transform: translateY(-1px); }
     .confirm-booking-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    
+
     /* Booking Success */
-    .booking-success {
-      display: none; text-align: center; padding: 40px 20px;
-    }
+    .booking-success { display: none; text-align: center; padding: 40px 20px; }
     .booking-success.active { display: block; }
     .success-icon {
       width: 72px; height: 72px; background: #DCFCE7; border-radius: 50%;
@@ -289,33 +236,36 @@
       padding: 10px 24px; border-radius: 10px; font-size: 14px; font-weight: 700;
       cursor: pointer; text-decoration: none; transition: all var(--transition-fast);
     }
-    
-    .empty-hotels { text-align: center; padding: 60px 20px; color: var(--color-text-body); }
-    .empty-hotels h3 { font-size: 20px; color: var(--color-text-heading); margin-bottom: 8px; }
-    
-    /* Login prompt */
+
+    .empty-pkgs { text-align: center; padding: 60px 20px; color: var(--color-text-body); }
+    .empty-pkgs h3 { font-size: 20px; color: var(--color-text-heading); margin-bottom: 8px; }
+
     .login-prompt {
       background: #FFF7ED; border: 1.5px solid #FDBA74; border-radius: 12px;
       padding: 16px 20px; margin-bottom: 20px; display: none;
       align-items: center; gap: 12px; font-size: 14px; font-weight: 600; color: #9A3412;
     }
     .login-prompt a { color: var(--color-primary); font-weight: 700; text-decoration: underline; }
-    
+
+    .book-pkg-btn {
+      background: var(--color-primary); color: #fff; border: none; border-radius: 10px;
+      padding: 12px 32px; font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: all var(--transition-fast); margin-top: 16px;
+      box-shadow: 0 4px 14px rgba(15,139,141,0.25);
+    }
+    .book-pkg-btn:hover { background: #0b6f71; transform: translateY(-1px); }
+
     @media (max-width: 1024px) {
-      .hotel-card { flex-direction: column; }
-      .hotel-card-img { width: 100%; min-height: 200px; max-height: 220px; }
+      .pkg-card { flex-direction: column; }
+      .pkg-card-img { width: 100%; min-height: 200px; max-height: 220px; }
       .detail-info-grid { grid-template-columns: 1fr; }
-      .detail-images { grid-template-columns: 1fr; max-height: 200px; }
-      .detail-images-side { display: none; }
     }
     @media (max-width: 640px) {
-      .hotel-page { padding: 20px; }
+      .pkg-page { padding: 20px; }
       .page-title-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
       .page-title-bar h1 { font-size: 24px; }
       .filter-bar { flex-direction: column; }
       .booking-form-grid { grid-template-columns: 1fr; }
-      .room-card { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .room-card-right { text-align: left; width: 100%; display: flex; justify-content: space-between; align-items: center; }
     }
   </style>
 </head>
@@ -350,20 +300,20 @@
       </div>
     </a>
     <div class="nav-links">
-      <a href="hotel-booking.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> Hotels</a>
+      <a href="hotel-booking.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> Hotels</a>
       <a href="cab-booking.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="22" height="13" rx="2" ry="2"></rect><path d="M7 21h0a2 2 0 0 1-2-2v-3h14v3a2 2 0 0 1-2 2h0"></path></svg> Cars</a>
-      <a href="package-booking.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="14" rx="2" ry="2"></rect><path d="M7 8V5a3 3 0 0 1 6 0v3"></path></svg> Holiday Packages</a>
+      <a href="package-booking.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="14" rx="2" ry="2"></rect><path d="M7 8V5a3 3 0 0 1 6 0v3"></path></svg> Holiday Packages</a>
       <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg> Offers</a>
       <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Travel Guide</a>
     </div>
-    <div class="nav-right">
+    <div class="nav-right" id="nav-auth-area">
       <a href="#" class="wishlist-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> Wishlist</a>
       <a href="login.html" class="login-btn" id="nav-login-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Login / Sign Up</a>
     </div>
   </nav>
 
   <!-- MAIN CONTENT -->
-  <div class="hotel-page">
+  <div class="pkg-page">
     <div class="page-breadcrumb">
       <a href="landing.html" style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-primary); font-weight: 700; text-decoration: none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 14px; height: 14px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
@@ -371,54 +321,48 @@
       </a>
     </div>
     <div class="page-title-bar">
-      <h1>🏨 Browse Hotels</h1>
-      <span class="hotel-count" id="hotel-count"></span>
+      <h1>🌴 Holiday Packages</h1>
+      <span class="pkg-count" id="pkg-count"></span>
     </div>
-    
+
     <div class="login-prompt" id="login-prompt">
-      ⚠️ You need to <a href="login.html">login</a> to book a hotel. Browse hotels freely!
+      ⚠️ You need to <a href="login.html">login</a> to book a package. Browse packages freely!
     </div>
 
     <!-- Filter Bar -->
     <div class="filter-bar">
-      <input type="text" id="filter-search" placeholder="Search hotels by name or city..."/>
-      <select id="filter-city">
-        <option value="">All Cities</option>
-        <option value="Goa">Goa</option>
-        <option value="Manali">Manali</option>
-        <option value="Jaipur">Jaipur</option>
-      </select>
-      <select id="filter-rating">
-        <option value="">All Ratings</option>
-        <option value="4.5">4.5+ ★</option>
-        <option value="4">4+ ★</option>
-        <option value="3">3+ ★</option>
+      <input type="text" id="filter-search" placeholder="Search packages by name or destination..."/>
+      <select id="filter-duration">
+        <option value="">All Durations</option>
+        <option value="1-3">1–3 Days</option>
+        <option value="4-5">4–5 Days</option>
+        <option value="6-10">6+ Days</option>
       </select>
       <select id="filter-price">
         <option value="">All Prices</option>
         <option value="0-10000">Under ₹10,000</option>
-        <option value="10000-20000">₹10,000 – ₹20,000</option>
-        <option value="20000-50000">₹20,000+</option>
+        <option value="10000-25000">₹10,000 – ₹25,000</option>
+        <option value="25000-999999">₹25,000+</option>
       </select>
       <button class="filter-btn" onclick="applyFilters()">Search</button>
       <button class="clear-btn" onclick="clearFilters()">Clear</button>
     </div>
 
-    <!-- Hotel Grid -->
-    <div class="hotel-grid" id="hotel-grid">
+    <!-- Package Grid -->
+    <div class="pkg-grid" id="pkg-grid">
       <!-- Populated dynamically -->
     </div>
-    <div class="empty-hotels" id="empty-hotels" style="display:none;">
-      <h3>No hotels found</h3>
-      <p>Try adjusting your search filters</p>
+    <div class="empty-pkgs" id="empty-pkgs" style="display:none;">
+      <h3>No packages found</h3>
+      <p>Try adjusting your search filters or check back later</p>
     </div>
   </div>
 
-  <!-- Hotel Detail Modal -->
-  <div class="modal-overlay" id="hotel-detail-modal">
+  <!-- Package Detail Modal -->
+  <div class="modal-overlay" id="pkg-detail-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 id="detail-hotel-name"></h2>
+        <h2 id="detail-pkg-name"></h2>
         <button class="modal-close" onclick="closeDetailModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -440,9 +384,32 @@
   </div>
 
   <script>
-    let allHotels = [];
-    let currentHotel = null;
-    let selectedRoom = null;
+    let allPackages = [];
+    let currentPkg = null;
+
+    // Destination images
+    const destImages = {
+      'goa': 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80',
+      'manali': 'https://images.unsplash.com/photo-1571401835393-8c5f35328320?w=800&q=80',
+      'jaipur': 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&q=80',
+      'kerala': 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80',
+      'ladakh': 'https://i0.wp.com/lahimalaya.com/wp-content/uploads/2019/08/Ladakh-trip.jpg?fit=960%2C640&ssl=1',
+      'shimla': 'https://media.istockphoto.com/id/1492080164/photo/rampur-bushahr-town-himachal-pradesh-india.jpg?s=612x612&w=0&k=20&c=mUG_jCG7RYY3tpgVHAor_70IwnnFxdH1LoWNpPmY5CA=',
+      'rishikesh': 'https://www.shutterstock.com/image-photo/rishikesh-yoga-city-india-gange-260nw-1137990866.jpg',
+      'udaipur': 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=800&q=80',
+      'varanasi': 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80',
+      'singapore': 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&q=80',
+      'bali': 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80',
+      'default': 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80'
+    };
+
+    function getDestImage(destination) {
+      const key = (destination || '').toLowerCase();
+      for (const [city, url] of Object.entries(destImages)) {
+        if (key.includes(city)) return url;
+      }
+      return destImages['default'];
+    }
 
     // Auth helpers
     function getToken() { return localStorage.getItem('token'); }
@@ -464,14 +431,14 @@
       if (loginBtn) {
         const userMenu = document.createElement('div');
         userMenu.className = 'user-menu';
-        
+
         let dropdownHTML = `
           <a href="profile.html">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;margin-right:8px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             My Profile
           </a>
         `;
-        
+
         if (user.role === 'admin') {
           dropdownHTML += `
             <a href="admin-dashboard.html">
@@ -480,7 +447,7 @@
             </a>
           `;
         }
-        
+
         userMenu.innerHTML = `
           <img src="${user.picture || 'https://i.pravatar.cc/80'}" alt="${user.name}"/>
           <span class="user-name">${user.name}</span>
@@ -492,254 +459,197 @@
               Log Out
             </a>
           </div>`;
-        
+
         if (loginBtn.parentNode === navRight) {
           navRight.replaceChild(userMenu, loginBtn);
         }
-        
+
         const logoutLink = document.getElementById('logout-link');
         if (logoutLink) {
           logoutLink.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation();
             localStorage.removeItem('user');
             localStorage.removeItem('token');
             window.location.reload();
           });
         }
-        
-        // Add toggle behaviour for the user menu in booking page
+
         const userDropdown = userMenu.querySelector('.user-dropdown');
         userMenu.addEventListener('click', (e) => {
           e.stopPropagation();
           const isDisplayed = window.getComputedStyle(userDropdown).display === 'flex';
           userDropdown.style.display = isDisplayed ? 'none' : 'flex';
         });
-        document.addEventListener('click', () => {
-          if (userDropdown) userDropdown.style.display = '';
-        });
-        userMenu.addEventListener('mouseenter', () => {
-          if (userDropdown) userDropdown.style.display = 'flex';
-        });
-        userMenu.addEventListener('mouseleave', () => {
-          if (userDropdown) userDropdown.style.display = '';
-        });
+        document.addEventListener('click', () => { if (userDropdown) userDropdown.style.display = ''; });
+        userMenu.addEventListener('mouseenter', () => { if (userDropdown) userDropdown.style.display = 'flex'; });
+        userMenu.addEventListener('mouseleave', () => { if (userDropdown) userDropdown.style.display = ''; });
       }
     }
     checkLoginState();
 
-    // Fetch hotels
-    async function loadHotels() {
+    // Fetch packages
+    async function loadPackages() {
       try {
-        const res = await fetch('/api/hotels');
+        const res = await fetch('/api/trip-bundles');
         if (res.ok) {
-          allHotels = await res.json();
-          
-          // Read query parameters
+          allPackages = await res.json();
+          // Filter only approved
+          allPackages = allPackages.filter(p => p.status === 'Approved');
+
           const params = new URLSearchParams(window.location.search);
-          const cityParam = params.get('city');
-          if (cityParam) {
-            document.getElementById('filter-search').value = cityParam;
+          const destParam = params.get('destination');
+          if (destParam) {
+            document.getElementById('filter-search').value = destParam;
             applyFilters();
           } else {
-            renderHotels(allHotels);
+            renderPackages(allPackages);
           }
         }
       } catch (err) {
-        console.error('Failed to load hotels:', err);
+        console.error('Failed to load packages:', err);
       }
     }
 
-    function renderHotels(hotels) {
-      const grid = document.getElementById('hotel-grid');
-      const empty = document.getElementById('empty-hotels');
-      const count = document.getElementById('hotel-count');
+    function parseInclusions(str) {
+      if (!str) return [];
+      return str.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    }
 
-      count.textContent = `${hotels.length} hotel${hotels.length !== 1 ? 's' : ''} found`;
+    function renderPackages(pkgs) {
+      const grid = document.getElementById('pkg-grid');
+      const empty = document.getElementById('empty-pkgs');
+      const count = document.getElementById('pkg-count');
 
-      if (hotels.length === 0) {
+      count.textContent = `${pkgs.length} package${pkgs.length !== 1 ? 's' : ''} found`;
+
+      if (pkgs.length === 0) {
         grid.innerHTML = '';
         empty.style.display = 'block';
         return;
       }
       empty.style.display = 'none';
 
-      grid.innerHTML = hotels.map(hotel => `
-        <div class="hotel-card" onclick="openHotelDetail('${hotel._id}')">
-          <div class="hotel-card-img">
-            <img src="${hotel.images?.[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80'}" alt="${hotel.name}"/>
-            ${hotel.badge ? `<div class="hotel-badge">${hotel.badge}</div>` : ''}
-          </div>
-          <div class="hotel-card-body">
-            <div class="hotel-card-top">
-              <div class="hotel-card-name">${hotel.name}</div>
-              <div class="hotel-card-loc">📍 ${hotel.location || hotel.city}</div>
-              <div>
-                <span class="hotel-card-rating">⭐ ${hotel.rating}</span>
-                <span class="hotel-card-reviews">${hotel.totalReviews?.toLocaleString() || 0} reviews</span>
+      grid.innerHTML = pkgs.map(pkg => {
+        const inclusions = parseInclusions(pkg.inclusions);
+        return `
+          <div class="pkg-card" onclick="openPkgDetail('${pkg._id}')">
+            <div class="pkg-card-img">
+              <img src="${getDestImage(pkg.destination)}" alt="${pkg.destination}"/>
+              <div class="pkg-badge">Holiday Package</div>
+              <div class="pkg-duration-badge">${pkg.days || 0}D / ${pkg.nights || 0}N</div>
+            </div>
+            <div class="pkg-card-body">
+              <div class="pkg-card-top">
+                <div class="pkg-card-name">${pkg.name}</div>
+                <div class="pkg-card-dest">📍 ${pkg.destination}</div>
+                <div><span class="pkg-card-duration">🗓️ ${pkg.days} Days / ${pkg.nights} Nights</span></div>
+                <div class="pkg-card-inclusions">
+                  ${inclusions.slice(0, 4).map(i => `<span class="inclusion-tag">✓ ${i}</span>`).join('')}
+                  ${inclusions.length > 4 ? `<span class="inclusion-tag">+${inclusions.length - 4} more</span>` : ''}
+                </div>
               </div>
-              <div class="hotel-card-amenities">
-                ${(hotel.amenities || []).slice(0, 5).map(a => `<span class="amenity-tag">${a}</span>`).join('')}
-                ${(hotel.amenities || []).length > 5 ? `<span class="amenity-tag">+${hotel.amenities.length - 5} more</span>` : ''}
+              <div class="pkg-card-bottom">
+                <div>
+                  <div class="pkg-price">₹${(pkg.price || 0).toLocaleString()}<span> / person</span></div>
+                </div>
+                <button class="view-pkg-btn">View Details</button>
               </div>
             </div>
-            <div class="hotel-card-bottom">
-              <div>
-                <div class="hotel-price">₹${hotel.pricePerNight?.toLocaleString()}<span> / night</span></div>
-                <div class="hotel-rooms-left">${hotel.totalAvailableRooms || 0} rooms available</div>
-              </div>
-              <button class="view-hotel-btn">View Details</button>
-            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     // Filters
     function applyFilters() {
       const search = document.getElementById('filter-search').value.toLowerCase();
-      const city = document.getElementById('filter-city').value;
-      const rating = document.getElementById('filter-rating').value;
+      const duration = document.getElementById('filter-duration').value;
       const priceRange = document.getElementById('filter-price').value;
 
-      let filtered = allHotels.filter(h => {
-        if (search && !h.name.toLowerCase().includes(search) && !h.city.toLowerCase().includes(search)) return false;
-        if (city && h.city.toLowerCase() !== city.toLowerCase()) return false;
-        if (rating && h.rating < parseFloat(rating)) return false;
+      let filtered = allPackages.filter(p => {
+        if (search && !(p.name || '').toLowerCase().includes(search) && !(p.destination || '').toLowerCase().includes(search)) return false;
+        if (duration) {
+          const [min, max] = duration.split('-').map(Number);
+          if ((p.days || 0) < min || (p.days || 0) > max) return false;
+        }
         if (priceRange) {
           const [min, max] = priceRange.split('-').map(Number);
-          if (h.pricePerNight < min || (max && h.pricePerNight > max)) return false;
+          if ((p.price || 0) < min || (p.price || 0) > max) return false;
         }
         return true;
       });
-      renderHotels(filtered);
+      renderPackages(filtered);
     }
 
     function clearFilters() {
       document.getElementById('filter-search').value = '';
-      document.getElementById('filter-city').value = '';
-      document.getElementById('filter-rating').value = '';
+      document.getElementById('filter-duration').value = '';
       document.getElementById('filter-price').value = '';
-      renderHotels(allHotels);
+      renderPackages(allPackages);
     }
 
-    // Open hotel detail
-    async function openHotelDetail(id) {
+    // Open package detail
+    async function openPkgDetail(id) {
       try {
-        const res = await fetch(`/api/hotels/${id}`);
+        const res = await fetch(`/api/trip-bundles/${id}`);
         if (!res.ok) return;
-        currentHotel = await res.json();
-        selectedRoom = null;
+        currentPkg = await res.json();
 
-        document.getElementById('detail-hotel-name').textContent = currentHotel.name;
+        document.getElementById('detail-pkg-name').textContent = currentPkg.name || 'Package Details';
+        const inclusions = parseInclusions(currentPkg.inclusions);
 
         const body = document.getElementById('detail-modal-body');
         body.innerHTML = `
-          <!-- Images -->
-          <div class="detail-images">
-            <img src="${currentHotel.images?.[0] || ''}" alt="${currentHotel.name}"/>
-            <div class="detail-images-side">
-              <img src="${currentHotel.images?.[1] || currentHotel.images?.[0] || ''}" alt=""/>
-              <img src="${currentHotel.images?.[2] || currentHotel.images?.[0] || ''}" alt=""/>
-            </div>
+          <div style="border-radius: 14px; overflow: hidden; margin-bottom: 24px; max-height: 280px;">
+            <img src="${getDestImage(currentPkg.destination)}" alt="${currentPkg.destination}" style="width: 100%; height: 280px; object-fit: cover; display: block;"/>
           </div>
 
           <div class="detail-info-grid">
             <div>
-              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
-                <span class="hotel-card-rating">⭐ ${currentHotel.rating}</span>
-                <span class="hotel-card-reviews">${currentHotel.totalReviews?.toLocaleString()} reviews</span>
-                ${currentHotel.badge ? `<span class="hotel-badge" style="position:static;">${currentHotel.badge}</span>` : ''}
-              </div>
-              <div style="font-size: 14px; color: var(--color-text-body); margin-bottom: 12px;">📍 ${currentHotel.address || currentHotel.location}</div>
-              <p style="font-size: 14px; line-height: 1.7; color: var(--color-text-heading); margin-bottom: 16px;">${currentHotel.description || ''}</p>
-              
-              <div class="detail-section-title">🏷️ Amenities</div>
-              <div class="detail-amenities">
-                ${(currentHotel.amenities || []).map(a => `<div class="detail-amenity">✓ ${a}</div>`).join('')}
-              </div>
+              <div class="detail-section-title">📋 Package Overview</div>
+              <div class="detail-item"><span class="detail-label">Destination</span><span class="detail-value">📍 ${currentPkg.destination}</span></div>
+              <div class="detail-item"><span class="detail-label">Duration</span><span class="detail-value">${currentPkg.days} Days / ${currentPkg.nights} Nights</span></div>
+              <div class="detail-item"><span class="detail-label">Price per Person</span><span class="detail-value" style="color: var(--color-primary); font-size: 18px;">₹${(currentPkg.price || 0).toLocaleString()}</span></div>
 
-              <div class="detail-section-title">📍 Nearby Attractions</div>
-              <div class="detail-attractions">
-                ${(currentHotel.nearbyAttractions || []).map(a => `
-                  <div class="attraction-item">
-                    <span class="attraction-name">${a.name}</span>
-                    <span class="attraction-dist">${a.distance}</span>
-                  </div>
-                `).join('')}
-              </div>
+              ${inclusions.length > 0 ? `
+                <div class="detail-section-title" style="margin-top: 20px;">🏷️ What's Included</div>
+                <div class="detail-inclusions">
+                  ${inclusions.map(i => `<div class="detail-inclusion">✓ ${i}</div>`).join('')}
+                </div>
+              ` : ''}
             </div>
-
             <div>
-              <div class="detail-section-title">📋 Hotel Policies</div>
-              <div class="detail-policies">
-                ${currentHotel.policies ? `
-                  <strong>🕐 Check-in / Check-out:</strong><br/>${currentHotel.policies.checkIn || 'N/A'}<br/><br/>
-                  <strong>🔄 Cancellation:</strong><br/>${currentHotel.policies.cancellation || 'N/A'}<br/><br/>
-                  <strong>👶 Children:</strong><br/>${currentHotel.policies.children || 'N/A'}<br/><br/>
-                  <strong>🐾 Pets:</strong><br/>${currentHotel.policies.pets || 'N/A'}<br/><br/>
-                  <strong>💳 Payment:</strong><br/>${currentHotel.policies.payment || 'N/A'}
-                ` : 'No policies listed'}
+              <div class="detail-section-title">ℹ️ Good to Know</div>
+              <div style="font-size: 13px; color: var(--color-text-body); line-height: 1.8;">
+                <strong>🕐 Check-in:</strong><br/>Standard hotel check-in times apply<br/><br/>
+                <strong>🔄 Cancellation:</strong><br/>Free cancellation up to 48 hours before departure<br/><br/>
+                <strong>👶 Children:</strong><br/>Children below 5 years stay free<br/><br/>
+                <strong>💳 Payment:</strong><br/>Full payment required at booking
               </div>
             </div>
           </div>
 
-          <!-- Rooms -->
-          <div class="rooms-section">
-            <div class="detail-section-title">🛏️ Choose Your Room</div>
-            ${(currentHotel.rooms || []).map((room, idx) => `
-              <div class="room-card" id="room-card-${idx}">
-                <div class="room-card-info">
-                  <h4>${room.name}</h4>
-                  <div class="room-card-meta">
-                    <span>👥 ${room.capacity} Guests</span>
-                    <span>🛏️ ${room.bedType}</span>
-                    <span>📐 ${room.size} sq.ft.</span>
-                  </div>
-                  <div class="room-card-features">
-                    ${(room.features || []).map(f => `<span class="room-feature-tag">${f}</span>`).join('')}
-                  </div>
-                  ${room.freeCancellation ? '<div class="room-free-cancel">✓ Free Cancellation</div>' : ''}
-                </div>
-                <div class="room-card-right">
-                  <div class="room-price">₹${room.pricePerNight?.toLocaleString()}<span> /night</span></div>
-                  <div class="room-tax-note">Inclusive of all taxes</div>
-                  <button class="book-room-btn" onclick="event.stopPropagation(); selectRoom(${idx})" ${room.availableRooms < 1 ? 'disabled style="opacity:0.5;"' : ''}>
-                    ${room.availableRooms < 1 ? 'Sold Out' : 'Book Now'}
-                  </button>
-                </div>
-              </div>
-            `).join('')}
+          <div style="text-align: center;">
+            <button class="book-pkg-btn" onclick="showBookingForm()">🌴 Book This Package</button>
           </div>
 
           <!-- Booking Form -->
           <div class="booking-form-section" id="booking-form-section">
             <div class="detail-section-title">📝 Complete Your Booking</div>
-            <div id="selected-room-info" style="font-size: 14px; color: var(--color-primary); font-weight: 700; margin-bottom: 16px;"></div>
             <div class="booking-form-grid">
               <div class="form-group">
-                <label>Check-in Date</label>
-                <input type="date" id="book-checkin" onchange="calculatePrice()"/>
+                <label>Travel Start Date</label>
+                <input type="date" id="book-date" onchange="calculatePrice()"/>
               </div>
               <div class="form-group">
-                <label>Check-out Date</label>
-                <input type="date" id="book-checkout" onchange="calculatePrice()"/>
-              </div>
-              <div class="form-group">
-                <label>Guests</label>
-                <select id="book-guests">
-                  <option value="1">1 Guest</option>
-                  <option value="2" selected>2 Guests</option>
-                  <option value="3">3 Guests</option>
-                  <option value="4">4 Guests</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Rooms</label>
-                <select id="book-rooms" onchange="calculatePrice()">
-                  <option value="1">1 Room</option>
-                  <option value="2">2 Rooms</option>
-                  <option value="3">3 Rooms</option>
+                <label>Number of Travelers</label>
+                <select id="book-travelers" onchange="calculatePrice()">
+                  <option value="1">1 Person</option>
+                  <option value="2" selected>2 Persons</option>
+                  <option value="3">3 Persons</option>
+                  <option value="4">4 Persons</option>
+                  <option value="5">5 Persons</option>
+                  <option value="6">6 Persons</option>
                 </select>
               </div>
               <div class="form-group">
@@ -748,32 +658,31 @@
               </div>
               <div class="form-group">
                 <label>Promo Code</label>
-                <input type="text" id="book-promo" placeholder="e.g. HOTEL20" oninput="calculatePrice()"/>
+                <input type="text" id="book-promo" placeholder="e.g. TRAVEL30" oninput="calculatePrice()"/>
               </div>
               <div class="form-group">
                 <label>Payment Method</label>
                 <select id="book-payment">
                   <option value="online">💳 Pay Online</option>
-                  <option value="pay_at_hotel">🏨 Pay at Hotel</option>
+                  <option value="pay_later">🏦 Pay Later</option>
                 </select>
               </div>
               <div class="form-group full">
                 <label>Special Requests (Optional)</label>
-                <textarea id="book-requests" placeholder="e.g. Early check-in, extra pillows..."></textarea>
+                <textarea id="book-requests" placeholder="e.g. Vegetarian meals, room preferences..."></textarea>
               </div>
             </div>
-            
+
             <div class="price-summary" id="price-summary" style="display:none;">
-              <div class="price-row"><span>Room Price</span><span id="ps-base"></span></div>
-              <div class="price-row"><span>× Nights</span><span id="ps-nights"></span></div>
-              <div class="price-row"><span>× Rooms</span><span id="ps-rooms-count"></span></div>
+              <div class="price-row"><span>Price per Person</span><span id="ps-base"></span></div>
+              <div class="price-row"><span>× Travelers</span><span id="ps-travelers"></span></div>
               <div class="price-row"><span>Subtotal</span><span id="ps-subtotal"></span></div>
               <div class="price-row"><span>Taxes & Fees (18%)</span><span id="ps-taxes"></span></div>
               <div class="price-row discount" id="ps-discount-row" style="display:none;"><span>Discount</span><span id="ps-discount"></span></div>
               <div class="price-row total"><span>Total Amount</span><span id="ps-total"></span></div>
             </div>
 
-            <button class="confirm-booking-btn" id="confirm-btn" onclick="confirmBooking()" disabled>Confirm Booking</button>
+            <button class="confirm-booking-btn" id="confirm-btn" onclick="confirmBooking()" disabled>Confirm Package Booking</button>
           </div>
 
           <!-- Booking Success -->
@@ -781,145 +690,121 @@
             <div class="success-icon">
               <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </div>
-            <div class="success-title">Booking Confirmed! 🎉</div>
+            <div class="success-title">Package Booked! 🎉</div>
             <div class="success-booking-id" id="success-booking-id"></div>
-            <div class="success-msg">Your hotel reservation has been confirmed. A confirmation email will be sent shortly.</div>
+            <div class="success-msg">Your holiday package has been booked. A confirmation email will be sent shortly.</div>
             <div class="success-actions">
               <a href="landing.html" style="background: var(--color-bg); border: 1.5px solid var(--color-border); color: var(--color-text-heading);">Back to Home</a>
-              <button onclick="closeDetailModal()" style="background: var(--color-primary); color: #fff; border: none;">Browse More Hotels</button>
+              <button onclick="closeDetailModal()" style="background: var(--color-primary); color: #fff; border: none;">Browse More Packages</button>
             </div>
           </div>
         `;
 
-        // Set default dates
+        // Set default date
         const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const dayAfter = new Date(today);
-        dayAfter.setDate(dayAfter.getDate() + 2);
-        document.getElementById('book-checkin').value = tomorrow.toISOString().split('T')[0];
-        document.getElementById('book-checkout').value = dayAfter.toISOString().split('T')[0];
-        document.getElementById('book-checkin').min = today.toISOString().split('T')[0];
+        const nextWeek = new Date(today);
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        document.getElementById('book-date').value = nextWeek.toISOString().split('T')[0];
+        document.getElementById('book-date').min = today.toISOString().split('T')[0];
 
-        document.getElementById('hotel-detail-modal').classList.add('active');
+        calculatePrice();
+
+        document.getElementById('pkg-detail-modal').classList.add('active');
         document.body.style.overflow = 'hidden';
       } catch (err) {
-        console.error('Failed to open hotel detail:', err);
+        console.error('Failed to open package detail:', err);
       }
     }
 
     function closeDetailModal() {
-      document.getElementById('hotel-detail-modal').classList.remove('active');
+      document.getElementById('pkg-detail-modal').classList.remove('active');
       document.body.style.overflow = '';
-      currentHotel = null;
-      selectedRoom = null;
+      currentPkg = null;
     }
 
-    function selectRoom(idx) {
+    function showBookingForm() {
       if (!isLoggedIn()) {
-        alert('Please login to book a hotel.');
+        alert('Please login to book a package.');
         window.location.href = 'login.html';
         return;
       }
-      selectedRoom = currentHotel.rooms[idx];
       document.getElementById('booking-form-section').classList.add('active');
       document.getElementById('booking-success').classList.remove('active');
-      document.getElementById('selected-room-info').textContent = `Selected: ${selectedRoom.name} — ₹${selectedRoom.pricePerNight.toLocaleString()}/night`;
-      
-      // Highlight selected room
-      currentHotel.rooms.forEach((_, i) => {
-        const card = document.getElementById(`room-card-${i}`);
-        if (card) card.style.borderColor = i === idx ? 'var(--color-primary)' : '';
-      });
-
-      calculatePrice();
       document.getElementById('booking-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      calculatePrice();
     }
 
     function calculatePrice() {
-      if (!selectedRoom) return;
+      if (!currentPkg) return;
 
-      const checkin = new Date(document.getElementById('book-checkin').value);
-      const checkout = new Date(document.getElementById('book-checkout').value);
-      const rooms = parseInt(document.getElementById('book-rooms').value) || 1;
-      const promo = document.getElementById('book-promo').value.toUpperCase().trim();
+      const travelers = parseInt(document.getElementById('book-travelers')?.value) || 2;
+      const promo = (document.getElementById('book-promo')?.value || '').toUpperCase().trim();
+      const date = document.getElementById('book-date')?.value;
 
-      if (isNaN(checkin.getTime()) || isNaN(checkout.getTime()) || checkout <= checkin) {
-        document.getElementById('price-summary').style.display = 'none';
-        document.getElementById('confirm-btn').disabled = true;
+      if (!date) {
+        if (document.getElementById('price-summary')) document.getElementById('price-summary').style.display = 'none';
+        if (document.getElementById('confirm-btn')) document.getElementById('confirm-btn').disabled = true;
         return;
       }
 
-      const nights = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
-      const subtotal = selectedRoom.pricePerNight * nights * rooms;
+      const basePrice = currentPkg.price || 0;
+      const subtotal = basePrice * travelers;
       const taxes = Math.round(subtotal * 0.18);
       let discount = 0;
-      if (promo === 'HOTEL20') discount = Math.round(subtotal * 0.20);
-      else if (promo === 'TRAVEL30') discount = Math.round(subtotal * 0.30);
+      if (promo === 'TRAVEL30') discount = Math.round(subtotal * 0.30);
+      else if (promo === 'HOTEL20') discount = Math.round(subtotal * 0.20);
       else if (promo === 'CAR15') discount = Math.round(subtotal * 0.15);
       const total = subtotal + taxes - discount;
 
-      document.getElementById('ps-base').textContent = `₹${selectedRoom.pricePerNight.toLocaleString()}`;
-      document.getElementById('ps-nights').textContent = `${nights} night${nights > 1 ? 's' : ''}`;
-      document.getElementById('ps-rooms-count').textContent = `${rooms} room${rooms > 1 ? 's' : ''}`;
-      document.getElementById('ps-subtotal').textContent = `₹${subtotal.toLocaleString()}`;
-      document.getElementById('ps-taxes').textContent = `₹${taxes.toLocaleString()}`;
+      if (document.getElementById('ps-base')) document.getElementById('ps-base').textContent = `₹${basePrice.toLocaleString()}`;
+      if (document.getElementById('ps-travelers')) document.getElementById('ps-travelers').textContent = `${travelers} person${travelers > 1 ? 's' : ''}`;
+      if (document.getElementById('ps-subtotal')) document.getElementById('ps-subtotal').textContent = `₹${subtotal.toLocaleString()}`;
+      if (document.getElementById('ps-taxes')) document.getElementById('ps-taxes').textContent = `₹${taxes.toLocaleString()}`;
 
       const discountRow = document.getElementById('ps-discount-row');
-      if (discount > 0) {
-        discountRow.style.display = 'flex';
-        document.getElementById('ps-discount').textContent = `-₹${discount.toLocaleString()}`;
-      } else {
-        discountRow.style.display = 'none';
+      if (discountRow) {
+        if (discount > 0) {
+          discountRow.style.display = 'flex';
+          document.getElementById('ps-discount').textContent = `-₹${discount.toLocaleString()}`;
+        } else {
+          discountRow.style.display = 'none';
+        }
       }
 
-      document.getElementById('ps-total').textContent = `₹${total.toLocaleString()}`;
-      document.getElementById('price-summary').style.display = 'block';
-      document.getElementById('confirm-btn').disabled = false;
+      if (document.getElementById('ps-total')) document.getElementById('ps-total').textContent = `₹${total.toLocaleString()}`;
+      if (document.getElementById('price-summary')) document.getElementById('price-summary').style.display = 'block';
+      if (document.getElementById('confirm-btn')) document.getElementById('confirm-btn').disabled = false;
     }
 
     async function confirmBooking() {
-      if (!isLoggedIn() || !selectedRoom || !currentHotel) return;
+      if (!isLoggedIn() || !currentPkg) return;
 
       const btn = document.getElementById('confirm-btn');
       btn.disabled = true;
       btn.textContent = 'Processing...';
 
-      const checkin = document.getElementById('book-checkin').value;
-      const checkout = document.getElementById('book-checkout').value;
-      const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
-      const rooms = parseInt(document.getElementById('book-rooms').value) || 1;
-      const promo = document.getElementById('book-promo').value.toUpperCase().trim();
-      const subtotal = selectedRoom.pricePerNight * nights * rooms;
+      const user = getUser();
+      const travelers = parseInt(document.getElementById('book-travelers').value) || 2;
+      const promo = (document.getElementById('book-promo').value || '').toUpperCase().trim();
+      const basePrice = currentPkg.price || 0;
+      const subtotal = basePrice * travelers;
       const taxes = Math.round(subtotal * 0.18);
       let discount = 0;
-      if (promo === 'HOTEL20') discount = Math.round(subtotal * 0.20);
-      else if (promo === 'TRAVEL30') discount = Math.round(subtotal * 0.30);
+      if (promo === 'TRAVEL30') discount = Math.round(subtotal * 0.30);
+      else if (promo === 'HOTEL20') discount = Math.round(subtotal * 0.20);
       else if (promo === 'CAR15') discount = Math.round(subtotal * 0.15);
       const totalAmount = subtotal + taxes - discount;
 
       const bookingData = {
-        hotelId: currentHotel._id,
-        roomType: selectedRoom.type,
-        roomName: selectedRoom.name,
-        pricePerNight: selectedRoom.pricePerNight,
-        checkIn: checkin,
-        checkOut: checkout,
-        nights,
-        guests: parseInt(document.getElementById('book-guests').value),
-        rooms,
-        subtotal,
-        taxes,
-        discount,
-        totalAmount,
-        promoCode: promo || '',
-        paymentMethod: document.getElementById('book-payment').value,
-        guestPhone: document.getElementById('book-phone').value,
-        specialRequests: document.getElementById('book-requests').value
+        customerName: user.name,
+        customerPhone: document.getElementById('book-phone').value || 'N/A',
+        bookingDate: document.getElementById('book-date').value,
+        amount: totalAmount,
+        status: 'confirmed'
       };
 
       try {
-        const res = await fetch('/api/hotel-bookings', {
+        const res = await fetch('/api/bookings', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -930,25 +815,25 @@
 
         const data = await res.json();
         if (res.ok) {
-          alert("Your hotel is booked successfully!");
+          alert("Your package is booked successfully!");
           document.getElementById('booking-form-section').classList.remove('active');
           document.getElementById('booking-success').classList.add('active');
-          document.getElementById('success-booking-id').textContent = `Booking ID: ${data.bookingId}`;
+          document.getElementById('success-booking-id').textContent = `Booking ID: ${data.bookingId || data._id}`;
           document.getElementById('booking-success').scrollIntoView({ behavior: 'smooth' });
         } else {
           alert(data.error || 'Booking failed. Please try again.');
           btn.disabled = false;
-          btn.textContent = 'Confirm Booking';
+          btn.textContent = 'Confirm Package Booking';
         }
       } catch (err) {
         alert('Connection error. Please try again.');
         btn.disabled = false;
-        btn.textContent = 'Confirm Booking';
+        btn.textContent = 'Confirm Package Booking';
       }
     }
 
     // Close modal on overlay click
-    document.getElementById('hotel-detail-modal').addEventListener('click', (e) => {
+    document.getElementById('pkg-detail-modal').addEventListener('click', (e) => {
       if (e.target === e.currentTarget) closeDetailModal();
     });
 
@@ -957,8 +842,8 @@
       if (e.key === 'Escape') closeDetailModal();
     });
 
-    // Load hotels on page load
-    loadHotels();
+    // Load packages on page load
+    loadPackages();
   </script>
 </body>
 </html>
