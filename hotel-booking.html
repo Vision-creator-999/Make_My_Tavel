@@ -128,6 +128,63 @@
     }
     .view-hotel-btn:hover { background: #0b6f71; transform: translateY(-1px); }
     
+    /* Interactive Star Ratings and Reviews */
+    .star-btn {
+      transition: color 0.15s ease, transform 0.1s ease;
+    }
+    .star-btn:hover {
+      transform: scale(1.2);
+    }
+    .star-btn.active {
+      color: #F59E0B !important;
+    }
+    .review-item-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .review-user-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .review-user-name {
+      font-weight: 700;
+      color: var(--color-text-heading);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .review-user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: var(--color-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .review-date {
+      font-size: 11px;
+      color: var(--color-text-body);
+      font-weight: 500;
+    }
+    .review-comment-text {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--color-text-heading);
+      margin: 0;
+    }
+    
     /* Hotel Detail Modal */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -778,6 +835,41 @@
             <button class="confirm-booking-btn" id="confirm-btn" onclick="confirmBooking()" disabled>Confirm Booking</button>
           </div>
 
+          <!-- Guest Reviews & Ratings Section -->
+          <div class="reviews-section" style="margin-top: 30px; border-top: 1px solid var(--color-border); padding-top: 25px;">
+            <div class="detail-section-title" style="margin-bottom: 15px;">⭐ Guest Reviews & Ratings</div>
+            
+            <!-- Submit Review Form -->
+            <div id="new-review-box" style="margin-bottom: 25px; background: #F8FAFC; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 20px;">
+              <h4 style="margin-bottom: 12px; font-size: 15px; color: var(--color-text-heading);">Write a Review</h4>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+                <span style="font-size: 14px; color: var(--color-text-body);">Your Rating:</span>
+                <div class="star-rating-input" id="star-input-group" style="display: flex; gap: 6px; font-size: 22px; color: #cbd5e1; cursor: pointer;">
+                  <span class="star-btn" data-val="1" onclick="selectStarRating(1)">★</span>
+                  <span class="star-btn" data-val="2" onclick="selectStarRating(2)">★</span>
+                  <span class="star-btn" data-val="3" onclick="selectStarRating(3)">★</span>
+                  <span class="star-btn" data-val="4" onclick="selectStarRating(4)">★</span>
+                  <span class="star-btn" data-val="5" onclick="selectStarRating(5)">★</span>
+                </div>
+                <input type="hidden" id="review-rating-val" value="0">
+              </div>
+              <div class="form-group" style="margin-bottom: 15px;">
+                <textarea id="review-comment" placeholder="Share your experience staying at this hotel..." style="width: 100%; min-height: 80px; padding: 12px; border: 1.5px solid var(--color-border); border-radius: var(--radius-sm); font-family: inherit; resize: vertical; outline: none;"></textarea>
+              </div>
+              <button type="button" class="confirm-booking-btn" id="submit-review-btn" onclick="submitReview()" style="width: auto; padding: 10px 24px; font-size: 14px; margin-top: 0;">Submit Review</button>
+            </div>
+            
+            <div id="login-to-review-box" style="display: none; text-align: center; padding: 20px; border: 1.5px dashed var(--color-border); border-radius: var(--radius-sm); background: #F8FAFC; margin-bottom: 25px;">
+              <p style="font-size: 14px; color: var(--color-text-body); margin-bottom: 10px;">You must be logged in to rate and review hotels.</p>
+              <a href="login.html" style="display: inline-block; background: var(--color-primary); color: white; padding: 8px 20px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; text-decoration: none;">Login Now</a>
+            </div>
+
+            <!-- Reviews List -->
+            <div id="reviews-list-container" style="display: flex; flex-direction: column; gap: 15px;">
+              <p style="color: var(--color-text-body); font-size: 14px; font-style: italic;">Loading reviews...</p>
+            </div>
+          </div>
+
           <!-- Booking Success -->
           <div class="booking-success" id="booking-success">
             <div class="success-icon">
@@ -802,6 +894,10 @@
         document.getElementById('book-checkin').value = tomorrow.toISOString().split('T')[0];
         document.getElementById('book-checkout').value = dayAfter.toISOString().split('T')[0];
         document.getElementById('book-checkin').min = today.toISOString().split('T')[0];
+
+        // Load reviews and check form visibility
+        loadReviews(id);
+        checkReviewFormState();
 
         document.getElementById('hotel-detail-modal').classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -948,6 +1044,148 @@
         btn.textContent = 'Confirm Booking';
       }
     }
+
+    // Star Selection Interactive handler
+    window.selectStarRating = function(rating) {
+      document.getElementById('review-rating-val').value = rating;
+      const stars = document.querySelectorAll('#star-input-group .star-btn');
+      stars.forEach((star, idx) => {
+        if (idx < rating) {
+          star.classList.add('active');
+        } else {
+          star.classList.remove('active');
+        }
+      });
+    };
+
+    // Load reviews for the current hotel
+    window.loadReviews = async function(hotelId) {
+      const container = document.getElementById('reviews-list-container');
+      if (!container) return;
+
+      try {
+        const res = await fetch(`/api/ratings/${hotelId}`);
+        if (!res.ok) throw new Error();
+
+        const reviews = await res.json();
+        if (reviews.length === 0) {
+          container.innerHTML = `<p style="color: var(--color-text-body); font-size: 14px; font-style: italic;">No reviews yet. Be the first to rate & review this hotel!</p>`;
+          return;
+        }
+
+        container.innerHTML = reviews.map(r => {
+          const starsHtml = '⭐'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+          const formattedDate = new Date(r.createdAt).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          });
+          const avatarChar = r.userName ? r.userName.charAt(0).toUpperCase() : 'A';
+          const avatarHtml = r.userPicture 
+            ? `<img src="${r.userPicture}" alt="" style="width:28px; height:28px; border-radius:50%; object-fit:cover;"/>`
+            : `<div class="review-user-avatar">${avatarChar}</div>`;
+
+          return `
+            <div class="review-item-card">
+              <div class="review-user-info">
+                <div class="review-user-name">
+                  ${avatarHtml}
+                  <span>${r.userName}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+                  <span style="color:#F59E0B; font-size:13px; font-weight:700;">${starsHtml}</span>
+                  <span class="review-date">${formattedDate}</span>
+                </div>
+              </div>
+              <p class="review-comment-text">${r.comment || 'No comment provided.'}</p>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = `<p style="color: var(--color-text-body); font-size: 14px; font-style: italic;">Failed to load reviews. Please refresh the page.</p>`;
+      }
+    };
+
+    // Toggle Review Submission form based on Auth State
+    window.checkReviewFormState = function() {
+      const formBox = document.getElementById('new-review-box');
+      const loginBox = document.getElementById('login-to-review-box');
+      
+      if (!formBox || !loginBox) return;
+
+      if (isLoggedIn()) {
+        formBox.style.display = 'block';
+        loginBox.style.display = 'none';
+        
+        // Reset stars
+        selectStarRating(0);
+        document.getElementById('review-comment').value = '';
+      } else {
+        formBox.style.display = 'none';
+        loginBox.style.display = 'block';
+      }
+    };
+
+    // Submit Review API
+    window.submitReview = async function() {
+      const rating = parseInt(document.getElementById('review-rating-val').value) || 0;
+      const comment = document.getElementById('review-comment').value.trim();
+
+      if (rating < 1 || rating > 5) {
+        alert('Please choose a star rating (1 to 5) before submitting.');
+        return;
+      }
+
+      const btn = document.getElementById('submit-review-btn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const res = await fetch('/api/ratings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`
+          },
+          body: JSON.stringify({
+            hotelId: currentHotel._id || currentHotel.id,
+            rating,
+            comment
+          })
+        });
+
+        const data = await res.json();
+        
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to submit review');
+        }
+
+        alert('Thank you for rating this hotel!');
+        
+        // Update local detail view metrics
+        currentHotel.rating = data.updatedRating;
+        currentHotel.totalReviews = data.totalReviews;
+        
+        // Re-render overall average
+        document.querySelector('.detail-info-grid .hotel-card-rating').innerHTML = `⭐ ${data.updatedRating}`;
+        document.querySelector('.detail-info-grid .hotel-card-reviews').innerHTML = `${data.totalReviews.toLocaleString()} reviews`;
+
+        // Refresh reviews list
+        loadReviews(currentHotel._id || currentHotel.id);
+        
+        // Reload all baseline lists so the changes reflect on the main dashboard cards too
+        loadHotels();
+        
+        // Reset inputs
+        selectStarRating(0);
+        document.getElementById('review-comment').value = '';
+      } catch (err) {
+        alert(err.message || 'Error submitting review. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Submit Review';
+      }
+    };
 
     // Close modal on overlay click
     document.getElementById('hotel-detail-modal').addEventListener('click', (e) => {

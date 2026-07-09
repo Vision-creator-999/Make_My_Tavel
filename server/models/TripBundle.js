@@ -27,6 +27,7 @@ const tripBundleSchema = new mongoose.Schema({
   inclusions: {
     type: String
   },
+  images: [String],
   status: {
     type: String,
     enum: ['Approved', 'Pending', 'Rejected'],

@@ -233,6 +233,45 @@
     .upload-box:hover i {
       color: var(--primary-color);
     }
+    .preview-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .preview-item {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      aspect-ratio: 1;
+      border: 1.5px solid var(--border-color);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(239, 68, 68, 0.85);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: var(--transition);
+    }
+    .preview-item .remove-btn:hover {
+      background: rgb(220, 38, 38);
+    }
 
     .checkbox-group {
       display: flex;
@@ -574,6 +613,17 @@
           </div>
         </div>
         
+        <div class="form-group" style="margin-bottom: 25px;">
+          <label>Upload Car Photos (Max 3 images)</label>
+          <div class="upload-box" id="car-upload-area">
+            <i class="fa-solid fa-car"></i>
+            <span style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Drag & drop your car photos here</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">PNG, JPG or WebP (Max 3 images, up to 5MB each)</span>
+            <input type="file" id="car-images-upload" accept="image/*" multiple style="display: none;">
+          </div>
+          <div class="preview-gallery" id="car-preview-gallery"></div>
+        </div>
+        
         <div class="form-group" style="margin-bottom: 30px;">
           <label>Upload Driving License / RC Book (PDF or Image)</label>
           <div class="upload-box" id="media-upload-area">
@@ -699,6 +749,85 @@
       initMediaUploadInteraction();
     });
 
+    // Car Photos uploader variables and initialization
+    let carSelectedFiles = [];
+
+    function initCarPhotoUploader() {
+      const carUploadArea = document.getElementById('car-upload-area');
+      const carFileInput = document.getElementById('car-images-upload');
+      const carPreviewGallery = document.getElementById('car-preview-gallery');
+
+      if (!carUploadArea || !carFileInput) return;
+
+      carUploadArea.addEventListener('click', () => carFileInput.click());
+
+      carFileInput.addEventListener('change', (e) => {
+        handleCarFiles(e.target.files);
+      });
+
+      // Drag & drop handlers
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        carUploadArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }, false);
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        carUploadArea.addEventListener(eventName, () => {
+          carUploadArea.style.borderColor = 'var(--primary-color)';
+          carUploadArea.style.backgroundColor = '#F0FDFD';
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        carUploadArea.addEventListener(eventName, () => {
+          carUploadArea.style.borderColor = 'var(--border-color)';
+          carUploadArea.style.backgroundColor = '#F8FAFC';
+        }, false);
+      });
+
+      carUploadArea.addEventListener('drop', (e) => {
+        handleCarFiles(e.dataTransfer.files);
+      });
+
+      function handleCarFiles(files) {
+        const remainingLimit = 3 - carSelectedFiles.length;
+        const filesToAdd = Array.from(files).slice(0, remainingLimit);
+
+        filesToAdd.forEach(file => {
+          if (!file.type.startsWith('image/')) return;
+          carSelectedFiles.push(file);
+          
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const item = document.createElement('div');
+            item.className = 'preview-item';
+            
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            item.appendChild(img);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'remove-btn';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.addEventListener('click', () => {
+              const index = carSelectedFiles.indexOf(file);
+              if (index > -1) {
+                carSelectedFiles.splice(index, 1);
+              }
+              item.remove();
+            });
+            item.appendChild(removeBtn);
+            
+            carPreviewGallery.appendChild(item);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
     // 1. Handle Driver Registration Form Submission
     function initDriverRegistration() {
       const form = document.getElementById('driver-registration-form');
@@ -706,32 +835,60 @@
       const modalClose = document.getElementById('driver-modal-close');
       const modalOk = document.getElementById('driver-modal-ok');
       const modalDetails = document.getElementById('driver-app-details');
+      const carPreviewGallery = document.getElementById('car-preview-gallery');
 
       if (!form || !modalOverlay) return;
+
+      initCarPhotoUploader();
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        if (carSelectedFiles.length === 0) {
+          alert('Please upload at least one photo of your car.');
+          return;
+        }
+
         const formData = new FormData(form);
         
-        // Map form data to backend Cab model fields
-        const cabData = {
-          driver: formData.get('driverName'),
-          driverExp: Number(formData.get('driverExp')),
-          licenseNum: formData.get('licenseNum'),
-          vehicle: formData.get('cabModel'),
-          category: formData.get('cabCategory'),
-          plate: formData.get('plateNumber'),
-          seats: formData.get('cabCapacity'),
-          driverEmail: formData.get('driverEmail'),
-          mobile: formData.get('driverPhone'),
-          city: formData.get('driverCity'),
-          ratePerKm: Number(formData.get('ratePerKm')),
-          cabId: `MMT-DRV-${Math.floor(100000 + Math.random() * 900000)}`,
-          status: 'Pending'
-        };
-
         try {
+          // Upload car photos first
+          const uploadData = new FormData();
+          carSelectedFiles.forEach(file => {
+            uploadData.append('images', file);
+          });
+
+          const uploadRes = await fetch('/api/upload/cab', {
+            method: 'POST',
+            body: uploadData
+          });
+
+          if (!uploadRes.ok) {
+            const errData = await uploadRes.json();
+            throw new Error(errData.error || 'Failed to upload car images');
+          }
+
+          const uploadResult = await uploadRes.json();
+          const uploadedCarImageUrls = uploadResult.images;
+
+          // Map form data to backend Cab model fields
+          const cabData = {
+            driver: formData.get('driverName'),
+            driverExp: Number(formData.get('driverExp')),
+            licenseNum: formData.get('licenseNum'),
+            vehicle: formData.get('cabModel'),
+            category: formData.get('cabCategory'),
+            plate: formData.get('plateNumber'),
+            seats: formData.get('cabCapacity'),
+            driverEmail: formData.get('driverEmail'),
+            mobile: formData.get('driverPhone'),
+            city: formData.get('driverCity'),
+            ratePerKm: Number(formData.get('ratePerKm')),
+            images: uploadedCarImageUrls,
+            cabId: `MMT-DRV-${Math.floor(100000 + Math.random() * 900000)}`,
+            status: 'Pending'
+          };
+
           const response = await fetch('/api/cabs', {
             method: 'POST',
             headers: {
@@ -765,9 +922,11 @@
           }, 10);
           
           form.reset();
+          carPreviewGallery.innerHTML = '';
+          carSelectedFiles = [];
         } catch (error) {
           console.error('Error submitting driver registration:', error);
-          alert('Registration failed. Please try again.');
+          alert(error.message || 'Registration failed. Please try again.');
         }
       });
 

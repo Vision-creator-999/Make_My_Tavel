@@ -57,6 +57,7 @@ const cabSchema = new mongoose.Schema({
   insurance: {
     type: String
   },
+  images: [String],
   status: {
     type: String,
     enum: ['Approved', 'Pending', 'Rejected'],

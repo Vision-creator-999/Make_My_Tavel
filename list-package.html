@@ -116,6 +116,70 @@
       font-size: 0.95rem; cursor: pointer; transition: var(--transition);
     }
     .btn-modal-close:hover { background-color: var(--secondary-dark); }
+    .upload-box {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #F8FAFC;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 5px;
+    }
+    .upload-box:hover {
+      border-color: var(--primary-color);
+      background-color: #F0FDFD;
+    }
+    .upload-box i {
+      font-size: 2.2rem;
+      color: var(--text-muted);
+    }
+    .upload-box:hover i {
+      color: var(--primary-color);
+    }
+    .preview-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .preview-item {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      aspect-ratio: 1;
+      border: 1.5px solid var(--border-color);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(239, 68, 68, 0.85);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: var(--transition);
+    }
+    .preview-item .remove-btn:hover {
+      background: rgb(220, 38, 38);
+    }
   </style>
 </head>
 <body>
@@ -256,12 +320,15 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="pkg-inclusions">Inclusions (Comma separated)</label>
-          <div class="input-wrapper">
-            <i class="fa-solid fa-circle-check"></i>
-            <input type="text" id="pkg-inclusions" name="inclusions" placeholder="e.g. Hotel stay, Daily Breakfast, Sightseeing, Airport Transfers" required>
+        <div class="form-group" style="margin-bottom: 30px;">
+          <label>Upload Package Photos (Max 4 images)</label>
+          <div class="upload-box" id="package-upload-area">
+            <i class="fa-solid fa-images"></i>
+            <span style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Drag & drop your package photos here</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">PNG, JPG or WebP (Max 4 images, up to 5MB each)</span>
+            <input type="file" id="package-images-upload" accept="image/*" multiple style="display: none;">
           </div>
+          <div class="preview-gallery" id="package-preview-gallery"></div>
         </div>
 
         <button type="submit" class="btn-submit">🌴 List Your Package</button>
@@ -291,23 +358,122 @@
     const modalOverlay = document.getElementById('success-modal-overlay');
     const modalDetails = document.getElementById('modal-details');
 
+    // Multi-image upload handlers
+    const uploadArea = document.getElementById('package-upload-area');
+    const fileInput = document.getElementById('package-images-upload');
+    const previewGallery = document.getElementById('package-preview-gallery');
+    let selectedFiles = [];
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    // Drag & drop handlers
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, () => {
+        uploadArea.style.borderColor = 'var(--primary-color)';
+        uploadArea.style.backgroundColor = '#F0FDFD';
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, () => {
+        uploadArea.style.borderColor = 'var(--border-color)';
+        uploadArea.style.backgroundColor = '#F8FAFC';
+      }, false);
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      handleFiles(e.dataTransfer.files);
+    });
+
+    function handleFiles(files) {
+      const remainingLimit = 4 - selectedFiles.length;
+      const filesToAdd = Array.from(files).slice(0, remainingLimit);
+
+      filesToAdd.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        selectedFiles.push(file);
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const item = document.createElement('div');
+          item.className = 'preview-item';
+          
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          item.appendChild(img);
+
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'remove-btn';
+          removeBtn.innerHTML = '&times;';
+          removeBtn.addEventListener('click', () => {
+            const index = selectedFiles.indexOf(file);
+            if (index > -1) {
+              selectedFiles.splice(index, 1);
+            }
+            item.remove();
+          });
+          item.appendChild(removeBtn);
+          
+          previewGallery.appendChild(item);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      if (selectedFiles.length === 0) {
+        alert('Please upload at least one photo of the package destination.');
+        return;
+      }
+
       const formData = new FormData(form);
 
-      const pkgData = {
-        name: formData.get('name'),
-        destination: formData.get('destination'),
-        price: Number(formData.get('price')),
-        days: Number(formData.get('days')),
-        nights: Number(formData.get('nights')),
-        inclusions: formData.get('inclusions'),
-        status: 'Pending',
-        packageId: `MMT-PKG-${Math.floor(100000 + Math.random() * 900000)}`
-      };
-
       try {
+        // Upload images first
+        const uploadData = new FormData();
+        selectedFiles.forEach(file => {
+          uploadData.append('images', file);
+        });
+
+        const uploadRes = await fetch('/api/upload/package', {
+          method: 'POST',
+          body: uploadData
+        });
+
+        if (!uploadRes.ok) {
+          const errData = await uploadRes.json();
+          throw new Error(errData.error || 'Failed to upload package images');
+        }
+
+        const uploadResult = await uploadRes.json();
+        const uploadedImageUrls = uploadResult.images;
+
+        const pkgData = {
+          name: formData.get('name'),
+          destination: formData.get('destination'),
+          price: Number(formData.get('price')),
+          days: Number(formData.get('days')),
+          nights: Number(formData.get('nights')),
+          inclusions: formData.get('inclusions'),
+          images: uploadedImageUrls,
+          status: 'Pending',
+          packageId: `MMT-PKG-${Math.floor(100000 + Math.random() * 900000)}`
+        };
+
         const response = await fetch('/api/trip-bundles', {
           method: 'POST',
           headers: {
@@ -338,9 +504,11 @@
         }, 10);
 
         form.reset();
+        previewGallery.innerHTML = '';
+        selectedFiles = [];
       } catch (err) {
         console.error('Submit package error:', err);
-        alert('Submission failed. Please try again.');
+        alert(err.message || 'Submission failed. Please try again.');
       }
     });
 

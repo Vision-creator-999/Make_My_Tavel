@@ -23,6 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static website files from the current folder
 app.use(express.static(__dirname));
 
+// Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Connected to MongoDB Atlas'))
@@ -198,6 +201,8 @@ const cabRoutes = require('./server/routes/cabRoutes');
 const tripBundleRoutes = require('./server/routes/tripBundleRoutes');
 const bookingRoutes = require('./server/routes/bookingRoutes');
 const profileRoutes = require('./server/routes/profileRoutes');
+const uploadRoutes = require('./server/routes/uploadRoutes');
+const ratingRoutes = require('./server/routes/ratingRoutes');
 
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/hotel-bookings', hotelBookingRoutes);
@@ -206,6 +211,8 @@ app.use('/api/cabs', cabRoutes);
 app.use('/api/trip-bundles', tripBundleRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/ratings', ratingRoutes);
 
 // Redirect /admin to /admin-login.html
 app.get('/admin', (req, res) => {
