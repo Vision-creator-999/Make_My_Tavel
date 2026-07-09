@@ -579,6 +579,31 @@
           <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&q=80" alt="Jaipur" />
           <div class="dest-info"><strong>📍 Jaipur</strong><span>From ₹2,199</span></div>
         </div>
+        <!-- Duplicated Cards for Infinite Drift -->
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Goa</strong><span>From ₹2,999</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Manali</strong><span>From ₹3,499</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Dubai</strong><span>From ₹11,999</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Thailand</strong><span>From ₹15,999</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Kerala</strong><span>From ₹2,499</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Jaipur</strong><span>From ₹2,199</span></div>
+        </div>
       </div>
 
       <button class="slider-arrow next" id="dest-next">
@@ -1198,13 +1223,84 @@
       }
     });
 
-    // Destination scroll button logic
+    // Destination scroll and animation logic
     const destScroll = document.getElementById('dest-scroll');
+    let autoDriftPaused = false;
+    let pauseTimer = null;
+    let initialScrollSet = false;
+
+    function setInitialScroll() {
+      if (destScroll.scrollWidth > 0) {
+        destScroll.scrollLeft = destScroll.scrollWidth / 2;
+        initialScrollSet = true;
+      }
+    }
+
+    window.addEventListener('load', setInitialScroll);
+    setInitialScroll();
+
+    function triggerPause() {
+      autoDriftPaused = true;
+      if (pauseTimer) clearTimeout(pauseTimer);
+    }
+
+    function requestResume() {
+      if (pauseTimer) clearTimeout(pauseTimer);
+      pauseTimer = setTimeout(() => {
+        autoDriftPaused = false;
+      }, 2500);
+    }
+
+    destScroll.addEventListener('mouseenter', triggerPause);
+    destScroll.addEventListener('mouseleave', requestResume);
+    destScroll.addEventListener('touchstart', triggerPause, { passive: true });
+    destScroll.addEventListener('touchend', requestResume, { passive: true });
+
     document.getElementById('dest-next').addEventListener('click', () => {
+      triggerPause();
       destScroll.scrollBy({ left: 320, behavior: 'smooth' });
+      requestResume();
     });
     document.getElementById('dest-prev').addEventListener('click', () => {
+      triggerPause();
       destScroll.scrollBy({ left: -320, behavior: 'smooth' });
+      requestResume();
+    });
+
+    // RequestAnimationFrame infinite drift loop (moving left-to-right visually)
+    function autoScrollStep() {
+      if (!initialScrollSet && destScroll.scrollWidth > 0) {
+        setInitialScroll();
+      }
+
+      const isHovered = destScroll.matches(':hover');
+
+      if (!autoDriftPaused && !isHovered) {
+        let newScroll = destScroll.scrollLeft - 0.6;
+        if (newScroll <= 0) {
+          newScroll = destScroll.scrollWidth / 2;
+        }
+        destScroll.scrollLeft = newScroll;
+      }
+      requestAnimationFrame(autoScrollStep);
+    }
+    requestAnimationFrame(autoScrollStep);
+
+    // Click "pop" feedback and redirect on destination cards
+    document.querySelectorAll('.dest-card').forEach(card => {
+      card.addEventListener('click', function() {
+        if (this.classList.contains('pop-anim')) return;
+
+        this.classList.add('pop-anim');
+
+        const strongText = this.querySelector('.dest-info strong').textContent;
+        const cityName = strongText.replace(/📍/g, '').trim();
+
+        this.addEventListener('animationend', () => {
+          this.classList.remove('pop-anim');
+          window.location.href = `hotel-booking.html?city=${encodeURIComponent(cityName)}`;
+        }, { once: true });
+      });
     });
 
     // Testimonials slider logic (responsive dot selector & navigation buttons)
