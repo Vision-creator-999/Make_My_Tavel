@@ -96,6 +96,10 @@ async function seed() {
         'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800&q=80'
       ],
       badge: 'Popular Choice',
+      status: 'Approved',
+      ownerName: 'Rahul Sharma',
+      mobile: '+91 98765 43210',
+      email: 'rahul@example.com',
       amenities: ['Free WiFi', 'Swimming Pool', 'Free Parking', 'Restaurant', 'Fitness Centre', 'Spa & Wellness', 'Air Conditioning', 'Laundry Service'],
       rooms: [
         {
@@ -183,6 +187,10 @@ async function seed() {
         'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&q=80'
       ],
       badge: 'Adventure',
+      status: 'Approved',
+      ownerName: 'Sneha Kapoor',
+      mobile: '+91 98765 43211',
+      email: 'sneha@example.com',
       amenities: ['Free WiFi', 'Fireplace Lounge', 'Spa & Wellness', 'Restaurant', 'Valley View', 'Bonfire Area', 'Trekking Arranged', 'Room Heater'],
       rooms: [
         {
@@ -258,6 +266,10 @@ async function seed() {
         'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&q=80'
       ],
       badge: 'Luxury Pick',
+      status: 'Approved',
+      ownerName: 'Arjun Desai',
+      mobile: '+91 98765 43212',
+      email: 'arjun@example.com',
       amenities: ['Free WiFi', 'Swimming Pool', 'Spa & Wellness', 'Restaurant', 'Heritage Tours', 'Cultural Performances', 'Rooftop Dining', 'Airport Transfer'],
       rooms: [
         {

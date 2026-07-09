@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List Your Holiday Package | Make My Travel</title>
+  <meta name="description" content="Partner with Make My Travel. List your tour or holiday packages. Gain visibility, get local bookings, and grow your travel operator business.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #0F8B8D;
+      --primary-dark: #0b6f71;
+      --secondary-color: #17375E;
+      --secondary-dark: #0a1628;
+      --accent-color: #F97316;
+      --card-bg: #FFFFFF;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      --font-heading: 'Inter', sans-serif;
+      --shadow-lg: 0 10px 30px rgba(23, 55, 94, 0.08);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    body { background-color: #F8FAFC; font-family: var(--font-heading); color: var(--text-main); }
+    .driver-hero {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
+      color: #FFFFFF; padding: 80px 20px; text-align: center; position: relative;
+    }
+    .driver-hero-content { max-width: 800px; margin: 0 auto; }
+    .driver-hero h1 { font-family: 'Outfit', sans-serif; font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; }
+    .driver-hero p { font-size: 1.15rem; opacity: 0.9; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .driver-stats { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 20px; }
+    .driver-stat-item {
+      background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
+      padding: 15px 25px; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.15);
+      text-align: center; min-width: 180px;
+    }
+    .driver-stat-num { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--accent-color); }
+    .driver-stat-label { font-size: 0.85rem; font-weight: 500; }
+    .driver-container { max-width: 800px; margin: -40px auto 80px; padding: 0 20px; position: relative; z-index: 10; }
+    .driver-form-card {
+      background-color: var(--card-bg); border-radius: var(--radius-lg);
+      padding: 40px; box-shadow: var(--shadow-lg); border: 1px solid var(--border-color);
+    }
+    .form-section-title {
+      font-family: 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 700;
+      color: var(--secondary-color); margin-bottom: 25px; padding-bottom: 10px;
+      border-bottom: 2px solid #F1F5F9; display: flex; align-items: center; gap: 10px;
+    }
+    .form-section-title i { color: var(--primary-color); }
+    .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .form-group label { font-size: 0.88rem; font-weight: 600; color: #475569; }
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-wrapper i { position: absolute; left: 16px; color: var(--text-muted); font-size: 1.1rem; }
+    .input-wrapper input, .input-wrapper select, .input-wrapper textarea {
+      width: 100%; padding: 14px 16px 14px 48px; border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md); font-family: inherit; font-size: 0.95rem;
+      color: var(--text-main); outline: none; background-color: #FCFDFE;
+      transition: var(--transition);
+    }
+    .input-wrapper textarea { padding-left: 48px; min-height: 100px; resize: vertical; }
+    .input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus {
+      border-color: var(--primary-color); background-color: #FFFFFF;
+      box-shadow: 0 0 0 4px rgba(15, 139, 141, 0.1);
+    }
+    .driver-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) {
+      .driver-grid-2 { grid-template-columns: 1fr; gap: 0; }
+    }
+    .btn-submit {
+      width: 100%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: #FFFFFF; border: none; padding: 16px; border-radius: var(--radius-md);
+      font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: var(--transition);
+      box-shadow: 0 10px 20px rgba(15, 139, 141, 0.2);
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(15, 139, 141, 0.3); }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+      z-index: 1000; display: none; align-items: center; justify-content: center;
+      padding: 20px; transition: opacity 0.3s ease; opacity: 0;
+    }
+    .modal-overlay.active { opacity: 1; }
+    .success-modal {
+      background-color: var(--card-bg); border-radius: var(--radius-lg);
+      max-width: 500px; width: 100%; padding: 40px; text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-color); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-overlay.active .success-modal { transform: scale(1); }
+    .success-icon-wrapper {
+      width: 80px; height: 80px; background-color: #E2FDF5; border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;
+    }
+    .success-icon-wrapper i { color: #10B981; font-size: 2.5rem; }
+    .success-modal h2 { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--secondary-color); margin-bottom: 10px; }
+    .success-modal p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+    .success-details {
+      background-color: #F8FAFC; border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md); padding: 20px; margin-bottom: 30px; text-align: left;
+    }
+    .success-details p { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.88rem; }
+    .success-details p:last-child { margin-bottom: 0; }
+    .success-details strong { color: var(--text-main); font-weight: 600; }
+    .success-details span { color: var(--text-muted); font-weight: 500; }
+    .btn-modal-close {
+      background-color: var(--secondary-color); color: #FFFFFF; border: none;
+      padding: 12px 30px; border-radius: var(--radius-md); font-weight: 600;
+      font-size: 0.95rem; cursor: pointer; transition: var(--transition);
+    }
+    .btn-modal-close:hover { background-color: var(--secondary-dark); }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="logo">
+      <div class="logo-icon-wrapper">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" fill="#17375E" />
+          <path d="M15 80 C 35 70, 70 50, 85 25" stroke="#F97316" stroke-width="8" stroke-linecap="round" />
+          <path d="M15 80 C 35 70, 70 50, 85 25" stroke="#FBBF24" stroke-width="4" stroke-linecap="round" />
+          <g transform="translate(68, 15) rotate(45) scale(0.65)">
+            <path d="M25 0 L29 15 L45 22 L29 25 L25 40 L21 25 L5 22 L21 15 Z" fill="#FFFFFF" />
+          </g>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <strong>Make<span class="accent">my</span>Travel</strong>
+        <span class="tagline">Partner Portal</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="landing.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; margin-right: 4px; stroke: var(--secondary-color);">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        Main Site Home
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="landing.html" class="login-btn">Home</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="driver-hero">
+    <div class="driver-hero-content">
+      <h1>Grow Your Tour Business with Us</h1>
+      <p>List your custom tour or holiday packages. Reach thousands of active booking travelers instantly with zero registration fees.</p>
+      
+      <div class="driver-stats">
+        <div class="driver-stat-item">
+          <div class="driver-stat-num">5k+</div>
+          <div class="driver-stat-label">Monthly Package Bookings</div>
+        </div>
+        <div class="driver-stat-item">
+          <div class="driver-stat-num">15%</div>
+          <div class="driver-stat-label">Avg Commission Increase</div>
+        </div>
+        <div class="driver-stat-item">
+          <div class="driver-stat-num">24x7</div>
+          <div class="driver-stat-label">Direct Operator Payouts</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <div class="driver-container">
+    <div class="driver-form-card">
+      <form id="package-registration-form">
+        
+        <!-- Section 1: Package Operator Details -->
+        <h3 class="form-section-title"><i class="fa-solid fa-briefcase"></i> Operator Details</h3>
+        
+        <div class="form-group">
+          <label for="agency-name">Travel Agency / Operator Name</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-building"></i>
+            <input type="text" id="agency-name" name="agencyName" placeholder="e.g. Skyline Travel Agency" required>
+          </div>
+        </div>
+        
+        <div class="driver-grid-2">
+          <div class="form-group">
+            <label for="operator-email">Email Address</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="operator-email" name="email" placeholder="e.g. info@skylinetravels.com" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="operator-phone">Mobile Number</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-phone"></i>
+              <input type="tel" id="operator-phone" name="mobile" placeholder="e.g. +91 98765 43210" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Package Information -->
+        <h3 class="form-section-title"><i class="fa-solid fa-globe"></i> Holiday Package Details</h3>
+        
+        <div class="form-group">
+          <label for="pkg-name">Package Name</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-heading"></i>
+            <input type="text" id="pkg-name" name="name" placeholder="e.g. Magical Shimla Honeymoon Special" required>
+          </div>
+        </div>
+
+        <div class="driver-grid-2">
+          <div class="form-group">
+            <label for="pkg-destination">Destination City / Region</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-map-pin"></i>
+              <input type="text" id="pkg-destination" name="destination" placeholder="e.g. Shimla" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="pkg-price">Package Price per Person (₹)</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+              <input type="number" id="pkg-price" name="price" placeholder="e.g. 14500" min="1" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="driver-grid-2">
+          <div class="form-group">
+            <label for="pkg-days">Duration Days</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-sun"></i>
+              <input type="number" id="pkg-days" name="days" placeholder="e.g. 4" min="1" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="pkg-nights">Duration Nights</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-moon"></i>
+              <input type="number" id="pkg-nights" name="nights" placeholder="e.g. 3" min="0" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pkg-inclusions">Inclusions (Comma separated)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-circle-check"></i>
+            <input type="text" id="pkg-inclusions" name="inclusions" placeholder="e.g. Hotel stay, Daily Breakfast, Sightseeing, Airport Transfers" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">🌴 List Your Package</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Modal Overlay -->
+  <div class="modal-overlay" id="success-modal-overlay">
+    <div class="success-modal">
+      <div class="success-icon-wrapper">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h2>Submission Received!</h2>
+      <p>Your holiday package registration is successful. Our admin team will verify details and approve your listing shortly.</p>
+      
+      <div class="success-details" id="modal-details">
+        <!-- Filled dynamically -->
+      </div>
+      
+      <button class="btn-modal-close" onclick="closeModalAndRedirect()">Done</button>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('package-registration-form');
+    const modalOverlay = document.getElementById('success-modal-overlay');
+    const modalDetails = document.getElementById('modal-details');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      const pkgData = {
+        name: formData.get('name'),
+        destination: formData.get('destination'),
+        price: Number(formData.get('price')),
+        days: Number(formData.get('days')),
+        nights: Number(formData.get('nights')),
+        inclusions: formData.get('inclusions'),
+        status: 'Pending',
+        packageId: `MMT-PKG-${Math.floor(100000 + Math.random() * 900000)}`
+      };
+
+      try {
+        const response = await fetch('/api/trip-bundles', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(pkgData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to submit package');
+        }
+
+        const savedPkg = await response.json();
+        const referenceId = savedPkg.packageId || pkgData.packageId;
+
+        // Build the success details UI
+        modalDetails.innerHTML = `
+          <p><strong>Package Ref ID:</strong> <span style="font-family: monospace; color: var(--primary-color); font-weight: 700;">${referenceId}</span></p>
+          <p><strong>Package Name:</strong> <span>${pkgData.name}</span></p>
+          <p><strong>Destination:</strong> <span>${pkgData.destination}</span></p>
+          <p><strong>Duration:</strong> <span>${pkgData.days} Days / ${pkgData.nights} Nights</span></p>
+          <p><strong>Status:</strong> <span style="color: #F59E0B; font-weight: 700;">Pending Approval</span></p>
+        `;
+
+        modalOverlay.style.display = 'flex';
+        setTimeout(() => {
+          modalOverlay.classList.add('active');
+        }, 10);
+
+        form.reset();
+      } catch (err) {
+        console.error('Submit package error:', err);
+        alert('Submission failed. Please try again.');
+      }
+    });
+
+    function closeModalAndRedirect() {
+      modalOverlay.classList.remove('active');
+      setTimeout(() => {
+        modalOverlay.style.display = 'none';
+        window.location.href = 'landing.html';
+      }, 300);
+    }
+  </script>
+</body>
+</html>

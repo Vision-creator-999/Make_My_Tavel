@@ -31,6 +31,7 @@ router.get('/:id', async (req, res) => {
 // POST /api/trip-bundles
 router.post('/', async (req, res) => {
   try {
+    req.body.status = 'Pending';
     const bundle = await TripBundle.create(req.body);
     res.status(201).json(bundle);
   } catch (err) {

@@ -73,6 +73,8 @@ exports.createHotel = async (req, res) => {
     if (!name || !city || !pricePerNight) {
       return res.status(400).json({ error: 'Name, city, and price per night are required' });
     }
+    // Force status to Pending for new listings
+    req.body.status = 'Pending';
     const hotel = await Hotel.create(req.body);
     res.status(201).json(hotel);
   } catch (err) {

@@ -534,6 +534,8 @@
         const res = await fetch('/api/hotels');
         if (res.ok) {
           allHotels = await res.json();
+          // Only show approved hotels
+          allHotels = allHotels.filter(h => h.status === 'Approved');
           
           // Read query parameters
           const params = new URLSearchParams(window.location.search);
