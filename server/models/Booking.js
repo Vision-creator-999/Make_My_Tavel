@@ -27,6 +27,10 @@ const bookingSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  bookingType: {
+    type: String,
+    enum: ['cab', 'package']
   }
 }, {
   timestamps: true
