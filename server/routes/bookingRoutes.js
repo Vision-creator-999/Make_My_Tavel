@@ -38,9 +38,12 @@ router.get('/', async (req, res) => {
   }
 });
 
+const { protect } = require('../middleware/auth');
+
 // POST /api/bookings
-router.post('/', async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
+    req.body.user = req.user._id;
     const booking = await Booking.create(req.body);
     res.status(201).json(booking);
   } catch (err) {

@@ -17,6 +17,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/trip-bundles/search
+router.get('/search', async (req, res) => {
+  try {
+    let bundles = await TripBundle.find({ status: 'Approved' });
+    if (req.query.destination) {
+      const destQuery = req.query.destination.toLowerCase().trim();
+      bundles = bundles.filter(b => b.destination && b.destination.toLowerCase().includes(destQuery));
+    }
+    res.json(bundles);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/trip-bundles/:id
 router.get('/:id', async (req, res) => {
   try {

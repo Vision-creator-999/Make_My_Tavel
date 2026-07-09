@@ -20,8 +20,13 @@ async function createAdmin() {
       console.warn('⚠️ Could not connect to MongoDB Atlas. Creating admin in local JSON database fallback instead!');
     }
 
-    const ADMIN_EMAIL = 'mharshvardhan20@gmail.com';
-    const ADMIN_PASSWORD = 'Admin@1234';
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+    const ADMIN_PASSWORD = process.env.ADMIN_SEED_PASSWORD;
+
+    if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+      console.error('❌ Error: Environment variables ADMIN_EMAIL and ADMIN_SEED_PASSWORD must be defined.');
+      process.exit(1);
+    }
 
     let admin = await User.findOne({ email: ADMIN_EMAIL });
     if (admin) {

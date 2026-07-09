@@ -135,7 +135,46 @@ function createQueryChain(promise) {
       });
       return this;
     },
-    select: function() { return this; },
+    select: function(criteria) {
+      if (typeof criteria === 'string') {
+        const fields = criteria.split(/\s+/).filter(Boolean);
+        promise = promise.then(data => {
+          if (!data) return data;
+          const processDoc = (doc) => {
+            if (!doc || typeof doc !== 'object') return doc;
+            const isExclusion = fields.some(f => f.startsWith('-'));
+            if (isExclusion) {
+              const excludeFields = fields.filter(f => f.startsWith('-')).map(f => f.substring(1));
+              for (const field of excludeFields) {
+                delete doc[field];
+              }
+            } else {
+              const includeFields = new Set(fields);
+              for (const key in doc) {
+                if (key !== '_id' && key !== 'id' && !includeFields.has(key)) {
+                  delete doc[key];
+                }
+              }
+            }
+            return doc;
+          };
+          if (Array.isArray(data)) {
+            return data.map(processDoc);
+          } else {
+            return processDoc(data);
+          }
+        });
+      }
+      return this;
+    },
+    lean: function() { return this; },
+    limit: function(n) {
+      promise = promise.then(data => {
+        if (!Array.isArray(data)) return data;
+        return data.slice(0, n);
+      });
+      return this;
+    },
     exec: function() { return promise; },
     then: function(onResolve, onReject) {
       return promise.then(onResolve, onReject);

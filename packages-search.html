@@ -344,7 +344,7 @@
       const countText = document.getElementById('pkg-count');
 
       try {
-        const response = await fetch(`/api/trip-bundles?destination=${encodeURIComponent(destination)}`);
+        const response = await fetch(`/api/trip-bundles/search?destination=${encodeURIComponent(destination)}`);
         if (!response.ok) throw new Error('API error');
         const pkgs = await response.json();
 

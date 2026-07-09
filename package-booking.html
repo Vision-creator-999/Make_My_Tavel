@@ -490,7 +490,7 @@
     // Fetch packages
     async function loadPackages() {
       try {
-        const res = await fetch('/api/trip-bundles');
+        const res = await fetch('/api/trip-bundles/search');
         if (res.ok) {
           allPackages = await res.json();
           // Filter only approved

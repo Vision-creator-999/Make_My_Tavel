@@ -88,18 +88,22 @@ router.get('/me/bookings', protect, async (req, res) => {
 
     try {
       const HotelBooking = require('../models/HotelBooking');
-      hotelBookings = await HotelBooking.find({ userId: req.user._id })
+      hotelBookings = await HotelBooking.find({ user: req.user._id })
         .sort({ createdAt: -1 }).limit(20).lean();
       hotelBookings = hotelBookings.map(b => ({ ...b, type: 'hotel', id: b._id }));
-    } catch (e) { /* model may not exist */ }
+    } catch (e) {
+      if (e.code !== 'MODULE_NOT_FOUND') throw e;
+    }
 
     try {
       const Booking = require('../models/Booking');
-      const other = await Booking.find({ userId: req.user._id })
+      const other = await Booking.find({ user: req.user._id })
         .sort({ createdAt: -1 }).limit(20).lean();
       cabBookings = other.filter(b => b.bookingType === 'cab').map(b => ({ ...b, type: 'cab', id: b._id }));
       packageBookings = other.filter(b => b.bookingType === 'package').map(b => ({ ...b, type: 'package', id: b._id }));
-    } catch (e) { /* model may not exist */ }
+    } catch (e) {
+      if (e.code !== 'MODULE_NOT_FOUND') throw e;
+    }
 
     const allBookings = [...hotelBookings, ...cabBookings, ...packageBookings]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
