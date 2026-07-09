@@ -530,13 +530,19 @@
   <section class="dest-section">
     <div class="section-header">
       <div>
-        <div class="section-title">
+        <div class="section-title" style="display: flex; align-items: center; gap: 8px;">
           Popular Destinations
           <svg class="dotted-trail" width="100" height="24" viewBox="0 0 100 24" fill="none"
             xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-left: 8px;">
             <path d="M5 18 C 25 2, 75 2, 85 14" stroke="#64748B" stroke-width="2" stroke-dasharray="4,4" fill="none" />
             <path d="M85 14 L89 12 L87 9 L83 11 Z" fill="#0F8B8D" transform="rotate(30, 85, 14)" />
           </svg>
+          <button id="dest-motion-toggle" class="motion-toggle-btn" aria-label="Pause destinations auto-scroll" title="Pause auto-scroll" style="margin-left: 12px; background: none; border: 1.5px solid var(--color-border); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--color-text-body); transition: all var(--transition-fast);">
+            <svg id="dest-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 14px; height: 14px;">
+              <line x1="18" y1="4" x2="18" y2="20"></line>
+              <line x1="6" y1="4" x2="6" y2="20"></line>
+            </svg>
+          </button>
         </div>
       </div>
       <a href="#" class="view-all">View All
@@ -555,6 +561,7 @@
       </button>
 
       <div class="dest-scroll" id="dest-scroll">
+        <!-- Real Set of 12 Unique Cards -->
         <div class="dest-card">
           <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&q=80" alt="Goa" />
           <div class="dest-info"><strong>📍 Goa</strong><span>From ₹2,999</span></div>
@@ -579,7 +586,32 @@
           <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&q=80" alt="Jaipur" />
           <div class="dest-info"><strong>📍 Jaipur</strong><span>From ₹2,199</span></div>
         </div>
-        <!-- Duplicated Cards for Infinite Drift -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=400&q=80" alt="Udaipur" />
+          <div class="dest-info"><strong>📍 Udaipur</strong><span>From ₹3,999</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1588725835471-e945c2f3d611?w=400&q=80" alt="Shimla" />
+          <div class="dest-info"><strong>📍 Shimla</strong><span>From ₹2,899</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400&q=80" alt="Singapore" />
+          <div class="dest-info"><strong>📍 Singapore</strong><span>From ₹24,999</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" alt="Bali" />
+          <div class="dest-info"><strong>📍 Bali</strong><span>From ₹19,999</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1598977123418-45f04b01d4ec?w=400&q=80" alt="Rishikesh" />
+          <div class="dest-info"><strong>📍 Rishikesh</strong><span>From ₹1,999</span></div>
+        </div>
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1596701062351-df5f8a02e355?w=400&q=80" alt="Ladakh" />
+          <div class="dest-info"><strong>📍 Ladakh</strong><span>From ₹8,999</span></div>
+        </div>
+
+        <!-- Duplicated Set for Infinite Drift -->
         <div class="dest-card" aria-hidden="true" tabindex="-1">
           <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&q=80" alt="" />
           <div class="dest-info"><strong>📍 Goa</strong><span>From ₹2,999</span></div>
@@ -603,6 +635,30 @@
         <div class="dest-card" aria-hidden="true" tabindex="-1">
           <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&q=80" alt="" />
           <div class="dest-info"><strong>📍 Jaipur</strong><span>From ₹2,199</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Udaipur</strong><span>From ₹3,999</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1588725835471-e945c2f3d611?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Shimla</strong><span>From ₹2,899</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Singapore</strong><span>From ₹24,999</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Bali</strong><span>From ₹19,999</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1598977123418-45f04b01d4ec?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Rishikesh</strong><span>From ₹1,999</span></div>
+        </div>
+        <div class="dest-card" aria-hidden="true" tabindex="-1">
+          <img src="https://images.unsplash.com/photo-1596701062351-df5f8a02e355?w=400&q=80" alt="" />
+          <div class="dest-info"><strong>📍 Ladakh</strong><span>From ₹8,999</span></div>
         </div>
       </div>
 
@@ -1223,9 +1279,11 @@
       }
     });
 
-    // Destination scroll and animation logic
+    // Destination scroll, play/pause accessible control, and press-to-preview zoom overlay logic
     const destScroll = document.getElementById('dest-scroll');
+    const motionToggleBtn = document.getElementById('dest-motion-toggle');
     let autoDriftPaused = false;
+    let manualPauseOverride = false;
     let pauseTimer = null;
     let initialScrollSet = false;
 
@@ -1247,15 +1305,50 @@
     function requestResume() {
       if (pauseTimer) clearTimeout(pauseTimer);
       pauseTimer = setTimeout(() => {
-        autoDriftPaused = false;
+        if (!manualPauseOverride) {
+          autoDriftPaused = false;
+        }
       }, 2500);
     }
 
-    destScroll.addEventListener('mouseenter', triggerPause);
-    destScroll.addEventListener('mouseleave', requestResume);
-    destScroll.addEventListener('touchstart', triggerPause, { passive: true });
-    destScroll.addEventListener('touchend', requestResume, { passive: true });
+    // Accessible Play/Pause Toggle button click handler
+    if (motionToggleBtn) {
+      motionToggleBtn.addEventListener('click', () => {
+        manualPauseOverride = !manualPauseOverride;
+        const toggleIcon = document.getElementById('dest-toggle-icon');
+        if (manualPauseOverride) {
+          motionToggleBtn.setAttribute('aria-label', 'Play auto-scroll');
+          motionToggleBtn.setAttribute('title', 'Play auto-scroll');
+          if (toggleIcon) {
+            toggleIcon.innerHTML = `<polygon points="5 3 19 12 5 21 5 3"></polygon>`;
+          }
+          triggerPause();
+        } else {
+          motionToggleBtn.setAttribute('aria-label', 'Pause auto-scroll');
+          motionToggleBtn.setAttribute('title', 'Pause auto-scroll');
+          if (toggleIcon) {
+            toggleIcon.innerHTML = `<line x1="18" y1="4" x2="18" y2="20"></line><line x1="6" y1="4" x2="6" y2="20"></line>`;
+          }
+          autoDriftPaused = false;
+        }
+      });
+    }
 
+    // Hover & Touch event listeners
+    destScroll.addEventListener('mouseenter', () => {
+      if (!manualPauseOverride) triggerPause();
+    });
+    destScroll.addEventListener('mouseleave', () => {
+      if (!manualPauseOverride) requestResume();
+    });
+    destScroll.addEventListener('touchstart', () => {
+      if (!manualPauseOverride) triggerPause();
+    }, { passive: true });
+    destScroll.addEventListener('touchend', () => {
+      if (!manualPauseOverride) requestResume();
+    }, { passive: true });
+
+    // Slider arrows (also pause auto-drift briefly)
     document.getElementById('dest-next').addEventListener('click', () => {
       triggerPause();
       destScroll.scrollBy({ left: 320, behavior: 'smooth' });
@@ -1274,9 +1367,10 @@
       }
 
       const isHovered = destScroll.matches(':hover');
+      const isOverlayActive = !!document.querySelector('.dest-preview-backdrop');
 
-      if (!autoDriftPaused && !isHovered) {
-        let newScroll = destScroll.scrollLeft - 0.6;
+      if (!manualPauseOverride && !autoDriftPaused && !isHovered && !isOverlayActive) {
+        let newScroll = destScroll.scrollLeft - 0.5; // slow left-to-right drift (0.5px per frame)
         if (newScroll <= 0) {
           newScroll = destScroll.scrollWidth / 2;
         }
@@ -1286,21 +1380,155 @@
     }
     requestAnimationFrame(autoScrollStep);
 
-    // Click "pop" feedback and redirect on destination cards
-    document.querySelectorAll('.dest-card').forEach(card => {
-      card.addEventListener('click', function() {
-        if (this.classList.contains('pop-anim')) return;
+    // Press-to-preview overlay, 8px drag threshold, and timing-safe redirect
+    let currentBackdrop = null;
+    let currentClone = null;
+    let isPressing = false;
+    let didDrag = false;
+    let startX = 0;
+    let startY = 0;
+    let cardRect = null;
+    let pressTargetCard = null;
 
-        this.classList.add('pop-anim');
+    function startPress(card, clientX, clientY) {
+      if (isPressing) return;
+      isPressing = true;
+      didDrag = false;
+      startX = clientX;
+      startY = clientY;
+      pressTargetCard = card;
+      cardRect = card.getBoundingClientRect();
 
-        const strongText = this.querySelector('.dest-info strong').textContent;
+      // Pause movement instantly
+      triggerPause();
+
+      // Create preview elements
+      currentBackdrop = document.createElement('div');
+      currentBackdrop.className = 'dest-preview-backdrop';
+      document.body.appendChild(currentBackdrop);
+
+      currentClone = card.cloneNode(true);
+      currentClone.className = 'dest-preview-clone dest-card';
+      currentClone.style.width = cardRect.width + 'px';
+      currentClone.style.height = cardRect.height + 'px';
+      currentClone.style.top = cardRect.top + 'px';
+      currentClone.style.left = cardRect.left + 'px';
+      currentClone.style.pointerEvents = 'none';
+      document.body.appendChild(currentClone);
+
+      requestAnimationFrame(() => {
+        if (!currentBackdrop || !currentClone) return;
+        currentBackdrop.classList.add('active');
+
+        const centerX = (window.innerWidth - cardRect.width) / 2;
+        const centerY = (window.innerHeight - cardRect.height) / 2;
+        currentClone.style.top = centerY + 'px';
+        currentClone.style.left = centerX + 'px';
+        currentClone.style.transform = 'scale(3)';
+      });
+
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('mouseup', handleRelease);
+      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchend', handleRelease);
+    }
+
+    function handleMove(e) {
+      if (!isPressing) return;
+      trackMove(e.clientX, e.clientY);
+    }
+
+    function handleTouchMove(e) {
+      if (!isPressing) return;
+      const touch = e.touches[0];
+      trackMove(touch.clientX, touch.clientY);
+    }
+
+    function trackMove(clientX, clientY) {
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist > 8) {
+        didDrag = true;
+        cancelPreview();
+      }
+    }
+
+    function cancelPreview() {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleRelease);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleRelease);
+
+      if (currentBackdrop) {
+        currentBackdrop.remove();
+        currentBackdrop = null;
+      }
+      if (currentClone) {
+        currentClone.remove();
+        currentClone = null;
+      }
+      isPressing = false;
+      requestResume();
+    }
+
+    function handleRelease() {
+      if (!isPressing) return;
+
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleRelease);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleRelease);
+
+      isPressing = false;
+
+      if (didDrag) {
+        cancelPreview();
+        return;
+      }
+
+      if (currentClone && currentBackdrop && cardRect && pressTargetCard) {
+        const backdrop = currentBackdrop;
+        const clone = currentClone;
+        const targetCard = pressTargetCard;
+        const originalRect = cardRect;
+
+        // Animate clone back to original captured position
+        clone.classList.add('shrinking');
+        clone.style.transform = 'scale(1)';
+        clone.style.top = originalRect.top + 'px';
+        clone.style.left = originalRect.left + 'px';
+        backdrop.classList.remove('active');
+
+        // Extract clean destination name
+        const strongText = targetCard.querySelector('.dest-info strong').textContent;
         const cityName = strongText.replace(/📍/g, '').trim();
 
-        this.addEventListener('animationend', () => {
-          this.classList.remove('pop-anim');
+        // Wait for shrink-back animation to finish, then redirect
+        setTimeout(() => {
+          backdrop.remove();
+          clone.remove();
           window.location.href = `hotel-booking.html?city=${encodeURIComponent(cityName)}`;
-        }, { once: true });
+        }, 220);
+
+        currentBackdrop = null;
+        currentClone = null;
+      }
+      requestResume();
+    }
+
+    // Attach mouse & touch listeners to all destination cards
+    document.querySelectorAll('.dest-card').forEach(card => {
+      card.addEventListener('mousedown', (e) => {
+        // Prevent trigger on right clicks or non-primary actions
+        if (e.button !== 0) return;
+        startPress(card, e.clientX, e.clientY);
       });
+      card.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        startPress(card, touch.clientX, touch.clientY);
+      }, { passive: true });
     });
 
     // Testimonials slider logic (responsive dot selector & navigation buttons)
