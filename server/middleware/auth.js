@@ -22,7 +22,7 @@ const protect = async (req, res, next) => {
       }
     }
 
-    // Fallback: Check cookies for admin_token session
+    // Fallback: Check cookies for admin_token JWT
     if (!token && req.headers.cookie) {
       const parseCookies = (cookieStr) => {
         const list = {};
@@ -32,18 +32,19 @@ const protect = async (req, res, next) => {
         });
         return list;
       };
-      
+
       const cookies = parseCookies(req.headers.cookie);
       const adminToken = cookies.admin_token;
-      
+
       if (adminToken) {
-        const { activeSessions } = require('../routes/adminAuth');
-        if (activeSessions && activeSessions.has(adminToken)) {
-          const session = activeSessions.get(adminToken);
-          req.user = await User.findOne({ email: session.email, role: 'admin' }).select('-password');
+        try {
+          const decoded = jwt.verify(adminToken, process.env.JWT_SECRET);
+          req.user = await User.findById(decoded.id).select('-password');
           if (req.user) {
             return next();
           }
+        } catch (_) {
+          // expired / invalid cookie — fall through to the "no token" 401 below
         }
       }
     }

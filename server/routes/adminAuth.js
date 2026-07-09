@@ -3,14 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Simple in-memory session tracking for custom dashboard
-const activeSessions = new Map();
-
-function generateToken() {
-  return Array.from({ length: 64 }, () =>
-    Math.floor(Math.random() * 16).toString(16)
-  ).join('');
-}
+const SEVEN_DAYS_SEC = 60 * 60 * 24 * 7; // 604 800 seconds
 
 const parseCookies = (req) => {
   const list = {};
@@ -42,42 +35,58 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid email or password.' });
     }
 
-    // Generate session token
-    const token = generateToken();
-    activeSessions.set(token, { email, name: user.name, loginAt: new Date() });
+    // Generate a single JWT — used for both the cookie and the response body
+    const token = jwt.sign(
+      { id: user._id, role: 'admin' },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
 
-    // Set session cookie manually
-    res.setHeader('Set-Cookie', `admin_token=${token}; Path=/; HttpOnly; Max-Age=${60 * 60 * 4}; SameSite=Lax`);
+    // Set the JWT as the admin_token cookie (HttpOnly, 7-day Max-Age matching the JWT expiry)
+    res.setHeader(
+      'Set-Cookie',
+      `admin_token=${token}; Path=/; HttpOnly; Max-Age=${SEVEN_DAYS_SEC}; SameSite=Lax`
+    );
 
-    // Generate JWT token as well
-    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'makemytravel_jwt_secret_2026', { expiresIn: '7d' });
-
-    return res.json({ success: true, message: 'Login successful.', token: jwtToken });
+    return res.json({ success: true, message: 'Login successful.', token });
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 });
 
-// GET /api/admin/check  — verify if admin is logged in
-router.get('/check', (req, res) => {
-  const cookies = parseCookies(req);
-  const token = cookies.admin_token;
-  if (!token || !activeSessions.has(token)) {
+// GET /api/admin/check  — verify if admin is logged in (stateless JWT check)
+router.get('/check', async (req, res) => {
+  try {
+    const cookies = parseCookies(req);
+    const token = cookies.admin_token;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Not authenticated.' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Confirm the user still exists and is still an admin
+    const user = await User.findById(decoded.id).select('-password');
+    if (!user || user.role !== 'admin') {
+      return res.status(401).json({ success: false, message: 'Not authenticated.' });
+    }
+
+    return res.json({
+      success: true,
+      admin: { email: user.email, name: user.name, loginAt: null }
+    });
+  } catch (err) {
+    // jwt.verify throws on expired / invalid / tampered tokens
     return res.status(401).json({ success: false, message: 'Not authenticated.' });
   }
-  return res.json({ success: true, admin: activeSessions.get(token) });
 });
 
 // POST /api/admin/logout
 router.post('/logout', (req, res) => {
-  const cookies = parseCookies(req);
-  const token = cookies.admin_token;
-  if (token) {
-    activeSessions.delete(token);
-  }
-  res.setHeader('Set-Cookie', 'admin_token=; Path=/; HttpOnly; Max-Age=0');
+  res.setHeader('Set-Cookie', 'admin_token=; Path=/; HttpOnly; Max-Age=0; SameSite=Lax');
   return res.json({ success: true, message: 'Logged out.' });
 });
 
-module.exports = { router, activeSessions };
+module.exports = { router };
