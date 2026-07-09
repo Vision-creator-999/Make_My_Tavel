@@ -35,7 +35,7 @@ exports.getAllHotels = async (req, res) => {
     // Add available room count to each hotel
     const hotelsWithAvailability = hotels.map(hotel => {
       const hotelObj = hotel.toObject();
-      hotelObj.totalAvailableRooms = hotel.rooms.reduce(
+      hotelObj.totalAvailableRooms = (hotel.rooms || []).reduce(
         (sum, room) => sum + (room.availableRooms || 0), 0
       );
       return hotelObj;
