@@ -40,7 +40,8 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(async () => {
     console.log('✅ Connected to MongoDB Atlas');
     try {
-      const Hotel = require('./models/Hotel');
+      require('./models/Hotel');
+      const Hotel = mongoose.model('Hotel');
       const result = await Hotel.updateMany({ status: { $ne: 'Approved' } }, { $set: { status: 'Approved' } });
       if (result.modifiedCount > 0) {
         console.log(`✅ Approved ${result.modifiedCount} pending hotels in Atlas.`);
