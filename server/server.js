@@ -16,7 +16,16 @@ const app = express();
 const PORT = process.env.PORT || 5500;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('netlify.app')) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS Policy: Origin not allowed'), false);
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -42,10 +42,10 @@ router.post('/login', async (req, res) => {
       { expiresIn: '7d' }
     );
 
-    // Set the JWT as the admin_token cookie (HttpOnly, 7-day Max-Age matching the JWT expiry)
+    // Set the JWT as the admin_token cookie (HttpOnly, 7-day Max-Age, SameSite=None, Secure for cross-origin Netlify access)
     res.setHeader(
       'Set-Cookie',
-      `admin_token=${token}; Path=/; HttpOnly; Max-Age=${SEVEN_DAYS_SEC}; SameSite=Lax`
+      `admin_token=${token}; Path=/; HttpOnly; Max-Age=${SEVEN_DAYS_SEC}; SameSite=None; Secure`
     );
 
     return res.json({ success: true, message: 'Login successful.', token });
