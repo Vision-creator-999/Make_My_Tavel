@@ -267,8 +267,9 @@ textarea.fi2{resize:vertical;min-height:100px;line-height:1.6;}
     </div>
   </main>
 </div>
+<script src="config.js"></script>
 <script>
-const API='';let cUser=null,bks=[];
+const API=API_BASE_URL;let cUser=null,bks=[];
 function tok(){return localStorage.getItem('token');}
 function goLogin(){window.location.href='login.html';}
 function el(id){return document.getElementById(id);}

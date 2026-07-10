@@ -480,6 +480,7 @@
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script>
     const loginSection = document.getElementById('login-section');
     const signupSection = document.getElementById('signup-section');
@@ -522,8 +523,7 @@
       banner.style.display = 'none';
     }
 
-    // Connect form submit actions
-    const backendUrl = ''; // Relative path because server serves static folder
+    const backendUrl = API_BASE_URL; // Assigned from config.js
 
     // 1. traditional Credentials Register
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
