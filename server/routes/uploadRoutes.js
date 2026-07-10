@@ -1,30 +1,23 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
 const router = express.Router();
 
 // Allowed upload types and their destination folders
 const ALLOWED_TYPES = ['cab', 'hotel', 'package'];
 
-// Configure storage engine — files go to uploads/<type>/
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+// Configure Cloudinary storage engine — files go to makemytravel/<type>s/
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
     const type = req.params.type;
-    if (!ALLOWED_TYPES.includes(type)) {
-      return cb(new Error('Invalid upload type'));
-    }
-    const dir = path.join(__dirname, '..', '..', 'uploads', `${type}s`);
-    // Ensure directory exists
-    fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
+    return {
+      folder: `makemytravel/${type}s`,
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'],
+      transformation: [{ width: 1200, crop: 'limit', quality: 'auto' }],
+    };
   },
-  filename: (req, file, cb) => {
-    // Unique filename: type-timestamp-random.ext
-    const ext = path.extname(file.originalname).toLowerCase();
-    const uniqueName = `${req.params.type}-${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
-    cb(null, uniqueName);
-  }
 });
 
 // File filter — only allow images
@@ -50,7 +43,7 @@ const upload = multer({
  * POST /api/upload/:type
  * :type = cab | hotel | package
  * Accepts up to 5 images (field name: "images")
- * Returns array of uploaded file paths
+ * Returns array of uploaded file paths (now Cloudinary URLs)
  */
 router.post('/:type', (req, res) => {
   const type = req.params.type;
@@ -78,9 +71,10 @@ router.post('/:type', (req, res) => {
       return res.status(400).json({ error: 'No files uploaded' });
     }
 
-    // Build public URLs for each uploaded file
+    // Build Cloudinary URLs for each uploaded file
+    // multer-storage-cloudinary sets file.path = resp.secure_url
     const filePaths = req.files.map(file => {
-      return `/uploads/${type}s/${file.filename}`;
+      return file.path;
     });
 
     res.status(200).json({
@@ -91,3 +85,4 @@ router.post('/:type', (req, res) => {
 });
 
 module.exports = router;
+
