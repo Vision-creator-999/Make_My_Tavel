@@ -494,7 +494,9 @@
       grid.innerHTML = cabs.map(cab => `
         <div class="cab-card" onclick="openCabDetail('${cab._id}')">
           <div class="cab-card-img">
-            ${getCabIcon(cab.category)}
+            ${cab.images && cab.images.length > 0 ? `
+              <img src="${cab.images[0]}" alt="${cab.vehicle || 'Cab'}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.outerHTML = getCabIcon('${cab.category}');">
+            ` : getCabIcon(cab.category)}
             ${cab.category ? `<div class="cab-category-badge">${cab.category}</div>` : ''}
           </div>
           <div class="cab-card-body">

@@ -300,6 +300,14 @@
 
   <script src="config.js"></script>
   <script>
+    // Default Cab Icon
+    function getCabIcon() {
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="1" y="3" width="22" height="13" rx="2" ry="2"></rect>
+        <path d="M7 21h0a2 2 0 0 1-2-2v-3h14v3a2 2 0 0 1-2 2h0"></path>
+      </svg>`;
+    }
+
     // Auth Check
     function getToken() { return localStorage.getItem('token'); }
     function getUser() {
@@ -358,10 +366,9 @@
         grid.innerHTML = cabs.map(cab => `
           <div class="cab-card">
             <div class="cab-card-img">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="1" y="3" width="22" height="13" rx="2" ry="2"></rect>
-                <path d="M7 21h0a2 2 0 0 1-2-2v-3h14v3a2 2 0 0 1-2 2h0"></path>
-              </svg>
+              ${cab.images && cab.images.length > 0 ? `
+                <img src="${cab.images[0]}" alt="${cab.vehicle || 'Cab'}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.outerHTML = getCabIcon();">
+              ` : getCabIcon()}
               <div class="cab-badge">${cab.category || 'Standard'}</div>
             </div>
             <div class="cab-card-body">
