@@ -3,7 +3,7 @@
  * Run this ONCE to create an admin user in MongoDB:
  *   node createAdmin.js
  */
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const dns = require('dns');

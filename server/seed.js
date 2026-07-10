@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const dns = require('dns');
 try {
   dns.setServers(['8.8.8.8', '8.8.4.4']);
