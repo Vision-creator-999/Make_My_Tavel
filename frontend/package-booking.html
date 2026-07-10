@@ -535,7 +535,7 @@
         return `
           <div class="pkg-card" onclick="openPkgDetail('${pkg._id}')">
             <div class="pkg-card-img">
-              <img src="${getDestImage(pkg.destination)}" alt="${pkg.destination}"/>
+              <img src="${pkg.images && pkg.images.length > 0 ? pkg.images[0] : getDestImage(pkg.destination)}" alt="${pkg.destination}" onerror="this.onerror=null; this.src=getDestImage('${pkg.destination.replace(/'/g, "\\'")}');"/>
               <div class="pkg-badge">Holiday Package</div>
               <div class="pkg-duration-badge">${pkg.days || 0}D / ${pkg.nights || 0}N</div>
             </div>
@@ -601,9 +601,17 @@
 
         const body = document.getElementById('detail-modal-body');
         body.innerHTML = `
-          <div style="border-radius: 14px; overflow: hidden; margin-bottom: 24px; max-height: 280px;">
-            <img src="${getDestImage(currentPkg.destination)}" alt="${currentPkg.destination}" style="width: 100%; height: 280px; object-fit: cover; display: block;"/>
-          </div>
+          ${currentPkg.images && currentPkg.images.length > 0 ? `
+            <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 24px; border-radius: 8px;">
+              ${currentPkg.images.map(img => `
+                <img src="${img}" style="height: 180px; width: auto; min-width: 240px; object-fit: cover; border-radius: 8px; border: 1px solid #e5e7eb;" />
+              `).join('')}
+            </div>
+          ` : `
+            <div style="border-radius: 14px; overflow: hidden; margin-bottom: 24px; max-height: 280px;">
+              <img src="${getDestImage(currentPkg.destination)}" alt="${currentPkg.destination}" style="width: 100%; height: 280px; object-fit: cover; display: block;"/>
+            </div>
+          `}
 
           <div class="detail-info-grid">
             <div>

@@ -375,7 +375,7 @@
           return `
             <div class="pkg-card">
               <div class="pkg-card-img">
-                <img src="${imgUrl}" alt="${pkg.name}" />
+                <img src="${pkg.images && pkg.images.length > 0 ? pkg.images[0] : imgUrl}" alt="${pkg.name}" onerror="this.onerror=null; this.src='${imgUrl}';" />
                 <div class="pkg-badge">${pkg.status || 'Verified'}</div>
               </div>
               <div class="pkg-card-body">
