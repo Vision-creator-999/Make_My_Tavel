@@ -847,6 +847,7 @@ async function saveHotel(e){
   try {
     const res = await fetch('/api/hotels', {
       method: 'POST',
+      credentials: 'include',
       headers: { 
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}` // use token if present, fallback to cookie session
@@ -891,7 +892,11 @@ async function saveCab(e){
   try {
     const res = await fetch('/api/cabs', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify(payload)
     });
 
@@ -927,7 +932,11 @@ async function savePackage(e){
   try {
     const res = await fetch('/api/trip-bundles', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify(payload)
     });
 
@@ -1022,6 +1031,7 @@ async function saveStatus(e) {
   try {
     const res = await fetch(url, {
       method: 'PUT',
+      credentials: 'include',
       headers: { 
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -1054,6 +1064,7 @@ async function deleteItem(type,idx){
   try {
     const res = await fetch(url, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }

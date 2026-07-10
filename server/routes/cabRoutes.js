@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { protect, adminOnly } = require('../middleware/auth');
 const Cab = require('../models/Cab');
 
 // GET /api/cabs
@@ -40,7 +41,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/cabs
-router.post('/', async (req, res) => {
+router.post('/', protect, adminOnly, async (req, res) => {
   try {
     const cab = await Cab.create(req.body);
     res.status(201).json(cab);
@@ -50,7 +51,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/cabs/:id
-router.put('/:id', async (req, res) => {
+router.put('/:id', protect, adminOnly, async (req, res) => {
   try {
     const cab = await Cab.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -64,7 +65,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE /api/cabs/:id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protect, adminOnly, async (req, res) => {
   try {
     const cab = await Cab.findByIdAndDelete(req.params.id);
     if (!cab) return res.status(404).json({ error: 'Cab not found' });

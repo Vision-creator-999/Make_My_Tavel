@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs');
 const dns = require('dns');
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
-const User = require('./server/models/User');
+const User = require('./models/User');
 
 async function createAdmin() {
   try {

@@ -354,6 +354,21 @@
     function authHeaders() {
       return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` };
     }
+    async function adminFetch(url, options = {}) {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getToken()}`,
+        ...(options.headers || {})
+      };
+      if (options.body instanceof FormData) {
+        delete headers['Content-Type'];
+      }
+      return fetch(url, {
+        credentials: 'include',
+        ...options,
+        headers
+      });
+    }
 
     // ═══════════════════════════════════════
     // TAB SWITCHING
@@ -372,7 +387,7 @@
     // ═══════════════════════════════════════
     async function loadHotels() {
       try {
-        const res = await fetch('/api/hotels');
+        const res = await adminFetch('/api/hotels');
         if (res.ok) { allHotels = await res.json(); renderHotels(allHotels); }
       } catch (err) { console.error('Load hotels error:', err); }
     }
@@ -622,7 +637,7 @@
             uploadData.append('images', file);
           });
 
-          const uploadRes = await fetch('/api/upload/hotel', {
+          const uploadRes = await adminFetch('/api/upload/hotel', {
             method: 'POST',
             body: uploadData
           });
@@ -651,12 +666,8 @@
 
         const url = editingHotelId ? `/api/hotels/${editingHotelId}` : '/api/hotels';
         const method = editingHotelId ? 'PUT' : 'POST';
-        const res = await fetch(url, { 
+        const res = await adminFetch(url, { 
           method, 
-          headers: {
-            'Content-Type': 'application/json',
-            ...authHeaders()
-          }, 
           body: JSON.stringify(body) 
         });
 
@@ -678,7 +689,7 @@
     async function deleteHotel(id, name) {
       if (!confirm(`Delete "${name}"? This will soft-delete the hotel.`)) return;
       try {
-        const res = await fetch(`/api/hotels/${id}`, { method: 'DELETE', headers: authHeaders() });
+        const res = await adminFetch(`/api/hotels/${id}`, { method: 'DELETE' });
         if (res.ok) loadHotels();
         else alert('Failed to delete hotel');
       } catch (err) { alert('Connection error'); }
@@ -689,7 +700,7 @@
     // ═══════════════════════════════════════
     async function loadBookings() {
       try {
-        const res = await fetch('/api/hotel-bookings/admin/all', { headers: authHeaders() });
+        const res = await adminFetch('/api/hotel-bookings/admin/all');
         if (res.ok) {
           allBookings = await res.json();
           renderBookingStats();
@@ -784,8 +795,8 @@
       if (action === 'cancelled' && !confirm('Cancel this booking?')) return;
 
       try {
-        const res = await fetch(`/api/hotel-bookings/${id}/status`, {
-          method: 'PUT', headers: authHeaders(),
+        const res = await adminFetch(`/api/hotel-bookings/${id}/status`, {
+          method: 'PUT',
           body: JSON.stringify({ bookingStatus: action })
         });
         if (res.ok) loadBookings();
@@ -852,7 +863,7 @@
     // ═══════════════════════════════════════
     async function loadAnalytics() {
       try {
-        const res = await fetch('/api/hotels/stats', { headers: authHeaders() });
+        const res = await adminFetch('/api/hotels/stats');
         if (res.ok) {
           statsData = await res.json();
           renderAnalytics();

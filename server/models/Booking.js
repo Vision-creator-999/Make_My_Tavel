@@ -31,6 +31,12 @@ const bookingSchema = new mongoose.Schema({
   bookingType: {
     type: String,
     enum: ['cab', 'package']
+  },
+  itemName: {
+    type: String
+  },
+  itemCity: {
+    type: String
   }
 }, {
   timestamps: true

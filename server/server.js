@@ -9,8 +9,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
-const User = require('./server/models/User');
-const { generateToken } = require('./server/middleware/auth');
+const User = require('./models/User');
+const { generateToken, protect, adminOnly } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5500;
@@ -20,11 +20,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static website files from the current folder
-app.use(express.static(__dirname));
+// Serve static website files from the frontend folder
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Serve uploaded images
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
@@ -165,6 +165,134 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+// 4a. Get user registration and booking stats (Admin only)
+app.get('/api/users/stats', protect, adminOnly, async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const googleUsers = await User.countDocuments({ authProvider: 'google' });
+    const verifiedUsers = await User.countDocuments({ verified: true });
+    
+    // Registrations by month (current year)
+    const currentYear = new Date().getFullYear();
+    const monthlyRegistrations = await User.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(currentYear, 0, 1),
+            $lt: new Date(currentYear + 1, 0, 1)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: { $month: '$createdAt' },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+    
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const registrationsByMonth = months.map((month, i) => {
+      const found = monthlyRegistrations.find(m => m._id === i + 1);
+      return { month, count: found ? found.count : 0 };
+    });
+
+    // Top active users by spend
+    const HotelBooking = require('./models/HotelBooking');
+    const Booking = require('./models/Booking');
+
+    const hb = await HotelBooking.find().lean();
+    const ob = await Booking.find().lean();
+
+    const userSpend = {};
+    [...hb, ...ob].forEach(b => {
+      const uId = b.user ? b.user.toString() : 'guest';
+      if (!userSpend[uId]) {
+        userSpend[uId] = { bookings: 0, spend: 0 };
+      }
+      userSpend[uId].bookings += 1;
+      userSpend[uId].spend += (b.totalAmount || b.amount || 0);
+    });
+
+    const userIds = Object.keys(userSpend).filter(id => id !== 'guest');
+    const dbUsers = await User.find({ _id: { $in: userIds } }).select('name email picture').lean();
+    const userMap = {};
+    dbUsers.forEach(u => {
+      userMap[u._id.toString()] = u;
+    });
+
+    const topUsers = Object.entries(userSpend)
+      .map(([id, stats]) => {
+        const u = userMap[id];
+        return {
+          id,
+          name: u ? u.name : 'Guest User',
+          email: u ? u.email : 'N/A',
+          picture: u ? u.picture : '',
+          bookings: stats.bookings,
+          spend: stats.spend
+        };
+      })
+      .sort((x, y) => y.spend - x.spend)
+      .slice(0, 5);
+
+    res.json({
+      totalUsers,
+      googleUsers,
+      verifiedUsers,
+      registrationsByMonth,
+      topUsers
+    });
+  } catch (err) {
+    console.error('Error fetching user stats:', err);
+    res.status(500).json({ error: 'Failed to fetch user stats' });
+  }
+});
+
+// 4b. Get all platform bookings merged (Admin only)
+app.get('/api/users/bookings', protect, adminOnly, async (req, res) => {
+  try {
+    const HotelBooking = require('./server/models/HotelBooking');
+    const Booking = require('./server/models/Booking');
+
+    const listA = await HotelBooking.find().populate('user').populate('hotel');
+    const listB = await Booking.find().populate('user');
+
+    const formattedA = listA.map(b => ({
+      _id: b._id || b.id,
+      id: b.bookingId || (b._id || b.id || '').toString(),
+      customerName: b.guestName || (b.user ? b.user.name : 'Unknown Guest'),
+      phone: b.guestPhone || 'N/A',
+      date: b.createdAt ? new Date(b.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      amount: b.totalAmount || 0,
+      status: b.bookingStatus === 'checked_in' || b.bookingStatus === 'checked_out' ? 'completed' : b.bookingStatus,
+      bookingType: 'hotel',
+      itemName: b.hotelName || 'Unknown Hotel',
+      itemCity: b.hotelCity || 'Unknown City'
+    }));
+
+    const formattedB = listB.map(b => ({
+      _id: b._id || b.id,
+      id: b.bookingId || (b._id || b.id || '').toString(),
+      customerName: b.customerName || (b.user ? b.user.name : 'Unknown Customer'),
+      phone: b.customerPhone || 'N/A',
+      date: b.bookingDate || (b.createdAt ? new Date(b.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]),
+      amount: b.amount,
+      status: b.status,
+      bookingType: b.bookingType || 'cab',
+      itemName: b.itemName || 'Unknown Item',
+      itemCity: b.itemCity || 'Unknown City'
+    }));
+
+    const merged = [...formattedA, ...formattedB].sort((x, y) => new Date(y.date) - new Date(x.date));
+    res.json(merged);
+  } catch (err) {
+    console.error('Error fetching platform bookings:', err);
+    res.status(500).json({ error: 'Failed to fetch platform bookings' });
+  }
+});
+
 // 5. Toggle user verification status
 app.post('/api/users/verify', async (req, res) => {
   try {
@@ -177,7 +305,13 @@ app.post('/api/users/verify', async (req, res) => {
       id,
       { verified: !!verified },
       { new: true }
-    ).select('-password');
+    );
+    if (user && user.toObject) {
+      // In case it's a mongoose document
+      delete user.password;
+    } else if (user) {
+      delete user.password;
+    }
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -194,15 +328,15 @@ app.post('/api/users/verify', async (req, res) => {
 });
 
 /* --- HOTEL & BOOKING ROUTES --- */
-const hotelRoutes = require('./server/routes/hotelRoutes');
-const hotelBookingRoutes = require('./server/routes/hotelBookingRoutes');
-const { router: adminAuthRoutes } = require('./server/routes/adminAuth');
-const cabRoutes = require('./server/routes/cabRoutes');
-const tripBundleRoutes = require('./server/routes/tripBundleRoutes');
-const bookingRoutes = require('./server/routes/bookingRoutes');
-const profileRoutes = require('./server/routes/profileRoutes');
-const uploadRoutes = require('./server/routes/uploadRoutes');
-const ratingRoutes = require('./server/routes/ratingRoutes');
+const hotelRoutes = require('./routes/hotelRoutes');
+const hotelBookingRoutes = require('./routes/hotelBookingRoutes');
+const { router: adminAuthRoutes } = require('./routes/adminAuth');
+const cabRoutes = require('./routes/cabRoutes');
+const tripBundleRoutes = require('./routes/tripBundleRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
+const profileRoutes = require('./routes/profileRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const ratingRoutes = require('./routes/ratingRoutes');
 
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/hotel-bookings', hotelBookingRoutes);

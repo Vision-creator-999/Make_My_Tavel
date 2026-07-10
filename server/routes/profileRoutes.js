@@ -38,7 +38,12 @@ router.put('/me', protect, async (req, res) => {
       req.user._id,
       { $set: update },
       { new: true, runValidators: true }
-    ).select('-password');
+    );
+    if (user && user.toObject) {
+      delete user.password;
+    } else if (user) {
+      delete user.password;
+    }
 
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ message: 'Profile updated successfully', user: user.toSafeJSON() });

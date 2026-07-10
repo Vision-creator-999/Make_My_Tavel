@@ -6,9 +6,9 @@ try {
   console.warn('⚠️ Could not configure custom DNS servers, using system default.');
 }
 const mongoose = require('mongoose');
-const User = require('./server/models/User');
-const Hotel = require('./server/models/Hotel');
-const HotelBooking = require('./server/models/HotelBooking');
+const User = require('./models/User');
+const Hotel = require('./models/Hotel');
+const HotelBooking = require('./models/HotelBooking');
 
 async function seed() {
   try {

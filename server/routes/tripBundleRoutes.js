@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { protect, adminOnly } = require('../middleware/auth');
 const TripBundle = require('../models/TripBundle');
 
 // GET /api/trip-bundles
@@ -43,7 +44,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/trip-bundles
-router.post('/', async (req, res) => {
+router.post('/', protect, adminOnly, async (req, res) => {
   try {
     req.body.status = 'Pending';
     const bundle = await TripBundle.create(req.body);
@@ -54,7 +55,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/trip-bundles/:id
-router.put('/:id', async (req, res) => {
+router.put('/:id', protect, adminOnly, async (req, res) => {
   try {
     const bundle = await TripBundle.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -68,7 +69,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE /api/trip-bundles/:id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protect, adminOnly, async (req, res) => {
   try {
     const bundle = await TripBundle.findByIdAndDelete(req.params.id);
     if (!bundle) return res.status(404).json({ error: 'Bundle not found' });
