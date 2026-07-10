@@ -85,7 +85,7 @@ router.get('/check', async (req, res) => {
 
 // POST /api/admin/logout
 router.post('/logout', (req, res) => {
-  res.setHeader('Set-Cookie', 'admin_token=; Path=/; HttpOnly; Max-Age=0; SameSite=Lax');
+  res.setHeader('Set-Cookie', 'admin_token=; Path=/; HttpOnly; Max-Age=0; SameSite=None; Secure');
   return res.json({ success: true, message: 'Logged out.' });
 });
 
