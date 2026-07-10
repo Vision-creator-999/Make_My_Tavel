@@ -356,6 +356,7 @@
       return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` };
     }
     async function adminFetch(url, options = {}) {
+      const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
       const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getToken()}`,
@@ -364,7 +365,7 @@
       if (options.body instanceof FormData) {
         delete headers['Content-Type'];
       }
-      return fetch(url, {
+      return fetch(fullUrl, {
         credentials: 'include',
         ...options,
         headers

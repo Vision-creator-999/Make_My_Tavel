@@ -512,7 +512,7 @@
           uploadData.append('images', file);
         });
 
-        const uploadRes = await fetch('/api/upload/hotel', {
+        const uploadRes = await fetch(`${API_BASE_URL}/api/upload/hotel`, {
           method: 'POST',
           body: uploadData
         });
@@ -546,7 +546,7 @@
           hotelId: `MMT-HTL-${Math.floor(100000 + Math.random() * 900000)}`
         };
 
-        const response = await fetch('/api/hotels', {
+        const response = await fetch(`${API_BASE_URL}/api/hotels`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

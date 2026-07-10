@@ -40,9 +40,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/cabs
-router.post('/', protect, adminOnly, async (req, res) => {
+// POST /api/cabs (Public listing registration, defaults to Pending)
+router.post('/', async (req, res) => {
   try {
+    req.body.status = 'Pending';
     const cab = await Cab.create(req.body);
     res.status(201).json(cab);
   } catch (err) {

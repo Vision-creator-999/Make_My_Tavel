@@ -859,7 +859,7 @@
             uploadData.append('images', file);
           });
 
-          const uploadRes = await fetch('/api/upload/cab', {
+          const uploadRes = await fetch(`${API_BASE_URL}/api/upload/cab`, {
             method: 'POST',
             body: uploadData
           });
@@ -890,7 +890,7 @@
             status: 'Pending'
           };
 
-          const response = await fetch('/api/cabs', {
+          const response = await fetch(`${API_BASE_URL}/api/cabs`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

@@ -43,8 +43,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/trip-bundles
-router.post('/', protect, adminOnly, async (req, res) => {
+// POST /api/trip-bundles (Public listing registration, defaults to Pending)
+router.post('/', async (req, res) => {
   try {
     req.body.status = 'Pending';
     const bundle = await TripBundle.create(req.body);
