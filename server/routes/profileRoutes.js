@@ -95,7 +95,10 @@ router.get('/me/bookings', protect, async (req, res) => {
       const HotelBooking = require('../models/HotelBooking');
       hotelBookings = await HotelBooking.find({ user: req.user._id })
         .sort({ createdAt: -1 }).limit(20).lean();
-      hotelBookings = hotelBookings.map(b => ({ ...b, type: 'hotel', id: b._id }));
+      hotelBookings = hotelBookings.map(b => {
+        const plain = b.toObject ? b.toObject() : b;
+        return { ...plain, type: 'hotel', id: plain._id };
+      });
     } catch (e) {
       if (e.code !== 'MODULE_NOT_FOUND') throw e;
     }
@@ -104,8 +107,14 @@ router.get('/me/bookings', protect, async (req, res) => {
       const Booking = require('../models/Booking');
       const other = await Booking.find({ user: req.user._id })
         .sort({ createdAt: -1 }).limit(20).lean();
-      cabBookings = other.filter(b => b.bookingType === 'cab').map(b => ({ ...b, type: 'cab', id: b._id }));
-      packageBookings = other.filter(b => b.bookingType === 'package').map(b => ({ ...b, type: 'package', id: b._id }));
+      cabBookings = other.filter(b => b.bookingType === 'cab').map(b => {
+        const plain = b.toObject ? b.toObject() : b;
+        return { ...plain, type: 'cab', id: plain._id };
+      });
+      packageBookings = other.filter(b => b.bookingType === 'package').map(b => {
+        const plain = b.toObject ? b.toObject() : b;
+        return { ...plain, type: 'package', id: plain._id };
+      });
     } catch (e) {
       if (e.code !== 'MODULE_NOT_FOUND') throw e;
     }

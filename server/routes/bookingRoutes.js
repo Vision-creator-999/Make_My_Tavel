@@ -95,6 +95,7 @@ router.put('/:id', async (req, res) => {
 
     res.status(404).json({ error: 'Booking not found' });
   } catch (err) {
+    console.error('Error in PUT /api/bookings/:id:', err);
     res.status(400).json({ error: err.message });
   }
 });
