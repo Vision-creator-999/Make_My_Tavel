@@ -61,6 +61,8 @@
     .status-badge.refunded { background: #F1F5F9; color: #64748B; }
     .status-badge.active { background: #DCFCE7; color: #15803D; }
     .status-badge.inactive { background: #FEE2E2; color: #DC2626; }
+    .status-badge.approved { background: #DCFCE7; color: #15803D; }
+    .status-badge.rejected { background: #FEE2E2; color: #DC2626; }
     
     /* Action buttons */
     .action-btn { border: 1.5px solid var(--color-border); background: #fff; color: var(--color-text-heading); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all var(--transition-fast); margin: 0 2px; }
@@ -222,8 +224,20 @@
 
     <!-- ═══════════════ HOTELS TAB ═══════════════ -->
     <div class="tab-content active" id="tab-hotels">
+      <div class="stats-row" style="margin-bottom: 24px;">
+        <div class="stat-card"><label>Total Hotels</label><div class="val" id="stat-total-hotels">0</div></div>
+        <div class="stat-card"><label>Approved Hotels</label><div class="val green" id="stat-approved-hotels">0</div></div>
+        <div class="stat-card"><label>Pending Hotels</label><div class="val orange" id="stat-pending-hotels">0</div></div>
+        <div class="stat-card"><label>Rejected Hotels</label><div class="val red" id="stat-rejected-hotels">0</div></div>
+      </div>
       <div class="filter-bar">
         <input type="text" id="hotel-search" placeholder="Search hotels by name or city..." oninput="filterHotels()"/>
+        <select id="hotel-status-filter" onchange="filterHotels()">
+          <option value="">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+        </select>
         <button class="primary-btn" onclick="openHotelModal()">+ Add Hotel</button>
       </div>
       <div class="table-container">
@@ -398,22 +412,45 @@
       const tbody = document.getElementById('hotels-tbody');
       const empty = document.getElementById('hotels-empty');
       const query = document.getElementById('hotel-search').value.toLowerCase();
-      const filtered = hotels.filter(h => h.name.toLowerCase().includes(query) || h.city.toLowerCase().includes(query));
+      const statusFilter = document.getElementById('hotel-status-filter').value;
+
+      const filtered = hotels.filter(h => {
+        const matchesQuery = h.name.toLowerCase().includes(query) || h.city.toLowerCase().includes(query);
+        const matchesStatus = !statusFilter || h.status === statusFilter;
+        return matchesQuery && matchesStatus;
+      });
+
+      // Update stat cards
+      const total = hotels.length;
+      const approved = hotels.filter(h => h.status === 'Approved').length;
+      const pending = hotels.filter(h => h.status === 'Pending').length;
+      const rejected = hotels.filter(h => h.status === 'Rejected').length;
+
+      document.getElementById('stat-total-hotels').textContent = total;
+      document.getElementById('stat-approved-hotels').textContent = approved;
+      document.getElementById('stat-pending-hotels').textContent = pending;
+      document.getElementById('stat-rejected-hotels').textContent = rejected;
 
       if (filtered.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
       empty.style.display = 'none';
 
       tbody.innerHTML = filtered.map(h => {
         const available = h.rooms?.reduce((s, r) => s + (r.availableRooms || 0), 0) || 0;
-        const total = h.rooms?.reduce((s, r) => s + (r.totalRooms || 0), 0) || 0;
+        const totalRooms = h.rooms?.reduce((s, r) => s + (r.totalRooms || 0), 0) || 0;
         return `<tr>
           <td><img class="hotel-thumb" src="${h.images?.[0] || 'https://via.placeholder.com/48x36'}" alt=""/></td>
           <td><strong>${h.name}</strong></td>
           <td>${h.city}</td>
           <td>₹${h.pricePerNight?.toLocaleString()}</td>
           <td>⭐ ${h.rating || 0}</td>
-          <td>${available}/${total}</td>
-          <td><span class="status-badge ${h.isActive ? 'active' : 'inactive'}">${h.isActive ? 'Active' : 'Inactive'}</span></td>
+          <td>${available}/${totalRooms}</td>
+          <td>
+            <select class="action-select status-badge ${h.status?.toLowerCase() || 'pending'}" onchange="updateHotelStatus('${h._id}', this.value)">
+              <option value="Pending" ${h.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Approved" ${h.status === 'Approved' ? 'selected' : ''}>Approved</option>
+              <option value="Rejected" ${h.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+            </select>
+          </td>
           <td>
             <button class="action-btn" onclick="editHotel('${h._id}')">Edit</button>
             <button class="action-btn danger" onclick="deleteHotel('${h._id}', '${h.name}')">Delete</button>
@@ -423,6 +460,20 @@
     }
 
     function filterHotels() { renderHotels(allHotels); }
+
+    async function updateHotelStatus(id, newStatus) {
+      try {
+        const res = await adminFetch(`/api/hotels/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (res.ok) {
+          loadHotels();
+        } else {
+          alert('Failed to update status');
+        }
+      } catch (err) { alert('Network error'); }
+    }
 
     // Admin Hotel Image upload variables and handlers
     let adminHotelFiles = [];
