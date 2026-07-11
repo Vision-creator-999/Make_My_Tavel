@@ -9,6 +9,7 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* Specific styles for Login Page split-screen layout */
     .login-container {
@@ -399,21 +400,8 @@
           <div class="auth-title">Welcome Back</div>
           <div class="auth-sub">Enter your details to log in to your account.</div>
 
-          <!-- Google Sign Up Button -->
-          <button class="google-btn" id="google-login-btn">
-            <!-- Google "G" Icon -->
-            <svg viewBox="0 0 48 48" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#EA4335"
-                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-              <path fill="#4285F4"
-                d="M46.5 24c0-1.55-.15-3.24-.47-4.77H24v9.03h12.75c-.55 3-2.22 5.5-4.77 7.22l7.47 5.78c4.37-4.03 6.92-9.98 6.92-17.25z" />
-              <path fill="#FBBC05"
-                d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z" />
-              <path fill="#34A853"
-                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.47-5.78c-2.11 1.42-4.8 2.29-8.42 2.29-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-            </svg>
-            Continue with Google
-          </button>
+          <!-- Google Sign In Button Container -->
+          <div id="google-login-btn" style="margin-bottom: 20px; width: 100%;"></div>
 
           <div class="divider-text">or login with email</div>
 
@@ -438,20 +426,8 @@
           <div class="auth-title">Create Account</div>
           <div class="auth-sub">Join Make My Travel and discover premium bookings.</div>
 
-          <!-- Google Sign Up Button -->
-          <button class="google-btn" id="google-signup-btn">
-            <svg viewBox="0 0 48 48" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#EA4335"
-                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-              <path fill="#4285F4"
-                d="M46.5 24c0-1.55-.15-3.24-.47-4.77H24v9.03h12.75c-.55 3-2.22 5.5-4.77 7.22l7.47 5.78c4.37-4.03 6.92-9.98 6.92-17.25z" />
-              <path fill="#FBBC05"
-                d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z" />
-              <path fill="#34A853"
-                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.47-5.78c-2.11 1.42-4.8 2.29-8.42 2.29-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-            </svg>
-            Sign up with Google
-          </button>
+          <!-- Google Sign Up Button Container -->
+          <div id="google-signup-btn" style="margin-bottom: 20px; width: 100%;"></div>
 
           <div class="divider-text">or register with email</div>
 
@@ -590,139 +566,42 @@
       }
     });
 
-    // 3. Google Login / Sign Up Simulation
-    // Since Google APIs require a client ID and live domains, we implement a beautiful simulation dialogue
-    // that captures authentic-looking Google account details.
-    async function simulateGoogleAuth() {
-      hideBanner();
-
-      // Simulate Google Authentication Pop-up
-      const mockProfiles = [
-        { name: 'Aditya Sharma', email: 'aditya.sharma@gmail.com', picture: 'https://i.pravatar.cc/80?img=33', googleId: 'google_108239082390' },
-        { name: 'Kriti Sen', email: 'kriti.sen@gmail.com', picture: 'https://i.pravatar.cc/80?img=38', googleId: 'google_109283091283' },
-        { name: 'Dev Patel', email: 'dev.patel@gmail.com', picture: 'https://i.pravatar.cc/80?img=12', googleId: 'google_103982098302' }
-      ];
-
-      // Ask user to pick which Google account they want to simulate
-      const overlay = document.createElement('div');
-      overlay.style.cssText = `
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        font-family: 'Inter', sans-serif;
-      `;
-
-      const modal = document.createElement('div');
-      modal.style.cssText = `
-        background: #fff;
-        border-radius: 16px;
-        padding: 24px;
-        width: 100%;
-        max-width: 360px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        text-align: center;
-      `;
-
-      modal.innerHTML = `
-        <svg viewBox="0 0 48 48" width="36px" height="36px" style="margin-bottom: 12px;">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.5 24c0-1.55-.15-3.24-.47-4.77H24v9.03h12.75c-.55 3-2.22 5.5-4.77 7.22l7.47 5.78c4.37-4.03 6.92-9.98 6.92-17.25z"/>
-          <path fill="#FBBC05" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.47-5.78c-2.11 1.42-4.8 2.29-8.42 2.29-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        <h3 style="margin-bottom: 6px; font-size: 18px; font-weight: 700; color: #1E293B;">Sign in with Google</h3>
-        <p style="margin-bottom: 20px; font-size: 13px; color: #64748B;">Choose a Google Account to sign in to Make My Travel</p>
-        <div id="mock-profiles-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
-      `;
-
-      overlay.appendChild(modal);
-      document.body.appendChild(overlay);
-
-      const listContainer = modal.querySelector('#mock-profiles-list');
-
-      mockProfiles.forEach(profile => {
-        const item = document.createElement('div');
-        item.style.cssText = `
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 10px 14px;
-          border: 1.5px solid #E2E8F0;
-          border-radius: 10px;
-          cursor: pointer;
-          transition: all 0.2s;
-          text-align: left;
-        `;
-        item.innerHTML = `
-          <img src="${profile.picture}" style="width: 32px; height: 32px; border-radius: 50%;" />
-          <div>
-            <div style="font-size: 13px; font-weight: 700; color: #1E293B;">${profile.name}</div>
-            <div style="font-size: 11px; color: #64748B;">${profile.email}</div>
-          </div>
-        `;
-
-        item.addEventListener('mouseenter', () => {
-          item.style.borderColor = '#0F8B8D';
-          item.style.backgroundColor = '#F0FDFD';
-        });
-        item.addEventListener('mouseleave', () => {
-          item.style.borderColor = '#E2E8F0';
-          item.style.backgroundColor = 'transparent';
-        });
-
-        item.addEventListener('click', async () => {
-          document.body.removeChild(overlay);
-
-          try {
-            const res = await fetch(`${backendUrl}/api/auth/google`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(profile)
-            });
-
-            const data = await res.json();
-            if (!res.ok) {
-              showBanner(data.error || 'Google Login failed', 'error');
-            } else {
-              showBanner('Google authentication successful!', 'success');
-              localStorage.setItem('user', JSON.stringify(data.user));
-              if (data.token) localStorage.setItem('token', data.token);
-              setTimeout(() => {
-                window.location.href = 'landing.html';
-              }, 1000);
-            }
-          } catch (err) {
-            showBanner('Server connection error.', 'error');
-          }
-        });
-
-        listContainer.appendChild(item);
+    // 3. Google Sign-In real Integration
+    window.onload = function() {
+      google.accounts.id.initialize({
+        client_id: "608434935286-ppnamcqtejsmsdg1uoa490maij7kpenv.apps.googleusercontent.com",
+        callback: handleGoogleCredentialResponse
       });
+      google.accounts.id.renderButton(
+        document.getElementById("google-login-btn"),
+        { theme: "outline", size: "large", width: "100%" }
+      );
+      google.accounts.id.renderButton(
+        document.getElementById("google-signup-btn"),
+        { theme: "outline", size: "large", width: "100%" }
+      );
+    };
 
-      // Add cancel button
-      const cancelBtn = document.createElement('button');
-      cancelBtn.textContent = 'Cancel';
-      cancelBtn.style.cssText = `
-        margin-top: 16px;
-        background: transparent;
-        border: none;
-        color: #64748B;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-      `;
-      cancelBtn.addEventListener('click', () => {
-        document.body.removeChild(overlay);
-      });
-      modal.appendChild(cancelBtn);
+    async function handleGoogleCredentialResponse(response) {
+      try {
+        const res = await fetch(`${backendUrl}/api/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showBanner(data.error || 'Google Login failed', 'error');
+        } else {
+          showBanner('Google authentication successful!', 'success');
+          localStorage.setItem('user', JSON.stringify(data.user));
+          if (data.token) localStorage.setItem('token', data.token);
+          setTimeout(() => { window.location.href = 'landing.html'; }, 1000);
+        }
+      } catch (err) {
+        showBanner('Server connection error.', 'error');
+      }
     }
-
-    document.getElementById('google-login-btn').addEventListener('click', simulateGoogleAuth);
-    document.getElementById('google-signup-btn').addEventListener('click', simulateGoogleAuth);
   </script>
 </body>
 

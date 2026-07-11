@@ -11,6 +11,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const User = require('./models/User');
 const { generateToken, protect, adminOnly } = require('./middleware/auth');
+const { OAuth2Client } = require('google-auth-library');
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const app = express();
 const PORT = process.env.PORT || 5500;
@@ -115,33 +117,47 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// 3. Google Sign-Up/Sign-In Capture
+// 3. Google Sign-Up/Sign-In verification
 app.post('/api/auth/google', async (req, res) => {
   try {
-    const { name, email, googleId, picture } = req.body;
-    if (!email || !name) {
-      return res.status(400).json({ error: 'Name and Email are required' });
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ error: 'Google credential is required' });
     }
 
-    let user = await User.findOne({ email: email.toLowerCase() });
+    // Verify token against Google's OAuth2 servers
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      return res.status(400).json({ error: 'Invalid Google token payload' });
+    }
+
+    const email = payload.email.toLowerCase();
+    const name = payload.name || payload.email.split('@')[0];
+    const googleId = payload.sub;
+    const picture = payload.picture || '';
+
+    let user = await User.findOne({ email });
 
     if (user) {
       user.lastLoginAt = new Date();
-      if (googleId) {
-        user.googleId = googleId;
-        user.authProvider = 'google';
-        user.verified = true;
-      }
-      if (picture) user.picture = picture;
+      user.googleId = googleId;
+      user.authProvider = 'google';
+      user.verified = true;
+      if (picture && !user.picture) user.picture = picture;
       await user.save();
     } else {
       user = await User.create({
         name,
-        email: email.toLowerCase(),
+        email,
         authProvider: 'google',
         verified: true,
         picture: picture || `https://i.pravatar.cc/80?u=${email}`,
-        googleId: googleId || 'simulated_google_id',
+        googleId,
         lastLoginAt: new Date()
       });
     }
