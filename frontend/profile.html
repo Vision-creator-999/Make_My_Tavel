@@ -342,8 +342,35 @@ function renderBks(){
     const em='<div class="es"><div class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg></div><h3>No bookings yet</h3><p>Start exploring!</p><a href="landing.html" style="display:inline-block;margin-top:16px;padding:10px 24px;border-radius:20px;background:var(--accent);color:#fff;font-size:13px;font-weight:700;">Explore &rarr;</a></div>';
     fe.innerHTML=em;re.innerHTML=em;return;
   }
-  const tbl=rows=>'<div class="btw"><table class="btt"><thead><tr><th>#</th><th>Type</th><th>Details</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>'+rows.map((b,i)=>'<tr><td style="color:var(--muted);font-size:12px;">'+(i+1)+'</td><td><span class="bt '+(b.type||'hotel')+'">'+bi(b.type)+' '+cap(b.type||'Hotel')+'</span></td><td><div style="font-weight:600;color:var(--heading);">'+(b.hotelName||b.cabName||b.packageName||b.name||'Booking')+'</div><div style="font-size:11px;color:var(--muted);">'+(b.city||b.destination||'—')+'</div></td><td style="font-size:12px;">'+(b.createdAt?new Date(b.createdAt).toLocaleDateString('en-IN'):'—')+'</td><td style="font-weight:700;color:var(--accent);">'+(b.totalAmount?'Rs.'+Number(b.totalAmount).toLocaleString():'—')+'</td><td><span class="sp '+(b.status||'confirmed').toLowerCase()+'">'+cap(b.status||'Confirmed')+'</span></td></tr>').join('')+'</tbody></table></div>';
+  const tbl=rows=>'<div class="btw"><table class="btt"><thead><tr><th>#</th><th>Type</th><th>Details</th><th>Date</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows.map((b,i)=>{
+    const status = (b.status || b.bookingStatus || 'confirmed').toLowerCase();
+    const actionBtn = status !== 'cancelled' ? `<button onclick="cancelBooking('${b.id || b._id}')" style="background:#EF4444;color:#fff;border:none;border-radius:4px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;">Cancel</button>` : '—';
+    return '<tr><td style="color:var(--muted);font-size:12px;">'+(i+1)+'</td><td><span class="bt '+(b.type||'hotel')+'">'+bi(b.type)+' '+cap(b.type||'Hotel')+'</span></td><td><div style="font-weight:600;color:var(--heading);">'+(b.hotelName||b.cabName||b.packageName||b.name||'Booking')+'</div><div style="font-size:11px;color:var(--muted);">'+(b.city||b.destination||'—')+'</div></td><td style="font-size:12px;">'+(b.createdAt?new Date(b.createdAt).toLocaleDateString('en-IN'):'—')+'</td><td style="font-weight:700;color:var(--accent);">'+(b.totalAmount?'Rs.'+Number(b.totalAmount).toLocaleString():'—')+'</td><td><span class="sp '+status+'">'+cap(status)+'</span></td><td>'+actionBtn+'</td></tr>';
+  }).join('')+'</tbody></table></div>';
   fe.innerHTML=tbl(bks);re.innerHTML=tbl(bks.slice(0,5));
+}
+
+async function cancelBooking(id) {
+  if (!confirm('Are you sure you want to cancel this booking?')) return;
+  try {
+    const res = await fetch(API + `/api/bookings/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + tok()
+      },
+      body: JSON.stringify({ status: 'cancelled' })
+    });
+    if (res.ok) {
+      alert('Booking cancelled successfully!');
+      await loadBks();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Failed to cancel booking.');
+    }
+  } catch (err) {
+    alert('Network error. Please try again.');
+  }
 }
 
 function bi(t){return t==='cab'?'🚗':t==='package'?'🎒':'🏨';}
