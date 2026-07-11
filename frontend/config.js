@@ -1,6 +1,4 @@
-const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === ""
-  ? "" 
-  : "https://make-my-tavel.onrender.com";
+const API_BASE_URL = "https://make-my-tavel.onrender.com";
 
 // Intercept global fetch to automatically prepend API_BASE_URL to relative /api/ requests
 if (window.fetch) {
