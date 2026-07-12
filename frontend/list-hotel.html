@@ -629,6 +629,9 @@
 
         const uploadRes = await fetch(`${API_BASE_URL}/api/upload/hotel`, {
           method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
           body: uploadData
         });
 
@@ -665,7 +668,8 @@
         const response = await fetch(`${API_BASE_URL}/api/hotels`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify(hotelData)
         });

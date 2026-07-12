@@ -48,6 +48,10 @@ const hotelSchema = new mongoose.Schema({
     enum: ['Approved', 'Pending', 'Rejected'],
     default: 'Pending'
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   name: {
     type: String,
     trim: true

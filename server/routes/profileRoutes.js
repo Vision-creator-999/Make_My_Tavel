@@ -150,4 +150,68 @@ router.get('/me/bookings', protect, async (req, res) => {
   }
 });
 
+// GET /api/profile/me/listings — Fetch all listings submitted by the logged-in user
+router.get('/me/listings', protect, async (req, res) => {
+  try {
+    const user = req.user._id;
+    const userEmail = req.user.email ? req.user.email.toLowerCase() : null;
+    const userPhone = req.user.phone ? req.user.phone.trim() : null;
+
+    const Cab = require('../models/Cab');
+    const Hotel = require('../models/Hotel');
+    const TripBundle = require('../models/TripBundle');
+
+    // Build query objects for backwards compatibility fallback
+    const cabQuery = { $or: [{ user }] };
+    if (userEmail) cabQuery.$or.push({ driverEmail: userEmail });
+    if (userPhone) cabQuery.$or.push({ mobile: userPhone });
+
+    const hotelQuery = { $or: [{ user }] };
+    if (userEmail) hotelQuery.$or.push({ email: userEmail });
+    if (userPhone) hotelQuery.$or.push({ mobile: userPhone });
+
+    const pkgQuery = { $or: [{ user }] };
+    if (userEmail) pkgQuery.$or.push({ partnerEmail: userEmail });
+
+    const [cabs, hotels, packages] = await Promise.all([
+      Cab.find(cabQuery).sort({ createdAt: -1 }).lean(),
+      Hotel.find(hotelQuery).sort({ createdAt: -1 }).lean(),
+      TripBundle.find(pkgQuery).sort({ createdAt: -1 }).lean()
+    ]);
+
+    // Format them for a unified list UI
+    const formattedCabs = cabs.map(c => ({
+      id: c._id,
+      type: 'cab',
+      name: `${c.vehicle} (${c.plate})`,
+      status: c.status || 'Pending',
+      createdAt: c.createdAt
+    }));
+
+    const formattedHotels = hotels.map(h => ({
+      id: h._id,
+      type: 'hotel',
+      name: h.name || h.hotelName,
+      status: h.status || 'Pending',
+      createdAt: h.createdAt
+    }));
+
+    const formattedPackages = packages.map(p => ({
+      id: p._id,
+      type: 'package',
+      name: p.name,
+      status: p.status || 'Pending',
+      createdAt: p.createdAt
+    }));
+
+    const allListings = [...formattedCabs, ...formattedHotels, ...formattedPackages]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json({ listings: allListings });
+  } catch (err) {
+    console.error('Listings fetch error:', err);
+    res.status(500).json({ error: 'Failed to fetch listings' });
+  }
+});
+
 module.exports = router;

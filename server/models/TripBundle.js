@@ -35,6 +35,10 @@ const tripBundleSchema = new mongoose.Schema({
   },
   partnerEmail: {
     type: String
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, {
   timestamps: true

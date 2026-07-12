@@ -10,7 +10,7 @@ router.get('/status/:hotelId', hotelController.getHotelStatus);
 router.get('/:id', hotelController.getHotelById);
 
 // Admin-only routes
-router.post('/', hotelController.createHotel);
+router.post('/', protect, hotelController.createHotel);
 router.put('/:id', protect, adminOnly, hotelController.updateHotel);
 router.delete('/:id', protect, adminOnly, hotelController.deleteHotel);
 

@@ -685,8 +685,8 @@ section {
 }
 
 .dest-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: var(--shadow-lg);
 }
 
 .dest-card:active {

@@ -44,7 +44,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/trip-bundles (Public listing registration, defaults to Pending)
-router.post('/', async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
     // 60 seconds deduplication check
     const oneMinuteAgo = new Date(Date.now() - 60000);
@@ -61,6 +61,7 @@ router.post('/', async (req, res) => {
     }
 
     req.body.status = 'Pending';
+    req.body.user = req.user._id;
     const bundle = await TripBundle.create(req.body);
     res.status(201).json(bundle);
   } catch (err) {

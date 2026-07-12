@@ -58,14 +58,18 @@ const cabSchema = new mongoose.Schema({
     type: String
   },
   images: [String],
-  status: {
-    type: String,
-    enum: ['Approved', 'Pending', 'Rejected'],
-    default: 'Pending'
-  }
-}, {
-  timestamps: true
-});
+    status: {
+      type: String,
+      enum: ['Approved', 'Pending', 'Rejected'],
+      default: 'Pending'
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  }, {
+    timestamps: true
+  });
 
 const realModel = mongoose.model('Cab', cabSchema);
 const { wrapModel } = require('../utils/dbFallback');

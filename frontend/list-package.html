@@ -475,6 +475,9 @@
 
         const uploadRes = await fetch(`${API_BASE_URL}/api/upload/package`, {
           method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
           body: uploadData
         });
 
@@ -502,7 +505,8 @@
         const response = await fetch(`${API_BASE_URL}/api/trip-bundles`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify(pkgData)
         });

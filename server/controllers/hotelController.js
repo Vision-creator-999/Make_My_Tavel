@@ -92,6 +92,7 @@ exports.createHotel = async (req, res) => {
 
     // Force status to Pending for new listings
     req.body.status = 'Pending';
+    req.body.user = req.user._id;
     const hotel = await Hotel.create(req.body);
     res.status(201).json(hotel);
   } catch (err) {

@@ -296,6 +296,142 @@
       background-color: var(--secondary-dark);
       box-shadow: 0 6px 18px rgba(23, 55, 94, 0.3);
     }
+  
+    /* My Listings Tracker styles */
+    .my-listings-section {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-top: 50px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      width: 100%;
+    }
+
+    .my-listings-section h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--secondary-color);
+      margin-bottom: 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .my-listings-section h2::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 3px;
+      background: var(--primary-color);
+      margin: 10px auto 0 auto;
+      border-radius: var(--radius-full);
+    }
+
+    .unauth-container {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .unauth-container p {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .unauth-container .login-link-btn {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .unauth-container .login-link-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .empty-listings {
+      text-align: center;
+      padding: 30px 0;
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .listings-table-container {
+      overflow-x: auto;
+    }
+
+    .listings-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .listings-table th,
+    .listings-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .listings-table th {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--secondary-color);
+      background-color: #F8FAFC;
+    }
+
+    .listings-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .listing-type-icon {
+      font-size: 18px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    .listing-type-icon.cab {
+      color: #D97706;
+    }
+
+    .listing-type-icon.hotel {
+      color: #059669;
+    }
+
+    .listing-type-icon.package {
+      color: #2563EB;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    .status-badge.pending {
+      background-color: #FEF3C7;
+      color: #D97706;
+    }
+
+    .status-badge.approved {
+      background-color: #D1FAE5;
+      color: #065F46;
+    }
+
+    .status-badge.rejected {
+      background-color: #FEE2E2;
+      color: #991B1B;
+    }
   </style>
 </head>
 <body>
@@ -443,6 +579,14 @@
       </div>
       
     </div>
+
+    <!-- MY LISTINGS SECTION -->
+    <div class="my-listings-section" id="myListingsSection">
+      <h2>My Listings Status Tracker</h2>
+      <div id="listingsContent">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -527,6 +671,7 @@
 
   <!-- JavaScript config & interaction -->
   <script src="config.js"></script>
+  <script src="globe-loader.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Footer Partner with Us dynamic options
@@ -546,6 +691,122 @@
             partnerArrow.style.transform = 'rotate(180deg)';
           }
         });
+      }
+
+      // Check login status and fetch listings
+      const listingsContent = document.getElementById('listingsContent');
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        listingsContent.innerHTML = `
+          <div class="unauth-container">
+            <p>Log in to view and track your submitted listings.</p>
+            <a href="login.html" class="login-link-btn" id="listingsLoginBtn">Log In Now</a>
+          </div>
+        `;
+        
+        const loginBtn = document.getElementById('listingsLoginBtn');
+        if (loginBtn) {
+          loginBtn.addEventListener('click', () => {
+            localStorage.setItem('redirect_after_login', 'partner-with-us.html');
+          });
+        }
+      } else {
+        fetchUserListings();
+      }
+
+      async function fetchUserListings() {
+        showLoader();
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/profile/me/listings`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (!res.ok) {
+            throw new Error('Failed to fetch listings');
+          }
+
+          const data = await res.json();
+          renderListings(data.listings || []);
+        } catch (err) {
+          console.error('Fetch listings error:', err);
+          listingsContent.innerHTML = `
+            <div class="empty-listings" style="color: #EF4444;">
+              <i class="fa-solid fa-triangle-exclamation" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+              Error loading listings: ${err.message}. Please try again later.
+            </div>
+          `;
+        } finally {
+          hideLoader();
+        }
+      }
+
+      function renderListings(listings) {
+        if (listings.length === 0) {
+          listingsContent.innerHTML = `
+            <div class="empty-listings">
+              <i class="fa-solid fa-folder-open" style="font-size: 32px; color: var(--text-muted); margin-bottom: 12px; display: block;"></i>
+              You haven't submitted any listings yet. Choose an option above to list your services!
+            </div>
+          `;
+          return;
+        }
+
+        let html = `
+          <div class="listings-table-container">
+            <table class="listings-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Listing Name</th>
+                  <th>Submitted On</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        listings.forEach(item => {
+          let typeIcon = '';
+          let typeText = '';
+          if (item.type === 'cab') {
+            typeIcon = '<i class="fa-solid fa-taxi listing-type-icon cab"></i>';
+            typeText = 'Cab';
+          } else if (item.type === 'hotel') {
+            typeIcon = '<i class="fa-solid fa-hotel listing-type-icon hotel"></i>';
+            typeText = 'Hotel';
+          } else if (item.type === 'package') {
+            typeIcon = '<i class="fa-solid fa-suitcase-rolling listing-type-icon package"></i>';
+            typeText = 'Package';
+          }
+
+          const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          }) : 'N/A';
+
+          const statusClass = (item.status || 'Pending').toLowerCase();
+
+          html += `
+            <tr>
+              <td>${typeIcon} <strong>${typeText}</strong></td>
+              <td>${item.name}</td>
+              <td>${dateStr}</td>
+              <td><span class="status-badge ${statusClass}">${item.status || 'Pending'}</span></td>
+            </tr>
+          `;
+        });
+
+        html += `
+              </tbody>
+            </table>
+          </div>
+        `;
+        listingsContent.innerHTML = html;
       }
     });
   </script>
