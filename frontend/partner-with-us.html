@@ -12,7 +12,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Partner with Us | Make My Travel</title>
-  <meta name="description" content="Register as a driver or cab operator on Make My Travel. Grow your taxi business, get local bookings, and manage rides.">
+  <meta name="description" content="Register as a driver, list your hotel, or share holiday packages on Make My Travel. Grow your travel business on India's premium network.">
   
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -42,7 +42,7 @@
     }
 
     body {
-      background-color: var(--color-bg, #F8FAFC);
+      background-color: #F8FAFC;
       font-family: var(--font-heading);
       color: var(--text-main);
     }
@@ -51,7 +51,7 @@
     .driver-hero {
       background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
       color: #FFFFFF;
-      padding: 80px 20px;
+      padding: 100px 20px 140px;
       text-align: center;
       position: relative;
     }
@@ -63,18 +63,20 @@
     
     .driver-hero h1 {
       font-family: 'Outfit', sans-serif;
-      font-size: 2.8rem;
+      font-size: 3rem;
       font-weight: 800;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
     }
     
     .driver-hero p {
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       opacity: 0.9;
-      margin-bottom: 30px;
-      max-width: 600px;
+      margin-bottom: 35px;
+      max-width: 700px;
       margin-left: auto;
       margin-right: auto;
+      line-height: 1.6;
     }
     
     .driver-stats {
@@ -107,311 +109,192 @@
       font-weight: 500;
     }
     
-    /* Form Area */
-    .driver-container {
-      max-width: 800px;
-      margin: -40px auto 80px;
+    /* Main Container */
+    .partner-container {
+      max-width: 1200px;
+      margin: 0 auto;
       padding: 0 20px;
-      position: relative;
-      z-index: 5;
-    }
-    
-    .driver-form-card {
-      background-color: var(--card-bg);
-      border-radius: var(--radius-lg);
-      padding: 40px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border-color);
-    }
-    
-    .form-section-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin: 30px 0 15px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #F0FDFD;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .form-section-title:first-of-type {
-      margin-top: 0;
     }
 
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 8px;
-    }
-
-    .input-wrapper {
-      position: relative;
-    }
-
-    .input-wrapper i {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-    }
-
-    .input-wrapper input, .input-wrapper select {
-      width: 100%;
-      padding: 12px 12px 12px 42px;
-      border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      color: var(--text-main);
-      background-color: #FAFBFD;
-      outline: none;
-      transition: var(--transition);
-      font-family: inherit;
-    }
-
-    .input-wrapper input:focus, .input-wrapper select:focus {
-      border-color: var(--primary-color);
-      background-color: #FFFFFF;
-      box-shadow: 0 0 0 3px rgba(15, 139, 141, 0.12);
-    }
-    
-    .driver-grid-2 {
+    .partner-cards-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: -60px;
+      margin-bottom: 100px;
+      position: relative;
+      z-index: 10;
     }
     
-    @media (max-width: 600px) {
-      .driver-grid-2 {
-        grid-template-columns: 1fr;
+    @media (max-width: 992px) {
+      .partner-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        margin-top: -40px;
       }
     }
-    
-    .submit-driver-btn {
-      background-color: var(--primary-color);
-      color: #FFFFFF;
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 1.15rem;
-      padding: 16px 40px;
-      border-radius: var(--radius-full);
-      width: 100%;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(15, 139, 141, 0.25);
-      transition: var(--transition);
-      margin-top: 30px;
+    @media (max-width: 768px) {
+      .partner-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-top: -30px;
+      }
     }
-    
-    .submit-driver-btn:hover {
-      background-color: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(15, 139, 141, 0.35);
-    }
-    
-    .upload-box {
-      border: 2px dashed var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 25px;
-      text-align: center;
-      cursor: pointer;
-      background-color: #F8FAFC;
-      transition: var(--transition);
+
+    .partner-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 40px 30px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-    }
-    
-    .upload-box:hover {
-      border-color: var(--primary-color);
-      background-color: #F0FDFD;
-    }
-    
-    .upload-box i {
-      font-size: 2.2rem;
-      color: var(--text-muted);
-    }
-    
-    .upload-box:hover i {
-      color: var(--primary-color);
-    }
-    .preview-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 12px;
-      margin-top: 15px;
-    }
-    .preview-item {
-      position: relative;
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      aspect-ratio: 1;
-      border: 1.5px solid var(--border-color);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .preview-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .preview-item .remove-btn {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(239, 68, 68, 0.85);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: var(--transition);
-    }
-    .preview-item .remove-btn:hover {
-      background: rgb(220, 38, 38);
-    }
-
-    .checkbox-group {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 13.5px;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .checkbox-group input {
-      margin-top: 4px;
-    }
-    
-    /* Success Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .modal-overlay.active {
-      display: flex;
-      opacity: 1;
-    }
-    
-    .modal-content {
-      background: #FFFFFF;
-      border-radius: var(--radius-lg);
-      width: 100%;
-      max-width: 520px;
-      padding: 40px;
-      position: relative;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
-      transform: scale(0.9);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    
-    .modal-overlay.active .modal-content {
-      transform: scale(1);
-    }
-    
-    .modal-close {
-      position: absolute;
-      top: 20px; right: 20px;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--text-muted);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
     }
 
-    .modal-close:hover {
-      color: var(--text-main);
+    .partner-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(23, 55, 94, 0.12);
+      border-color: rgba(15, 139, 141, 0.4);
     }
-    
-    .modal-success-icon {
-      width: 64px;
-      height: 64px;
+
+    .card-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #F1F5F9;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-icon-wrapper {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      background-color: #F0FDFD;
-      color: var(--primary-color);
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       font-size: 32px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
     }
-    
-    .modal-title {
+
+    .partner-card:hover .card-icon-wrapper {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .cab-color {
+      background-color: #FFFBEB;
+      color: #D97706;
+    }
+
+    .hotel-color {
+      background-color: #ECFDF5;
+      color: #059669;
+    }
+
+    .package-color {
+      background-color: #EFF6FF;
+      color: #2563EB;
+    }
+
+    .partner-card h3 {
       font-family: 'Outfit', sans-serif;
       font-size: 1.5rem;
       font-weight: 800;
-      margin-bottom: 10px;
-      color: var(--text-main);
+      color: var(--secondary-color);
+      margin-bottom: 12px;
     }
-    
-    .modal-body {
-      color: var(--text-muted);
+
+    .card-desc {
       font-size: 14px;
+      color: var(--text-muted);
       line-height: 1.6;
-      margin-bottom: 24px;
+      margin-bottom: 25px;
+      height: 72px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-    
-    .modal-details {
-      background-color: #F8FAFC;
-      border-radius: var(--radius-md);
-      padding: 20px;
-      text-align: left;
-      font-size: 13px;
-      margin-bottom: 24px;
-      border: 1px solid var(--border-color);
+
+    @media (max-width: 992px) {
+      .card-desc {
+        height: auto;
+      }
     }
-    
-    .modal-details p {
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px dashed var(--border-color);
-      padding-bottom: 8px;
-    }
-    
-    .modal-details p:last-child {
-      margin-bottom: 0;
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-    
-    .modal-btn {
-      background-color: var(--primary-color);
-      color: #FFFFFF;
-      font-family: var(--font-heading);
-      font-weight: 700;
+
+    .card-benefits {
+      list-style: none;
+      padding: 0;
       width: 100%;
-      padding: 12px;
-      border-radius: var(--radius-full);
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
+      margin-bottom: 30px;
+      text-align: left;
+      flex-grow: 1;
     }
-    
-    .modal-btn:hover {
+
+    .card-benefits li {
+      font-size: 13.5px;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 550;
+    }
+
+    .card-benefits li i {
+      color: var(--primary-color);
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .partner-action-btn {
+      width: 100%;
+      padding: 14px 24px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: white;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .cab-btn {
+      background-color: var(--primary-color);
+    }
+    .cab-btn:hover {
       background-color: var(--primary-dark);
+      box-shadow: 0 6px 18px rgba(15, 139, 141, 0.3);
+    }
+
+    .hotel-btn {
+      background-color: #059669;
+    }
+    .hotel-btn:hover {
+      background-color: #047857;
+      box-shadow: 0 6px 18px rgba(5, 150, 105, 0.3);
+    }
+
+    .package-btn {
+      background-color: var(--secondary-color);
+    }
+    .package-btn:hover {
+      background-color: var(--secondary-dark);
+      box-shadow: 0 6px 18px rgba(23, 55, 94, 0.3);
     }
   </style>
 </head>
@@ -420,7 +303,7 @@
   <!-- TOP PROMO BAR -->
   <div class="topbar">
     <div class="topbar-left">
-      🎁 Partner with Make My Travel &amp; get commercial ride bookings today!
+      🎁 Partner with Make My Travel &amp; get commercial listings today!
     </div>
     <div class="topbar-right">
       <a href="landing.html">
@@ -478,17 +361,17 @@
   <!-- Hero Section -->
   <section class="driver-hero">
     <div class="driver-hero-content">
-      <h1>Earn More by Partnering with Us</h1>
-      <p>Register as a driver or list your cab fleet on India's premium travel network. Get regular trips, transparent commissions, and daily payouts.</p>
+      <h1>Grow Your Business with India's Premium Travel Network</h1>
+      <p>Whether you own a taxi fleet, manage hotel accommodations, or design tour packages, list your services on Make My Travel and unlock direct access to millions of active travelers.</p>
       
       <div class="driver-stats">
         <div class="driver-stat-item">
-          <div class="driver-stat-num">₹35,000+</div>
-          <div class="driver-stat-label">Avg Monthly Earnings</div>
+          <div class="driver-stat-num">50,000+</div>
+          <div class="driver-stat-label">Active Partners</div>
         </div>
         <div class="driver-stat-item">
-          <div class="driver-stat-num">10k+</div>
-          <div class="driver-stat-label">Active Rides Weekly</div>
+          <div class="driver-stat-num">500k+</div>
+          <div class="driver-stat-label">Bookings Completed</div>
         </div>
         <div class="driver-stat-item">
           <div class="driver-stat-num">24x7</div>
@@ -499,156 +382,66 @@
   </section>
 
   <!-- Main Container -->
-  <div class="driver-container">
-    <div class="driver-form-card">
-      <form id="driver-registration-form">
-        
-        <!-- Section 1: Driver/Operator Information -->
-        <h3 class="form-section-title"><i class="fa-solid fa-user-tie"></i> Driver / Company Details</h3>
-        
-        <div class="form-group" style="margin-bottom: 20px;">
-          <label for="driver-name">Driver or Company Name</label>
-          <div class="input-wrapper">
-            <i class="fa-solid fa-heading"></i>
-            <input type="text" id="driver-name" name="driverName" placeholder="e.g. Ramesh Kumar / Royal Cab Services" required>
-          </div>
+  <div class="partner-container">
+    <div class="partner-cards-grid">
+      
+      <!-- Card 1: Cabs & Fleets -->
+      <div class="partner-card">
+        <div class="card-badge">Cabs</div>
+        <div class="card-icon-wrapper cab-color">
+          <i class="fa-solid fa-taxi"></i>
         </div>
-        
-        <div class="driver-grid-2" style="margin-bottom: 20px;">
-          <div class="form-group">
-            <label for="driving-exp">Driving Experience (Years)</label>
-            <div class="input-wrapper">
-              <i class="fa-solid fa-calendar-check"></i>
-              <input type="number" id="driving-exp" name="driverExp" min="1" max="50" placeholder="e.g. 5" required>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="license-number">License / Permit Number</label>
-            <div class="input-wrapper">
-              <i class="fa-solid fa-id-card"></i>
-              <input type="text" id="license-number" name="licenseNum" placeholder="e.g. DL-12201900123" required>
-            </div>
-          </div>
+        <h3>Cabs &amp; Fleets</h3>
+        <p class="card-desc">Register as a driver or list your cab fleet. Get regular local and outstation trips with transparent commissions and daily payouts.</p>
+        <ul class="card-benefits">
+          <li><i class="fa-solid fa-circle-check"></i> ₹35,000+ Avg. Monthly Earnings</li>
+          <li><i class="fa-solid fa-circle-check"></i> Transparent Commission Rates</li>
+          <li><i class="fa-solid fa-circle-check"></i> 24/7 Dedicated Partner Support</li>
+          <li><i class="fa-solid fa-circle-check"></i> Flexible Working &amp; Operating Hours</li>
+        </ul>
+        <a href="list-cab.html" class="partner-action-btn cab-btn">
+          List Your Cab <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <!-- Card 2: Hotels & Stays -->
+      <div class="partner-card">
+        <div class="card-badge">Hotels</div>
+        <div class="card-icon-wrapper hotel-color">
+          <i class="fa-solid fa-hotel"></i>
         </div>
-        
-        <!-- Section 2: Vehicle Information -->
-        <h3 class="form-section-title"><i class="fa-solid fa-car"></i> Vehicle Details</h3>
-        
-        <div class="driver-grid-2" style="margin-bottom: 20px;">
-          <div class="form-group">
-            <label for="cab-model">Vehicle Model Name</label>
-            <div class="input-wrapper">
-              <i class="fa-solid fa-tag"></i>
-              <input type="text" id="cab-model" name="cabModel" placeholder="e.g. Maruti Suzuki Dzire" required>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="cab-category">Cab Category</label>
-            <div class="input-wrapper">
-              <i class="fa-solid fa-car-side"></i>
-              <select id="cab-category" name="cabCategory">
-                <option value="Economy Hatchback">Economy Hatchback</option>
-                <option value="Premium Sedan" selected>Premium Sedan</option>
-                <option value="Luxury SUV">Luxury SUV</option>
-                <option value="Mini Van">Mini Van</option>
-              </select>
-            </div>
-          </div>
+        <h3>Hotels &amp; Stays</h3>
+        <p class="card-desc">List your hotel, resort, villa, or homestay. Showcase your rooms to millions of customers and boost your occupancy rate instantly.</p>
+        <ul class="card-benefits">
+          <li><i class="fa-solid fa-circle-check"></i> Increase Occupancy by up to 40%</li>
+          <li><i class="fa-solid fa-circle-check"></i> Zero Onboarding / Setup Fees</li>
+          <li><i class="fa-solid fa-circle-check"></i> Direct Admin Booking Panel Control</li>
+          <li><i class="fa-solid fa-circle-check"></i> Smart Dynamic Pricing Options</li>
+        </ul>
+        <a href="list-hotel.html" class="partner-action-btn hotel-btn">
+          List Your Hotel <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <!-- Card 3: Holiday Packages -->
+      <div class="partner-card">
+        <div class="card-badge">Tours</div>
+        <div class="card-icon-wrapper package-color">
+          <i class="fa-solid fa-suitcase-rolling"></i>
         </div>
-        
-        <div class="driver-grid-2" style="margin-bottom: 25px;">
-          <div class="form-group">
-            <label for="plate-number">Registration Plate Number</label>
-            <div class="input-wrapper">
-              <i class="fa-solid fa-list-ol"></i>
-              <input type="text" id="plate-number" name="plateNumber" placeholder="e.g. MH-12-GP-5678" required>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="cab-capacity">Seating Capacity (Excl. Driver)</label>
-            <div class="input-wrapper">
-              <i class="fa-solid fa-users"></i>
-              <select id="cab-capacity" name="cabCapacity">
-                <option value="4 Seater" selected>4 Seater</option>
-                <option value="6 Seater">6 Seater</option>
-                <option value="7 Seater">7 Seater</option>
-                <option value="9+ Seater">9+ Seater</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Section 3: Contact Details & Operating Area -->
-        <h3 class="form-section-title"><i class="fa-solid fa-envelope-open-text"></i> Contact & Operating Details</h3>
-        
-        <div class="driver-grid-2" style="margin-bottom: 20px;">
-          <div class="form-group">
-            <label for="driver-email">Email Address</label>
-            <div class="input-wrapper">
-              <i class="fa-solid fa-envelope"></i>
-              <input type="email" id="driver-email" name="driverEmail" placeholder="e.g. ramesh@cabs.com" required>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="driver-phone">Mobile Number</label>
-            <div class="input-wrapper">
-              <i class="fa-solid fa-phone"></i>
-              <input type="tel" id="driver-phone" name="driverPhone" placeholder="10-digit mobile number" required>
-            </div>
-          </div>
-        </div>
-        
-        <div class="form-group" style="margin-bottom: 25px;">
-          <label for="driver-city">Primary Operating City</label>
-          <div class="input-wrapper">
-            <i class="fa-solid fa-city"></i>
-            <input type="text" id="driver-city" name="driverCity" placeholder="e.g. Goa, Manali, Mumbai" required>
-          </div>
-        </div>
-        
-        <!-- Section 4: Pricing & Media -->
-        <h3 class="form-section-title"><i class="fa-solid fa-indian-rupee-sign"></i> Rates & Documents</h3>
-        
-        <div class="form-group" style="margin-bottom: 25px;">
-          <label for="rate-per-km">Expected Rate per KM (in INR)</label>
-          <div class="input-wrapper">
-            <i class="fa-solid fa-indian-rupee-sign"></i>
-            <input type="number" id="rate-per-km" name="ratePerKm" min="8" max="100" placeholder="e.g. 12" required>
-          </div>
-        </div>
-        
-        <div class="form-group" style="margin-bottom: 25px;">
-          <label>Upload Car Photos (Max 3 images)</label>
-          <div class="upload-box" id="car-upload-area">
-            <i class="fa-solid fa-car"></i>
-            <span style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Drag & drop your car photos here</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted);">PNG, JPG or WebP (Max 3 images, up to 5MB each)</span>
-            <input type="file" id="car-images-upload" accept="image/*" multiple style="display: none;">
-          </div>
-          <div class="preview-gallery" id="car-preview-gallery"></div>
-        </div>
-        
-        <div class="form-group" style="margin-bottom: 30px;">
-          <label>Upload Driving License / RC Book (PDF or Image)</label>
-          <div class="upload-box" id="media-upload-area">
-            <i class="fa-solid fa-file-shield"></i>
-            <span style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Drag & drop your documents here</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted);">PDF, PNG or JPG (Max size 5MB)</span>
-            <input type="file" id="driver-doc-upload" accept="image/*,application/pdf" style="display: none;">
-          </div>
-        </div>
-        
-        <div class="checkbox-group" style="margin-bottom: 20px;">
-          <input type="checkbox" id="terms-agree" name="termsAgree" required>
-          <label for="terms-agree">I certify that my commercial permit/driver's license is valid and I agree to the Driver Partner Terms.</label>
-        </div>
-        
-        <button type="submit" class="submit-driver-btn">Register My Cab</button>
-      </form>
+        <h3>Holiday Packages</h3>
+        <p class="card-desc">Partner as a tour operator or travel agency. List customized holiday packages, local sightseeing tours, and activities.</p>
+        <ul class="card-benefits">
+          <li><i class="fa-solid fa-circle-check"></i> Verified High-Intent Customer Leads</li>
+          <li><i class="fa-solid fa-circle-check"></i> Easy Package Booking Pipeline</li>
+          <li><i class="fa-solid fa-circle-check"></i> Showcase Local Tour Itineraries</li>
+          <li><i class="fa-solid fa-circle-check"></i> Premium Custom Itinerary Builder</li>
+        </ul>
+        <a href="list-package.html" class="partner-action-btn package-btn">
+          List Your Packages <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+      
     </div>
   </div>
 
@@ -679,7 +472,7 @@
           Partner with Us <span style="font-size: 8px; transition: transform 0.2s;" id="partner-arrow">▼</span>
         </a>
         <div id="partner-options" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease; display: flex; flex-direction: column; gap: 8px; padding-left: 10px; border-left: 2px solid var(--primary-color); margin-top: 4px;">
-          <a href="partner-with-us.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🚕 List your Cab</a>
+          <a href="list-cab.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🚕 List your Cab</a>
           <a href="list-hotel.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🏨 List your Hotel</a>
           <a href="list-package.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🌴 List your Holiday Package</a>
         </div>
@@ -732,302 +525,10 @@
     </div>
   </div>
 
-  <!-- Application Success Modal -->
-  <div class="modal-overlay" id="driver-success-modal">
-    <div class="modal-content">
-      <button class="modal-close" id="driver-modal-close">&times;</button>
-      <div class="modal-success-icon">
-        <i class="fa-solid fa-circle-check"></i>
-      </div>
-      <h3 class="modal-title">Registration Submitted!</h3>
-      <p class="modal-body">Your driver onboarding registration has been recorded successfully. Our verification department will check your commercial permits and contact you in 24–48 hours to activate your account.</p>
-      
-      <div class="modal-details" id="driver-app-details">
-        <!-- Dynamically filled by JS -->
-      </div>
-      
-      <button class="modal-btn" id="driver-modal-ok">Done</button>
-    </div>
-  </div>
-
-  <!-- JavaScript logic embedded -->
+  <!-- JavaScript config & interaction -->
   <script src="config.js"></script>
-  <script src="globe-loader.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      initDriverRegistration();
-      initMediaUploadInteraction();
-    });
-
-    // Car Photos uploader variables and initialization
-    let carSelectedFiles = [];
-
-    function initCarPhotoUploader() {
-      const carUploadArea = document.getElementById('car-upload-area');
-      const carFileInput = document.getElementById('car-images-upload');
-      const carPreviewGallery = document.getElementById('car-preview-gallery');
-
-      if (!carUploadArea || !carFileInput) return;
-
-      carUploadArea.addEventListener('click', () => carFileInput.click());
-
-      carFileInput.addEventListener('change', (e) => {
-        handleCarFiles(e.target.files);
-      });
-
-      // Drag & drop handlers
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        carUploadArea.addEventListener(eventName, (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }, false);
-      });
-
-      ['dragenter', 'dragover'].forEach(eventName => {
-        carUploadArea.addEventListener(eventName, () => {
-          carUploadArea.style.borderColor = 'var(--primary-color)';
-          carUploadArea.style.backgroundColor = '#F0FDFD';
-        }, false);
-      });
-
-      ['dragleave', 'drop'].forEach(eventName => {
-        carUploadArea.addEventListener(eventName, () => {
-          carUploadArea.style.borderColor = 'var(--border-color)';
-          carUploadArea.style.backgroundColor = '#F8FAFC';
-        }, false);
-      });
-
-      carUploadArea.addEventListener('drop', (e) => {
-        handleCarFiles(e.dataTransfer.files);
-      });
-
-      function handleCarFiles(files) {
-        const remainingLimit = 3 - carSelectedFiles.length;
-        const filesToAdd = Array.from(files).slice(0, remainingLimit);
-
-        filesToAdd.forEach(file => {
-          if (!file.type.startsWith('image/')) return;
-          carSelectedFiles.push(file);
-          
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const item = document.createElement('div');
-            item.className = 'preview-item';
-            
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            item.appendChild(img);
-
-            const removeBtn = document.createElement('button');
-            removeBtn.type = 'button';
-            removeBtn.className = 'remove-btn';
-            removeBtn.innerHTML = '&times;';
-            removeBtn.addEventListener('click', () => {
-              const index = carSelectedFiles.indexOf(file);
-              if (index > -1) {
-                carSelectedFiles.splice(index, 1);
-              }
-              item.remove();
-            });
-            item.appendChild(removeBtn);
-            
-            carPreviewGallery.appendChild(item);
-          };
-          reader.readAsDataURL(file);
-        });
-      }
-    }
-
-    // 1. Handle Driver Registration Form Submission
-    function initDriverRegistration() {
-      const form = document.getElementById('driver-registration-form');
-      const modalOverlay = document.getElementById('driver-success-modal');
-      const modalClose = document.getElementById('driver-modal-close');
-      const modalOk = document.getElementById('driver-modal-ok');
-      const modalDetails = document.getElementById('driver-app-details');
-      const carPreviewGallery = document.getElementById('car-preview-gallery');
-
-      if (!form || !modalOverlay) return;
-
-      initCarPhotoUploader();
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (carSelectedFiles.length === 0) {
-          alert('Please upload at least one photo of your car.');
-          return;
-        }
-
-        const formData = new FormData(form);
-        
-        showLoader();
-        try {
-          // Upload car photos first
-          const uploadData = new FormData();
-          carSelectedFiles.forEach(file => {
-            uploadData.append('images', file);
-          });
-
-          const uploadRes = await fetch(`${API_BASE_URL}/api/upload/cab`, {
-            method: 'POST',
-            body: uploadData
-          });
-
-          if (!uploadRes.ok) {
-            const errData = await uploadRes.json();
-            throw new Error(errData.error || 'Failed to upload car images');
-          }
-
-          const uploadResult = await uploadRes.json();
-          const uploadedCarImageUrls = uploadResult.images;
-
-          // Map form data to backend Cab model fields
-          const cabData = {
-            driver: formData.get('driverName'),
-            driverExp: Number(formData.get('driverExp')),
-            licenseNum: formData.get('licenseNum'),
-            vehicle: formData.get('cabModel'),
-            category: formData.get('cabCategory'),
-            plate: formData.get('plateNumber'),
-            seats: formData.get('cabCapacity'),
-            driverEmail: formData.get('driverEmail'),
-            mobile: formData.get('driverPhone'),
-            city: formData.get('driverCity'),
-            ratePerKm: Number(formData.get('ratePerKm')),
-            images: uploadedCarImageUrls,
-            cabId: `MMT-DRV-${Math.floor(100000 + Math.random() * 900000)}`,
-            status: 'Pending'
-          };
-
-          const response = await fetch(`${API_BASE_URL}/api/cabs`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(cabData)
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to register cab');
-          }
-
-          const savedCab = await response.json();
-          const referenceId = savedCab.cabId || cabData.cabId;
-
-          // Build the summary HTML details
-          modalDetails.innerHTML = `
-            <p><strong>Driver Ref ID:</strong> <span style="font-family: monospace; color: var(--primary-color); font-weight: 700;">${referenceId}</span></p>
-            <p><strong>Partner Name:</strong> <span>${cabData.driver}</span></p>
-            <p><strong>Vehicle Model:</strong> <span>${cabData.vehicle} (${cabData.category})</span></p>
-            <p><strong>Plate Number:</strong> <span>${cabData.plate}</span></p>
-            <p><strong>Operating Area:</strong> <span>${cabData.city}</span></p>
-            <p><strong>Expected Rate:</strong> <span>₹${cabData.ratePerKm}/KM</span></p>
-            <p><strong>Contact Phone:</strong> <span>${cabData.mobile}</span></p>
-          `;
-
-          // Show success modal
-          modalOverlay.style.display = 'flex';
-          setTimeout(() => {
-            modalOverlay.classList.add('active');
-          }, 10);
-          
-          form.reset();
-          carPreviewGallery.innerHTML = '';
-          carSelectedFiles = [];
-        } catch (error) {
-          console.error('Error submitting driver registration:', error);
-          alert(error.message || 'Registration failed. Please try again.');
-        } finally {
-          hideLoader();
-        }
-      });
-
-      // Modal Closing handlers - redirect back to main page on close
-      const closeModalAndRedirect = () => {
-        modalOverlay.classList.remove('active');
-        setTimeout(() => {
-          modalOverlay.style.display = 'none';
-          // Redirect back to main website home
-          window.location.href = 'landing.html';
-        }, 300);
-      };
-
-      if (modalClose) modalClose.addEventListener('click', closeModalAndRedirect);
-      if (modalOk) modalOk.addEventListener('click', closeModalAndRedirect);
-
-      modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) {
-          closeModalAndRedirect();
-        }
-      });
-    }
-
-    // 2. Drag & Drop Document Upload Area Click Interaction
-    function initMediaUploadInteraction() {
-      const uploadArea = document.getElementById('media-upload-area');
-      const fileInput = document.getElementById('driver-doc-upload');
-
-      if (!uploadArea || !fileInput) return;
-
-      // Clicking the card triggers the file picker
-      uploadArea.addEventListener('click', () => {
-        fileInput.click();
-      });
-
-      // Handle selected file
-      fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-          const fileName = fileInput.files[0].name;
-          const fileSize = (fileInput.files[0].size / (1024 * 1024)).toFixed(2); // MB
-          
-          // Update upload box UI with success checks
-          uploadArea.innerHTML = `
-            <i class="fa-solid fa-circle-check" style="color: var(--primary-color);"></i>
-            <span style="font-weight: 600; color: var(--primary-color); font-size: 0.95rem;">Document Selected Successfully!</span>
-            <span style="font-size: 0.8rem; color: var(--text-main); font-weight: 500;">${fileName} (${fileSize} MB)</span>
-            <span style="font-size: 0.7rem; color: var(--text-muted); text-decoration: underline;">Click to choose a different file</span>
-          `;
-        }
-      });
-
-      // Drag & drop highlight prevention
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        uploadArea.addEventListener(eventName, preventDefaults, false);
-      });
-
-      function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
-      ['dragenter', 'dragover'].forEach(eventName => {
-        uploadArea.addEventListener(eventName, () => {
-          uploadArea.style.borderColor = 'var(--primary-color)';
-          uploadArea.style.backgroundColor = '#F0FDFD';
-        }, false);
-      });
-
-      ['dragleave', 'drop'].forEach(eventName => {
-        uploadArea.addEventListener(eventName, () => {
-          uploadArea.style.borderColor = 'var(--border-color)';
-          uploadArea.style.backgroundColor = '#F8FAFC';
-        }, false);
-      });
-
-      // Handle dropped file
-      uploadArea.addEventListener('drop', (e) => {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        
-        if (files.length > 0) {
-          fileInput.files = files; // Assign to input
-          
-          // Trigger change event to run label updates
-          const event = new Event('change');
-          fileInput.dispatchEvent(event);
-        }
-      });
       // Footer Partner with Us dynamic options
       const partnerTrigger = document.getElementById('partner-trigger');
       const partnerOptions = document.getElementById('partner-options');
@@ -1046,7 +547,7 @@
           }
         });
       }
-    }
+    });
   </script>
 </body>
 </html>

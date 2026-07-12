@@ -1,4 +1,4 @@
-(function() {
+(function () {
   // Stylesheet definition
   const styleEl = document.createElement('style');
   styleEl.innerHTML = `
@@ -16,7 +16,7 @@
       z-index: 999999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s ease;
     }
     
     #globe-loader-overlay.active {
@@ -162,7 +162,7 @@
   overlay.setAttribute('role', 'status');
   overlay.setAttribute('aria-label', 'Loading');
   overlay.setAttribute('aria-hidden', 'false');
-  
+
   overlay.innerHTML = `
     <div class="globe-container">
       <svg class="globe-svg" viewBox="0 0 100 100">
@@ -205,7 +205,7 @@
     </div>
     <div class="loader-text">Loading Journey...</div>
   `;
-  
+
   // Inject overlay into page body
   if (document.body) {
     document.body.appendChild(overlay);
@@ -223,7 +223,7 @@
 
   // Initial load timer: keep loader active for at least 500ms after script execution
   const pageLoadStartTime = Date.now();
-  
+
   function hideInitialLoader() {
     const elapsed = Date.now() - pageLoadStartTime;
     const remaining = Math.max(500 - elapsed, 0);
@@ -243,6 +243,7 @@
 
   // Dynamic transition animation when leaving the page (clicking internal links)
   document.addEventListener('click', (e) => {
+    if (e.defaultPrevented) return;
     const link = e.target.closest('a');
     if (link && link.href && !link.target && !link.hasAttribute('download')) {
       if (link.href.startsWith('http') || link.href.startsWith('/') || link.href.startsWith('.')) {
@@ -268,9 +269,9 @@
     }
   });
 
-  window.showLoader = function() {
+  window.showLoader = function () {
     if (loaderTimeout) clearTimeout(loaderTimeout);
-    
+
     // Schedule loader overlay fade-in
     loaderTimeout = setTimeout(() => {
       overlay.classList.add('active');
@@ -279,13 +280,13 @@
     }, showDelay);
   };
 
-  window.hideLoader = function() {
+  window.hideLoader = function () {
     // Cancel pending show if hide is called early
     if (loaderTimeout) {
       clearTimeout(loaderTimeout);
       loaderTimeout = null;
     }
-    
+
     if (showTime > 0) {
       const elapsed = Date.now() - showTime;
       if (elapsed < minDuration) {
