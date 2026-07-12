@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, adminOnly } = require('../middleware/auth');
+const { listingLimiter } = require('../middleware/rateLimiter');
 const TripBundle = require('../models/TripBundle');
 
 // GET /api/trip-bundles
@@ -44,7 +45,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/trip-bundles (Public listing registration, defaults to Pending)
-router.post('/', protect, async (req, res) => {
+router.post('/', protect, listingLimiter, async (req, res) => {
   try {
     // 60 seconds deduplication check
     const oneMinuteAgo = new Date(Date.now() - 60000);

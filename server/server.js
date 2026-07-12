@@ -13,10 +13,12 @@ const User = require('./models/User');
 const Subscriber = require('./models/Subscriber');
 const ContactMessage = require('./models/ContactMessage');
 const { generateToken, protect, adminOnly } = require('./middleware/auth');
+const { authLimiter, registerLimiter, formLimiter, generalLimiter } = require('./middleware/rateLimiter');
 const { OAuth2Client } = require('google-auth-library');
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const app = express();
+app.set('trust proxy', 1); // Trust first proxy (Render) so rate limiter sees real client IP
 const PORT = process.env.PORT || 5500;
 
 // Middleware
@@ -52,7 +54,7 @@ mongoose.connect(process.env.MONGODB_URI)
 /* --- AUTHENTICATION API ROUTES --- */
 
 // 1. Email/Password Register
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', registerLimiter, async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -85,7 +87,7 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 // 2. Email/Password Login
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -120,7 +122,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // 3. Google Sign-Up/Sign-In verification
-app.post('/api/auth/google', async (req, res) => {
+app.post('/api/auth/google', registerLimiter, async (req, res) => {
   try {
     const { credential } = req.body;
     if (!credential) {
@@ -367,6 +369,9 @@ const profileRoutes = require('./routes/profileRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const ratingRoutes = require('./routes/ratingRoutes');
 
+// General rate limiter baseline for all /api/ routes
+app.use('/api/', generalLimiter);
+
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/hotel-bookings', hotelBookingRoutes);
 app.use('/api/admin', adminAuthRoutes);
@@ -383,7 +388,7 @@ app.get('/admin', (req, res) => {
 });
 
 // Contact Message endpoint
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', formLimiter, async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
     
@@ -421,7 +426,7 @@ app.post('/api/contact', async (req, res) => {
 });
 
 // Newsletter endpoints
-app.post('/api/newsletter/subscribe', async (req, res) => {
+app.post('/api/newsletter/subscribe', formLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) {

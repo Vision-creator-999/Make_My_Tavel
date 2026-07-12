@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { authLimiter } = require('../middleware/rateLimiter');
 
 const SEVEN_DAYS_SEC = 60 * 60 * 24 * 7; // 604 800 seconds
 
@@ -16,7 +17,7 @@ const parseCookies = (req) => {
 };
 
 // POST /api/admin/login
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
 
