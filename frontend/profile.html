@@ -182,6 +182,7 @@ textarea.fi2{resize:vertical;min-height:100px;line-height:1.6;}
       <div class="sni" data-s="bookings"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>My Bookings<span class="badge" id="b-cnt">0</span></div>
       <div class="sni" data-s="preferences"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle></svg>Preferences</div>
       <div class="sni" data-s="security"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Security</div>
+      <div class="sni" data-s="offers"><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><circle cx="7" cy="7" r="1" fill="currentColor"></circle></svg>Redeemed Offers</div>
     </nav>
   </aside>
   <main class="main">
@@ -273,9 +274,145 @@ textarea.fi2{resize:vertical;min-height:100px;line-height:1.6;}
         <div class="sr"><div class="sri"><div class="sic" style="background:rgba(239,68,68,.1);"><svg viewBox="0 0 24 24" style="stroke:#ef4444;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div><div class="st"><h4 style="color:#ef4444;">Delete Account</h4><p>Permanently remove your account and all data</p></div></div><button class="cbtn" style="color:#ef4444;border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08);" onclick="delAcc()">Delete</button></div>
       </div>
     </div>
+    <!-- REDEEMED OFFERS -->
+    <div class="panel" id="panel-offers">
+      <div class="ph">
+        <div class="pt">
+          <div class="pti">
+            <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><circle cx="7" cy="7" r="1" fill="currentColor"></circle></svg>
+          </div>
+          <div>
+            <h2>Redeemed Offers</h2>
+            <p>Your promo code usage history and savings log</p>
+          </div>
+        </div>
+      </div>
+      <div class="pb">
+        <div class="btw">
+          <table class="btt">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Promo Code</th>
+                <th>Booking Type</th>
+                <th>Booking Item</th>
+                <th>Savings (Discount)</th>
+                <th>Date Redeemed</th>
+              </tr>
+            </thead>
+            <tbody id="redeemed-offers-list">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </main>
 </div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter-wrapper" style="margin-top: 60px;">
+  <div class="newsletter">
+    <div class="newsletter-left">
+      <div class="nl-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+          <polyline points="22,6 12,13 2,6" />
+        </svg>
+      </div>
+      <div class="nl-text">
+        <strong>Get Best Travel Deals in Your Inbox</strong>
+        <span>Subscribe &amp; never miss an exclusive offer!</span>
+      </div>
+    </div>
+    <div class="nl-form-container">
+      <div class="nl-form">
+        <input type="email" placeholder="Enter your email address" />
+        <button>Subscribe ✈</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <strong>✈ Make<span class="accent">my</span>Travel</strong>
+    <p>Your all-in-one platform to book flights, hotels, cars &amp; holiday packages at the best prices. Journey beyond dreams with us.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <a href="about-us.html">About Us</a>
+    <a href="careers.html">Careers</a>
+    <a href="blog.html">Blog</a>
+    <a href="press.html">Press</a>
+    <a href="contact-us.html">Contact Us</a>
+  </div>
+  <div class="footer-col">
+    <h4>Support</h4>
+    <a href="help-center.html">Help Center</a>
+    <a href="faqs.html">FAQs</a>
+    <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="cancellation-policy.html">Cancellation Policy</a>
+    <div class="partner-menu-container">
+      <a href="partner-with-us.html" id="partner-trigger" style="font-weight: 700; color: var(--color-primary); display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
+        Partner with Us <span style="font-size: 8px; transition: transform var(--transition-fast);" id="partner-arrow">▼</span>
+      </a>
+      <div id="partner-options" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease; display: flex; flex-direction: column; gap: 8px; padding-left: 10px; border-left: 2px solid var(--color-primary); margin-top: 4px;">
+        <a href="list-cab.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🚕 List your Cab</a>
+        <a href="list-hotel.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🏨 List your Hotel</a>
+        <a href="list-package.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🌴 List your Holiday Package</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-col">
+    <h4>Top Destinations</h4>
+    <a href="#">Goa</a>
+    <a href="#">Manali</a>
+    <a href="#">Dubai</a>
+    <a href="#">Kerala</a>
+    <a href="#">Thailand</a>
+  </div>
+  <div class="footer-col">
+    <h4>Download App</h4>
+    <div class="store-badges-container">
+      <a href="#" class="store-badge-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.21.67-2.93 1.49-.62.69-1.16 1.84-1.01 2.96 1.12.09 2.27-.57 2.95-1.39z" />
+        </svg>
+        <div class="store-badge-text">
+          <span>Download on the</span>
+          <strong>App Store</strong>
+        </div>
+      </a>
+      <a href="#" class="store-badge-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 20.29v-16.58a1.5 1.5 0 0 1 2.27-1.3L20.88 11.2a1.5 1.5 0 0 1 0 2.6L5.27 21.59A1.5 1.5 0 0 1 3 20.29z" />
+        </svg>
+        <div class="store-badge-text">
+          <span>Get it on</span>
+          <strong>Google Play</strong>
+        </div>
+      </a>
+    </div>
+  </div>
+  <hr class="footer-divider" />
+</footer>
+
+<div class="footer-bottom-container">
+  <div class="footer-bottom-content">
+    <div>© 2026 Make My Travel. All Rights Reserved.</div>
+    <div class="footer-bottom-left">
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <span>|</span>
+      <a href="terms-and-conditions.html">Terms of Use</a>
+    </div>
+  </div>
+</div>
+
 <script src="config.js"></script>
+<script src="globe-loader.js"></script>
 <script>
 const API=API_BASE_URL;let cUser=null,bks=[];
 function tok(){return localStorage.getItem('token');}
@@ -292,6 +429,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
 });
 
 async function loadProfile(){
+  showLoader();
   try{
     const r=await fetch(API+'/api/profile/me',{headers:{Authorization:'Bearer '+tok()}});
     if(r.status===401){goLogin();return;}
@@ -299,6 +437,8 @@ async function loadProfile(){
   }catch(e){
     const l=localStorage.getItem('user');
     if(l){cUser=JSON.parse(l);fillUI(cUser);}else goLogin();
+  }finally{
+    hideLoader();
   }
 }
 
@@ -334,14 +474,43 @@ function setAv(wid,iid,pic,init){
 }
 
 async function loadBks(){
+  showLoader();
   try{
     const r=await fetch(API+'/api/profile/me/bookings',{headers:{Authorization:'Bearer '+tok()}});
     const d=await r.json();bks=d.bookings||[];
-  }catch(e){bks=[];}
+  }catch(e){bks=[];}finally{
+    hideLoader();
+  }
   renderBks();
+  renderRedeemedOffers();
   txt('b-cnt',bks.length);txt('st-bk',bks.length);
   const cities=new Set(bks.map(b=>b.city||b.destination).filter(Boolean));
   txt('st-dst',cities.size);
+}
+
+function renderRedeemedOffers() {
+  const listEl = el('redeemed-offers-list');
+  if (!listEl) return;
+
+  const redeemed = bks.filter(b => b.promoCode && b.promoCode.trim() !== '' && b.status !== 'cancelled' && b.bookingStatus !== 'cancelled');
+  if (!redeemed.length) {
+    listEl.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted);">No promo codes redeemed yet.</td></tr>';
+    return;
+  }
+
+  listEl.innerHTML = redeemed.map((b, i) => {
+    const discountAmt = b.discount ? `Rs.${Number(b.discount).toLocaleString()}` : '—';
+    return `
+      <tr>
+        <td style="color:var(--muted);font-size:12px;">${i + 1}</td>
+        <td style="font-weight:700;color:var(--heading);">${b.promoCode}</td>
+        <td><span class="bt ${(b.type || 'hotel')}">${bi(b.type)} ${cap(b.type || 'Hotel')}</span></td>
+        <td>${b.hotelName || b.cabName || b.packageName || b.itemName || 'Booking'}</td>
+        <td style="font-weight:700;color:var(--success);">${discountAmt}</td>
+        <td style="font-size:12px;">${b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-IN') : '—'}</td>
+      </tr>
+    `;
+  }).join('');
 }
 
 function renderBks(){
@@ -361,6 +530,7 @@ function renderBks(){
 async function cancelBooking(id, type) {
   if (!confirm('Are you sure you want to cancel this booking?')) return;
   const endpoint = type === 'hotel' ? `/api/hotel-bookings/${id}/cancel` : `/api/bookings/${id}`;
+  showLoader();
   try {
     const res = await fetch(API + endpoint, {
       method: 'PUT',
@@ -379,6 +549,8 @@ async function cancelBooking(id, type) {
     }
   } catch (err) {
     alert('Network error. Please try again.');
+  } finally {
+    hideLoader();
   }
 }
 
@@ -404,12 +576,15 @@ function initForms(){
     const np=el('pw-n').value,cf=el('pw-cf').value;
     if(np!==cf){alert2('al-pw','err','Passwords do not match.');return;}
     const btn=el('btn-pw');btn.disabled=true;btn.textContent='Updating…';
+    showLoader();
     try{
       const r=await fetch(API+'/api/profile/me/password',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok()},body:JSON.stringify({currentPassword:el('pw-c').value,newPassword:np})});
       const d=await r.json();
       if(!r.ok)alert2('al-pw','err',d.error||'Failed.');
       else{alert2('al-pw','ok','Password changed!');el('fm-pw').reset();el('pw-bar').style.width='0';}
-    }catch(e){alert2('al-pw','err','Server error.');}
+    }catch(e){alert2('al-pw','err','Server error.');}finally{
+      hideLoader();
+    }
     btn.disabled=false;btn.textContent='Update Password';
   });
 }
@@ -421,6 +596,7 @@ async function savePref(){
 }
 
 async function put(ep,body,aid){
+  showLoader();
   try{
     const r=await fetch(API+ep,{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok()},body:JSON.stringify(body)});
     const d=await r.json();
@@ -429,7 +605,9 @@ async function put(ep,body,aid){
     const stored=JSON.parse(localStorage.getItem('user')||'{}');
     if(d.user)localStorage.setItem('user',JSON.stringify({...stored,...d.user}));
     return d;
-  }catch(e){alert2(aid,'err','Server connection error.');return null;}
+  }catch(e){alert2(aid,'err','Server connection error.');return null;}finally{
+    hideLoader();
+  }
 }
 
 function alert2(id,type,msg){const e=el(id);if(!e)return;e.textContent=msg;e.className='alert '+type;setTimeout(()=>{e.className='alert';},5000);}
@@ -471,5 +649,24 @@ function chkStr(v){
 }
 function delAcc(){if(confirm('Are you sure? This permanently deletes your account and all data.'))alert('Deletion request submitted. Our team will contact you within 24 hours.');}
 function handleLogout(){localStorage.removeItem('token');localStorage.removeItem('user');window.location.href='login.html';}
+
+// Footer Partner with Us dynamic options
+const partnerTrigger = document.getElementById('partner-trigger');
+const partnerOptions = document.getElementById('partner-options');
+const partnerArrow = document.getElementById('partner-arrow');
+
+if (partnerTrigger && partnerOptions) {
+  partnerTrigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    const isOpen = partnerOptions.style.maxHeight !== '0px' && partnerOptions.style.maxHeight !== '';
+    if (isOpen) {
+      partnerOptions.style.maxHeight = '0px';
+      partnerArrow.style.transform = 'rotate(0deg)';
+    } else {
+      partnerOptions.style.maxHeight = '140px';
+      partnerArrow.style.transform = 'rotate(180deg)';
+    }
+  });
+}
 </script></body></html>
 

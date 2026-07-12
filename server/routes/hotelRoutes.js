@@ -6,6 +6,7 @@ const hotelController = require('../controllers/hotelController');
 // Public routes
 router.get('/', hotelController.getAllHotels);
 router.get('/stats', protect, adminOnly, hotelController.getHotelStats);
+router.get('/status/:hotelId', hotelController.getHotelStatus);
 router.get('/:id', hotelController.getHotelById);
 
 // Admin-only routes

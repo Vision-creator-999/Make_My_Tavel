@@ -330,6 +330,7 @@
           </div>
           <div class="form-group"><label>Total Reviews</label><input id="hm-reviews" type="number" placeholder="1200"/></div>
           <div class="form-group full"><label>Description</label><textarea id="hm-desc" placeholder="Hotel description..."></textarea></div>
+          <div class="form-group full"><label>Hotel Policy</label><textarea id="hm-policy" placeholder="Hotel policies and rules..."></textarea></div>
           <div class="form-group full"><label>Amenities (comma separated)</label><input id="hm-amenities" placeholder="Free WiFi, Pool, Spa, Restaurant"/></div>
           <div class="form-group full" style="margin-top: 10px;">
             <label>Upload Hotel Photos (Max 4 images)</label>
@@ -601,7 +602,7 @@
     function openHotelModal(hotelId) {
       editingHotelId = null;
       document.getElementById('hotel-modal-title').textContent = 'Add Hotel';
-      ['hm-name','hm-city','hm-location','hm-address','hm-price','hm-rating','hm-reviews','hm-desc','hm-amenities'].forEach(id => {
+      ['hm-name','hm-city','hm-location','hm-address','hm-price','hm-rating','hm-reviews','hm-desc','hm-policy','hm-amenities'].forEach(id => {
         const elem = document.getElementById(id);
         if (elem) elem.value = '';
       });
@@ -631,6 +632,7 @@
       document.getElementById('hm-reviews').value = hotel.totalReviews || '';
       document.getElementById('hm-badge').value = hotel.badge || '';
       document.getElementById('hm-desc').value = hotel.description || '';
+      document.getElementById('hm-policy').value = hotel.policy || '';
       document.getElementById('hm-amenities').value = (hotel.amenities || []).join(', ');
       
       adminHotelFiles = [];
@@ -718,6 +720,7 @@
           location: document.getElementById('hm-location').value,
           address: document.getElementById('hm-address').value,
           description: document.getElementById('hm-desc').value,
+          policy: document.getElementById('hm-policy').value,
           rating: parseFloat(document.getElementById('hm-rating').value) || 4.2,
           totalReviews: parseInt(document.getElementById('hm-reviews').value) || 18,
           badge: document.getElementById('hm-badge').value || 'Popular Choice',
@@ -1019,7 +1022,7 @@
 
     async function checkAuth() {
       try {
-        const r = await fetch('/api/admin/check', { credentials: 'include' });
+        const r = await adminFetch('/api/admin/check');
         if (!r.ok) throw new Error();
         // Authorized, load hotels
         loadHotels();

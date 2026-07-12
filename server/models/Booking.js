@@ -37,10 +37,31 @@ const bookingSchema = new mongoose.Schema({
   },
   itemCity: {
     type: String
+  },
+  promoCode: {
+    type: String
+  },
+  discount: {
+    type: Number,
+    default: 0
+  },
+  subtotal: {
+    type: Number
   }
 }, {
   timestamps: true
 });
+
+bookingSchema.index(
+  { user: 1, promoCode: 1 },
+  { 
+    unique: true, 
+    partialFilterExpression: { 
+      promoCode: { $gt: "" }, 
+      status: { $ne: "cancelled" } 
+    } 
+  }
+);
 
 const realModel = mongoose.model('Booking', bookingSchema);
 const { wrapModel } = require('../utils/dbFallback');

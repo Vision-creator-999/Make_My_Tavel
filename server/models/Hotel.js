@@ -97,6 +97,9 @@ const hotelSchema = new mongoose.Schema({
     pets: { type: String },
     payment: { type: String }
   },
+  policy: {
+    type: String
+  },
   isActive: {
     type: Boolean,
     default: true

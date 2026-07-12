@@ -82,6 +82,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '',
     maxlength: 300
+  },
+  profileCompleted: {
+    type: Boolean,
+    default: false
+  },
+  cabsBookedCount: {
+    type: Number,
+    default: 0
+  },
+  invitesSent: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

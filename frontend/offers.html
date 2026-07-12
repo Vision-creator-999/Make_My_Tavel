@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDTZ3LFREK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NDTZ3LFREK');
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Offers & Deals – Make My Travel</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --primary:#0F8B8D;
+    --secondary:#17375E;
+    --accent:#F97316;
+    --bg:#F8FAFC;
+    --card:#FFFFFF;
+    --heading:#1E293B;
+    --body-text:#64748B;
+    --success:#22C55E;
+    --warning:#FBBF24;
+    --border:#E5E7EB;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--body-text);}
+  a{text-decoration:none;color:inherit;}
+
+  .topbar{background:var(--primary);color:#fff;padding:10px 40px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+  .promo-badge{background:#fff;color:var(--primary);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;}
+  .topbar-right{display:flex;gap:20px;font-size:12px;opacity:.9;}
+
+  nav{background:#fff;padding:16px 40px;display:flex;align-items:center;gap:28px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;margin-right:auto;}
+  .logo-icon{width:38px;height:38px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--accent);}
+  .logo-text strong{font-family:'Outfit',sans-serif;font-size:19px;font-weight:800;color:var(--secondary);}
+  .logo-text strong span{color:var(--accent);}
+  .logo-text p{font-size:11px;color:var(--body-text);font-weight:500;}
+  .nav-links{display:flex;gap:24px;font-size:14px;font-weight:600;color:var(--secondary);}
+  .nav-links a{display:flex;align-items:center;gap:6px;padding:6px 2px;border-bottom:2px solid transparent;transition:border-color .15s;}
+  .nav-links a.active{color:var(--primary);border-color:var(--primary);}
+  .nav-links a:hover{color:var(--primary);}
+  .nav-right{display:flex;align-items:center;gap:20px;font-size:14px;font-weight:600;color:var(--secondary);}
+  .wishlist{color:#EF4444;}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--secondary);}
+
+  .page-head{max-width:1200px;margin:0 auto;padding:48px 40px 8px;}
+  .page-head h1{font-family:'Outfit',sans-serif;font-size:32px;font-weight:800;color:var(--heading);margin-bottom:8px;}
+  .page-head p{font-size:15px;color:var(--body-text);}
+
+  .filters{max-width:1200px;margin:0 auto;padding:24px 40px 8px;display:flex;gap:10px;flex-wrap:wrap;}
+  .filter-pill{background:var(--card);border:1.5px solid var(--border);color:var(--body-text);font-size:13px;font-weight:700;padding:9px 20px;border-radius:24px;cursor:pointer;transition:all .15s;}
+  .filter-pill:hover{border-color:var(--primary);color:var(--primary);}
+  .filter-pill.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+
+  .grid{max-width:1200px;margin:0 auto;padding:24px 40px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+
+  .offer-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s;}
+  .offer-card:hover{box-shadow:0 8px 24px rgba(15,139,141,0.08);transform:translateY(-2px);}
+  .offer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+  .offer-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .icon-hotel{background:#E1F5EE;}
+  .icon-cab{background:#FEF3E7;}
+  .icon-package{background:#FDEBEA;}
+  .icon-referral{background:#EAF9EE;}
+  .tag{font-size:11px;font-weight:700;padding:5px 11px;border-radius:8px;white-space:nowrap;}
+  .tag-warn{background:#FEF9E7;color:#92620A;}
+  .tag-success{background:#EAF9EE;color:#1A7A3C;}
+  .tag-accent{background:#FEF0E6;color:#C2410C;}
+
+  .offer-title{font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px;}
+  .offer-desc{font-size:13px;color:var(--body-text);line-height:1.55;margin-bottom:20px;flex-grow:1;}
+
+  .code-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .code-pill{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:var(--secondary);background:var(--bg);border:1.5px dashed var(--border);padding:8px 14px;border-radius:8px;flex:1;text-align:center;letter-spacing:0.5px;}
+  .copy-btn{background:var(--primary);color:#fff;border:none;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:background .15s;}
+  .copy-btn:hover{background:#0b6f71;}
+  .copy-btn.copied{background:var(--success);}
+
+  .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--body-text);font-size:14px;}
+
+  @media(max-width:900px){
+    nav{flex-wrap:wrap;padding:14px 20px;}
+    .nav-links{display:none;}
+    .page-head, .filters, .grid{padding-left:20px;padding-right:20px;}
+    .page-head h1{font-size:24px;}
+  }
+
+  /* --- NEWSLETTER SECTION --- */
+  .newsletter-wrapper {
+    max-width: 1280px;
+    margin: 64px auto 0;
+    padding: 0 40px;
+  }
+  .newsletter {
+    background-color: var(--primary);
+    border-radius: 16px;
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .newsletter-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 1;
+  }
+  .nl-icon {
+    background-color: rgba(255, 255, 255, 0.15);
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nl-icon svg {
+    width: 26px;
+    height: 26px;
+    stroke: #ffffff;
+    stroke-width: 2;
+    fill: none;
+  }
+  .nl-text strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .nl-text span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+  }
+  .nl-form-container {
+    flex: 1;
+    max-width: 480px;
+    z-index: 1;
+  }
+  .nl-form {
+    display: flex;
+    background-color: #ffffff;
+    padding: 4px;
+    border-radius: 30px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .nl-form input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 10px 20px;
+    font-size: 14px;
+    outline: none;
+    color: var(--heading);
+  }
+  .nl-form input::placeholder {
+    color: var(--body-text);
+  }
+  .nl-form button {
+    background-color: var(--primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+  .nl-form button:hover {
+    background-color: #0b6f71;
+  }
+
+  /* --- FOOTER --- */
+  footer {
+    background-color: var(--secondary);
+    color: #94A3B8;
+    padding: 64px 40px 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .footer-brand strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .footer-brand strong span.accent {
+    color: var(--accent);
+  }
+  .footer-brand p {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #94A3B8;
+  }
+  .footer-col h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .footer-col a {
+    display: block;
+    font-size: 13px;
+    color: #94A3B8;
+    margin-bottom: 8px;
+  }
+  .footer-col a:hover {
+    color: var(--primary);
+  }
+  .store-badges-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .store-badge-btn {
+    background-color: #0c1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    transition: all 0.15s;
+  }
+  .store-badge-btn:hover {
+    background-color: #0f223d;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  .store-badge-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+  .store-badge-text {
+    text-align: left;
+  }
+  .store-badge-text span {
+    display: block;
+    font-size: 9px;
+    color: #94A3B8;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .store-badge-text strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .footer-divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 32px 0 0;
+    grid-column: 1 / -1;
+  }
+  .footer-bottom-container {
+    background-color: #0F223D;
+    color: #64748B;
+    padding: 16px 40px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .footer-bottom-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-bottom-left {
+    display: flex;
+    gap: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div><span class="promo-badge">GIFT</span> Get Up to 30% OFF on Hotel Bookings &nbsp;|&nbsp; Use Code: <strong>TRAVEL30</strong></div>
+  <div class="topbar-right"><span>Download App</span><span>Help</span><span>INR ▾</span></div>
+</div>
+
+<nav>
+  <a href="landing.html" class="logo">
+    <div class="logo-icon">✈</div>
+    <div class="logo-text">
+      <strong>Make<span>my</span>Travel</strong>
+      <p>Journey Beyond Dreams</p>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="hotel-booking.html">Hotels</a>
+    <a href="cab-booking.html">Cars</a>
+    <a href="package-booking.html">Holiday Packages</a>
+    <a href="offers.html" class="active">Offers</a>
+    <a href="#">Travel Guide</a>
+  </div>
+  <div class="nav-right" id="nav-auth-area">
+    <a href="partner-with-us.html" class="partner-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13.5px; color: white; background-color: #0F8B8D; padding: 8px 16px; border-radius: 9999px; transition: all 0.2s; margin-right: 10px;">
+      <i class="fa-solid fa-handshake"></i> Partner with Us
+    </a>
+    <a href="login.html" class="login-btn" id="nav-login-btn" style="color:var(--secondary);font-weight:600;text-decoration:none;display:flex;align-items:center;gap:8px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      Login / Sign Up
+    </a>
+  </div>
+</nav>
+
+<div class="page-head">
+  <h1>Offers &amp; deals</h1>
+  <p>Handpicked discounts on hotels, cabs, holiday packages and referral rewards.</p>
+</div>
+
+<div class="filters" id="filters">
+  <button class="filter-pill active" data-filter="all">All offers</button>
+  <button class="filter-pill" data-filter="hotel">Hotels</button>
+  <button class="filter-pill" data-filter="cab">Cabs</button>
+  <button class="filter-pill" data-filter="package">Packages</button>
+  <button class="filter-pill" data-filter="referral">Referral</button>
+</div>
+
+<div class="grid" id="offerGrid"></div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter-wrapper" style="margin-top: 60px;">
+  <div class="newsletter">
+    <div class="newsletter-left">
+      <div class="nl-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+          <polyline points="22,6 12,13 2,6" />
+        </svg>
+      </div>
+      <div class="nl-text">
+        <strong>Get Best Travel Deals in Your Inbox</strong>
+        <span>Subscribe &amp; never miss an exclusive offer!</span>
+      </div>
+    </div>
+    <div class="nl-form-container">
+      <div class="nl-form">
+        <input type="email" placeholder="Enter your email address" />
+        <button>Subscribe ✈</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <strong>✈ Make<span class="accent">my</span>Travel</strong>
+    <p>Your all-in-one platform to book flights, hotels, cars &amp; holiday packages at the best prices. Journey beyond dreams with us.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <a href="about-us.html">About Us</a>
+    <a href="careers.html">Careers</a>
+    <a href="blog.html">Blog</a>
+    <a href="press.html">Press</a>
+    <a href="contact-us.html">Contact Us</a>
+  </div>
+  <div class="footer-col">
+    <h4>Support</h4>
+    <a href="help-center.html">Help Center</a>
+    <a href="faqs.html">FAQs</a>
+    <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="cancellation-policy.html">Cancellation Policy</a>
+    <div class="partner-menu-container">
+      <a href="partner-with-us.html" id="partner-trigger" style="font-weight: 700; color: var(--color-primary); display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
+        Partner with Us <span style="font-size: 8px; transition: transform var(--transition-fast);" id="partner-arrow">▼</span>
+      </a>
+      <div id="partner-options" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease; display: flex; flex-direction: column; gap: 8px; padding-left: 10px; border-left: 2px solid var(--color-primary); margin-top: 4px;">
+        <a href="list-cab.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🚕 List your Cab</a>
+        <a href="list-hotel.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🏨 List your Hotel</a>
+        <a href="list-package.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🌴 List your Holiday Package</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-col">
+    <h4>Top Destinations</h4>
+    <a href="#">Goa</a>
+    <a href="#">Manali</a>
+    <a href="#">Dubai</a>
+    <a href="#">Kerala</a>
+    <a href="#">Thailand</a>
+  </div>
+  <div class="footer-col">
+    <h4>Download App</h4>
+    <div class="store-badges-container">
+      <a href="#" class="store-badge-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.21.67-2.93 1.49-.62.69-1.16 1.84-1.01 2.96 1.12.09 2.27-.57 2.95-1.39z" />
+        </svg>
+        <div class="store-badge-text">
+          <span>Download on the</span>
+          <strong>App Store</strong>
+        </div>
+      </a>
+      <a href="#" class="store-badge-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 20.29v-16.58a1.5 1.5 0 0 1 2.27-1.3L20.88 11.2a1.5 1.5 0 0 1 0 2.6L5.27 21.59A1.5 1.5 0 0 1 3 20.29z" />
+        </svg>
+        <div class="store-badge-text">
+          <span>Get it on</span>
+          <strong>Google Play</strong>
+        </div>
+      </a>
+    </div>
+  </div>
+  <hr class="footer-divider" />
+</footer>
+
+<div class="footer-bottom-container">
+  <div class="footer-bottom-content">
+    <div>© 2026 Make My Travel. All Rights Reserved.</div>
+    <div class="footer-bottom-left">
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <span>|</span>
+      <a href="terms-and-conditions.html">Terms of Use</a>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="globe-loader.js"></script>
+<script>
+const offers = [
+  { cat:'hotel', icon:'🏨', iconClass:'icon-hotel', tag:'Task Unlocked', tagClass:'tag-success', title:'Flat 20% off on hotel bookings', desc:'Complete your user profile details (phone, bio, city) to unlock flat 20% off hotels.', code:'HOTEL20' },
+  { cat:'hotel', icon:'🌅', iconClass:'icon-hotel', tag:'Weekend only', tagClass:'tag-accent', title:'Weekend getaway discount', desc:'Flat ₹1,500 off on Friday to Sunday hotel stays across 50+ cities.', code:'WEEKEND1500' },
+  { cat:'hotel', icon:'🎉', iconClass:'icon-hotel', tag:'New user', tagClass:'tag-success', title:'20% off your first hotel booking', desc:'First-time users get an instant 20% discount, capped at ₹2,000.', code:'FIRSTSTAY20' },
+  { cat:'hotel', icon:'🛏️', iconClass:'icon-hotel', tag:'Long stay', tagClass:'tag-accent', title:'Extra 15% off stays 5+ nights', desc:'Book 5 nights or more at any hotel and save an additional 15% on the total.', code:'LONGSTAY15' },
+  { cat:'hotel', icon:'⭐', iconClass:'icon-hotel', tag:'Luxury', tagClass:'tag-warn', title:'₹5,000 off luxury hotels', desc:'Applicable on 5-star and luxury category hotel bookings above ₹25,000.', code:'LUXE5000' },
+  { cat:'hotel', icon:'💎', iconClass:'icon-hotel', tag:'Members only', tagClass:'tag-success', title:'Exclusive 25% member discount', desc:'Silver members and above unlock a flat 25% discount on select hotel partners.', code:'MEMBER25' },
+
+  { cat:'cab', icon:'🚕', iconClass:'icon-cab', tag:'Task Unlocked', tagClass:'tag-success', title:'Flat 15% off your cab rides', desc:'Invite at least 1 friend to unlock flat 15% off your cab rides.', code:'CAR15' },
+  { cat:'cab', icon:'🛣️', iconClass:'icon-cab', tag:'Outstation', tagClass:'tag-accent', title:'12% off outstation trips', desc:'Save on all one-way and round-trip outstation cab bookings above ₹1,500.', code:'OUTSTATION12' },
+  { cat:'cab', icon:'🔁', iconClass:'icon-cab', tag:'Round trip', tagClass:'tag-warn', title:'Flat ₹300 off round trips', desc:'Book a round-trip cab and get an instant ₹300 discount on the fare.', code:'ROUND300' },
+  { cat:'cab', icon:'🌙', iconClass:'icon-cab', tag:'Night rides', tagClass:'tag-accent', title:'10% off night rides', desc:'Bookings made between 11 PM and 5 AM get an automatic 10% discount.', code:'NIGHT10' },
+  { cat:'cab', icon:'📅', iconClass:'icon-cab', tag:'Subscription', tagClass:'tag-success', title:'20% off monthly ride pass', desc:'Subscribe to the monthly commute pass and save 20% versus per-ride pricing.', code:'PASS20' },
+  { cat:'cab', icon:'👥', iconClass:'icon-cab', tag:'Bulk booking', tagClass:'tag-warn', title:'15% off group cab bookings', desc:'Booking 3 or more cabs for an event or trip unlocks a flat 15% discount.', code:'GROUP15' },
+
+  { cat:'package', icon:'📅', iconClass:'icon-package', tag:'Task Unlocked', tagClass:'tag-success', title:'Flat 30% off holiday packages', desc:'Book at least 1 cab ride to unlock flat 30% off your next holiday package.', code:'TRAVEL30' },
+  { cat:'package', icon:'💑', iconClass:'icon-package', tag:'Limited seats', tagClass:'tag-warn', title:'₹3,000 off honeymoon packages', desc:'Book any honeymoon special package above ₹20,000 and save ₹3,000.', code:'HONEY3000' },
+  { cat:'package', icon:'👨👩👧', iconClass:'icon-package', tag:'Family special', tagClass:'tag-accent', title:'Flat 10% off family packages', desc:'Applicable on packages booked for 4 or more travellers.', code:'FAMILY10' },
+  { cat:'package', icon:'🎒', iconClass:'icon-package', tag:'Group booking', tagClass:'tag-warn', title:'18% off group holiday packages', desc:'Groups of 8 or more travellers get an 18% discount on the total package cost.', code:'GROUPTRIP18' },
+
+  { cat:'referral', icon:'🎁', iconClass:'icon-referral', tag:'Referral', tagClass:'tag-success', title:'Refer a friend, earn ₹500', desc:'Both you and your friend get ₹500 in loyalty points after their first booking.', code:'FRIEND500' },
+  { cat:'referral', icon:'🏆', iconClass:'icon-referral', tag:'Loyalty', tagClass:'tag-accent', title:'Bonus 200 points this month', desc:'Every booking this month earns double loyalty points, automatically applied.', code:'DOUBLEPTS' }
+];
+
+const grid = document.getElementById('offerGrid');
+const filters = document.getElementById('filters');
+let userProfile = null;
+let redeemedCodes = new Set();
+let currentFilter = 'all';
+let totalConfirmedBookingsCount = 0;
+let hasPriorHotelBooking = false;
+
+async function fetchUserData() {
+  const token = getToken();
+  if (!token) {
+    render(currentFilter);
+    return;
+  }
+
+  showLoader();
+
+  try {
+    // Fetch profile
+    const profileRes = await fetch(`${API_BASE_URL}/api/profile/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (profileRes.ok) {
+      userProfile = await profileRes.json();
+    }
+
+    // Fetch bookings to check for used promo codes
+    const bookingsRes = await fetch(`${API_BASE_URL}/api/profile/me/bookings`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (bookingsRes.ok) {
+      const data = await bookingsRes.json();
+      const bookings = data.bookings || [];
+      const activeBookings = bookings.filter(b => b.status !== 'cancelled' && b.bookingStatus !== 'cancelled');
+      totalConfirmedBookingsCount = activeBookings.length;
+      hasPriorHotelBooking = activeBookings.some(b => b.type === 'hotel');
+
+      bookings.forEach(b => {
+        if (b.promoCode && b.status !== 'cancelled' && b.bookingStatus !== 'cancelled') {
+          redeemedCodes.add(b.promoCode.toUpperCase().trim());
+        }
+      });
+    }
+  } catch (err) {
+    console.error("Error fetching user stats for locks:", err);
+  } finally {
+    hideLoader();
+  }
+
+  render(currentFilter);
+}
+
+function render(filter) {
+  const list = filter === 'all' ? offers : offers.filter(o => o.cat === filter);
+  grid.innerHTML = '';
+  if (list.length === 0) {
+    grid.innerHTML = '<div class="empty-state">No offers in this category right now.</div>';
+    return;
+  }
+  list.forEach(o => {
+    const card = document.createElement('div');
+    card.className = 'offer-card';
+    
+    // Determine lock state
+    let isLocked = false;
+    let lockReason = '';
+    let actionHtml = '';
+
+    if (o.code === 'HOTEL20') {
+      if (!userProfile) {
+        isLocked = true;
+        lockReason = 'Log in to unlock';
+        actionHtml = `<a href="login.html" style="background:var(--secondary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Log In</a>`;
+      } else if (!userProfile.profileCompleted) {
+        isLocked = true;
+        lockReason = 'Complete profile to unlock';
+        actionHtml = `<a href="profile.html" style="background:var(--primary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Complete Profile</a>`;
+      }
+    } else if (o.code === 'CAR15') {
+      if (!userProfile) {
+        isLocked = true;
+        lockReason = 'Log in to unlock';
+        actionHtml = `<a href="login.html" style="background:var(--secondary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Log In</a>`;
+      } else if (!userProfile.invitesSent || userProfile.invitesSent < 1) {
+        isLocked = true;
+        lockReason = 'Invite 1 friend to unlock';
+        actionHtml = `
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <input type="email" id="invite-email-input" placeholder="friend@email.com" style="flex:1;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;" onclick="event.stopPropagation()"/>
+            <button onclick="sendInvitation(event)" style="background:var(--accent);color:#fff;border:none;font-size:12px;font-weight:700;padding:8px 14px;border-radius:20px;cursor:pointer;white-space:nowrap;">Invite</button>
+          </div>
+        `;
+      }
+    } else if (o.code === 'TRAVEL30') {
+      if (!userProfile) {
+        isLocked = true;
+        lockReason = 'Log in to unlock';
+        actionHtml = `<a href="login.html" style="background:var(--secondary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Log In</a>`;
+      } else if (!userProfile.cabsBookedCount || userProfile.cabsBookedCount < 1) {
+        isLocked = true;
+        lockReason = 'Book 1 cab to unlock';
+        actionHtml = `<a href="cab-booking.html" style="background:var(--primary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Book a Cab</a>`;
+      }
+    } else if (o.code === 'FIRSTSTAY20') {
+      if (!userProfile) {
+        isLocked = true;
+        lockReason = 'Log in to unlock';
+        actionHtml = `<a href="login.html" style="background:var(--secondary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Log In</a>`;
+      } else if (hasPriorHotelBooking) {
+        isLocked = true;
+        lockReason = 'Valid on first hotel booking only';
+        actionHtml = ``;
+      }
+    } else if (o.code === 'MEMBER25') {
+      if (!userProfile) {
+        isLocked = true;
+        lockReason = 'Log in to unlock';
+        actionHtml = `<a href="login.html" style="background:var(--secondary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Log In</a>`;
+      } else if (totalConfirmedBookingsCount < 3) {
+        isLocked = true;
+        lockReason = `Complete 3 bookings to unlock (Current: ${totalConfirmedBookingsCount})`;
+        actionHtml = `<a href="landing.html" style="background:var(--primary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Explore Deals</a>`;
+      }
+    } else if (o.code === 'PASS20') {
+      if (!userProfile) {
+        isLocked = true;
+        lockReason = 'Log in to unlock';
+        actionHtml = `<a href="login.html" style="background:var(--secondary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Log In</a>`;
+      } else if (!userProfile.cabsBookedCount || userProfile.cabsBookedCount < 3) {
+        const currentCabs = userProfile.cabsBookedCount || 0;
+        isLocked = true;
+        lockReason = `Book 3 cabs to unlock (Current: ${currentCabs})`;
+        actionHtml = `<a href="cab-booking.html" style="background:var(--primary);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:20px;text-align:center;display:block;">Book a Cab</a>`;
+      }
+    }
+
+    const isRedeemed = redeemedCodes.has(o.code);
+
+    let bottomRowHtml = '';
+    if (isRedeemed) {
+      bottomRowHtml = `
+        <div class="code-row" style="justify-content:center;">
+          <span class="tag tag-success" style="font-size:13px;font-weight:700;padding:8px 24px;border-radius:8px;">✓ Redeemed</span>
+        </div>
+      `;
+    } else if (isLocked) {
+      bottomRowHtml = `
+        <div class="code-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+          <span class="tag tag-warn" style="text-align:center;">🔒 Locked: ${lockReason}</span>
+          ${actionHtml}
+        </div>
+      `;
+    } else {
+      let infoNoteHtml = '';
+      if (['LUXE5000', 'WEEKEND1500', 'LONGSTAY15'].includes(o.code)) {
+        infoNoteHtml = `<div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:8px;text-align:center;">💡 Applies automatically at checkout for eligible bookings</div>`;
+      }
+      bottomRowHtml = `
+        ${infoNoteHtml}
+        <div class="code-row">
+          <span class="code-pill">${o.code}</span>
+          <button class="copy-btn" data-code="${o.code}">Copy code</button>
+        </div>
+      `;
+    }
+
+    card.innerHTML = `
+      <div class="offer-top">
+        <div class="offer-icon ${o.iconClass}">${o.icon}</div>
+        <span class="tag ${isLocked ? 'tag-warn' : isRedeemed ? 'tag-success' : o.tagClass}">${isLocked ? 'Locked' : isRedeemed ? 'Redeemed' : o.tag}</span>
+      </div>
+      <div class="offer-title">${o.title}</div>
+      <div class="offer-desc">${o.desc}</div>
+      ${bottomRowHtml}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+async function sendInvitation(event) {
+  event.stopPropagation();
+  const input = document.getElementById('invite-email-input');
+  if (!input) return;
+  const email = input.value.trim();
+  if (!email) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  const token = getToken();
+  if (!token) return;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/profile/invite`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Invitation sent successfully! CAR15 has been unlocked.");
+      await fetchUserData(); // Refresh locks
+    } else {
+      alert(data.error || "Failed to send invitation.");
+    }
+  } catch (err) {
+    console.error("Invite error:", err);
+    alert("An error occurred while sending the invitation.");
+  }
+}
+
+filters.addEventListener('click', (e) => {
+  const btn = e.target.closest('.filter-pill');
+  if (!btn) return;
+  filters.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = btn.dataset.filter;
+  render(currentFilter);
+});
+
+grid.addEventListener('click', (e) => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  const code = btn.dataset.code;
+  navigator.clipboard.writeText(code).then(() => {
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('copied');
+    }, 1500);
+  }).catch(() => {
+    btn.textContent = 'Copy failed';
+    setTimeout(() => { btn.textContent = 'Copy code'; }, 1500);
+  });
+});
+
+function getToken() { return localStorage.getItem('token'); }
+function getUser() {
+  try { return JSON.parse(localStorage.getItem('user')); } catch(e) { return null; }
+}
+function checkLoginState() {
+  const user = getUser();
+  const authArea = document.getElementById('nav-auth-area');
+  if (user && getToken()) {
+    const initial = user.name ? user.name[0].toUpperCase() : 'U';
+    authArea.innerHTML = `
+      <a href="partner-with-us.html" class="partner-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13.5px; color: white; background-color: #0F8B8D; padding: 8px 16px; border-radius: 9999px; transition: all 0.2s; margin-right: 10px;">
+        <i class="fa-solid fa-handshake"></i> Partner with Us
+      </a>
+      <a href="profile.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;">
+        ${user.picture ? `<img src="${user.picture}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;" />` : `<div class="avatar">${initial}</div>`}
+        <span>${user.name}</span>
+      </a>
+    `;
+  }
+}
+checkLoginState();
+
+// Fetch dynamic user lock data on page load
+fetchUserData();
+
+// Footer Partner with Us dynamic options
+const partnerTrigger = document.getElementById('partner-trigger');
+const partnerOptions = document.getElementById('partner-options');
+const partnerArrow = document.getElementById('partner-arrow');
+
+if (partnerTrigger && partnerOptions) {
+  partnerTrigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    const isOpen = partnerOptions.style.maxHeight !== '0px' && partnerOptions.style.maxHeight !== '';
+    if (isOpen) {
+      partnerOptions.style.maxHeight = '0px';
+      partnerArrow.style.transform = 'rotate(0deg)';
+    } else {
+      partnerOptions.style.maxHeight = '140px';
+      partnerArrow.style.transform = 'rotate(180deg)';
+    }
+  });
+}
+</script>
+
+</body>
+</html>

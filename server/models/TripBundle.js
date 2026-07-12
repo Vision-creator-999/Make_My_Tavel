@@ -32,6 +32,9 @@ const tripBundleSchema = new mongoose.Schema({
     type: String,
     enum: ['Approved', 'Pending', 'Rejected'],
     default: 'Pending'
+  },
+  partnerEmail: {
+    type: String
   }
 }, {
   timestamps: true

@@ -44,9 +44,86 @@ const { protect, adminOnly } = require('../middleware/auth');
 router.post('/', protect, async (req, res) => {
   try {
     req.body.user = req.user._id;
+    const { bookingType, amount, promoCode, subtotal } = req.body;
+
+    let discount = 0;
+    const User = require('../models/User');
+
+    if (promoCode) {
+      const code = promoCode.toUpperCase().trim();
+      const verifiedSubtotal = subtotal || Math.round(amount / 1.18);
+      
+      // 1. Validate promo code matches booking type
+      if (bookingType === 'cab') {
+        if (code !== 'CAR15' && code !== 'PASS20') {
+          return res.status(400).json({ error: 'Invalid promo code for cab bookings.' });
+        }
+        if (code === 'CAR15') {
+          // Verify lock requirement: invitesSent >= 1
+          if (req.user.invitesSent < 1) {
+            return res.status(400).json({ error: 'Promo code CAR15 is locked! You must invite at least 1 friend to unlock this offer.' });
+          }
+          discount = Math.round(verifiedSubtotal * 0.15);
+        } else if (code === 'PASS20') {
+          // Verify lock requirement: cabsBookedCount >= 3
+          if (req.user.cabsBookedCount < 3) {
+            return res.status(400).json({ error: 'Promo code PASS20 is locked! Book at least 3 cab rides to unlock this offer.' });
+          }
+          discount = Math.round(verifiedSubtotal * 0.20);
+        }
+      } else if (bookingType === 'package') {
+        if (code !== 'TRAVEL30') {
+          return res.status(400).json({ error: 'Invalid promo code for holiday packages.' });
+        }
+        // Verify lock requirement: cabsBookedCount >= 1
+        if (req.user.cabsBookedCount < 1) {
+          return res.status(400).json({ error: 'Promo code TRAVEL30 is locked! You must book at least 1 cab ride to unlock this offer.' });
+        }
+        discount = Math.round(verifiedSubtotal * 0.30);
+      } else {
+        return res.status(400).json({ error: 'Invalid booking type for promo codes.' });
+      }
+
+      // 2. Check if user already used this promo code on a non-cancelled booking
+      const alreadyUsedOthers = await Booking.findOne({
+        user: req.user._id,
+        promoCode: code,
+        status: { $ne: 'cancelled' }
+      });
+      const alreadyUsedHotels = await HotelBooking.findOne({
+        user: req.user._id,
+        promoCode: code,
+        bookingStatus: { $ne: 'cancelled' }
+      });
+
+      if (alreadyUsedOthers || alreadyUsedHotels) {
+        return res.status(400).json({ error: 'You have already used this promo code.' });
+      }
+
+      req.body.promoCode = code;
+      req.body.discount = discount;
+      req.body.subtotal = verifiedSubtotal;
+      const taxes = Math.round(verifiedSubtotal * 0.18);
+      req.body.amount = verifiedSubtotal + taxes - discount;
+    } else {
+      req.body.promoCode = '';
+      req.body.discount = 0;
+      req.body.subtotal = subtotal || Math.round(amount / 1.18);
+    }
+
     const booking = await Booking.create(req.body);
+
+    // If successful cab booking, increment cabsBookedCount
+    if (bookingType === 'cab') {
+      await User.findByIdAndUpdate(req.user._id, { $inc: { cabsBookedCount: 1 } });
+    }
+
     res.status(201).json(booking);
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({ error: 'You have already used this promo code.' });
+    }
+    console.error('Booking error:', err);
     res.status(400).json({ error: err.message });
   }
 });

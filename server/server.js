@@ -10,6 +10,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 const User = require('./models/User');
+const Subscriber = require('./models/Subscriber');
+const ContactMessage = require('./models/ContactMessage');
 const { generateToken, protect, adminOnly } = require('./middleware/auth');
 const { OAuth2Client } = require('google-auth-library');
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -378,6 +380,95 @@ app.use('/api/ratings', ratingRoutes);
 // Redirect /admin to /admin-login.html
 app.get('/admin', (req, res) => {
   res.redirect('/admin-login.html');
+});
+
+// Contact Message endpoint
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    
+    // Basic validation
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
+    if (!email || !email.trim()) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+    const emailLower = email.toLowerCase().trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailLower)) {
+      return res.status(400).json({ error: 'Please provide a valid email address' });
+    }
+    if (!subject || !subject.trim()) {
+      return res.status(400).json({ error: 'Subject is required' });
+    }
+    if (!message || !message.trim()) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+
+    const newMessage = await ContactMessage.create({
+      name: name.trim(),
+      email: emailLower,
+      subject: subject.trim(),
+      message: message.trim()
+    });
+
+    res.status(201).json({ success: true, message: 'Message sent successfully! We will get back to you soon.', data: newMessage });
+  } catch (err) {
+    console.error('Contact message error:', err);
+    res.status(500).json({ error: 'Failed to save contact message. Please try again later.' });
+  }
+});
+
+// Newsletter endpoints
+app.post('/api/newsletter/subscribe', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const emailLower = email.toLowerCase().trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailLower)) {
+      return res.status(400).json({ error: 'Please provide a valid email address' });
+    }
+
+    const existing = await Subscriber.findOne({ email: emailLower });
+    if (existing) {
+      return res.status(400).json({ error: 'This email is already subscribed' });
+    }
+
+    await Subscriber.create({ email: emailLower });
+    res.status(201).json({ message: 'Subscribed successfully! Thank you for staying tuned.' });
+  } catch (err) {
+    console.error('Newsletter subscribe error:', err);
+    res.status(500).json({ error: 'Failed to subscribe. Please try again later.' });
+  }
+});
+
+app.get('/api/newsletter/subscribers', protect, adminOnly, async (req, res) => {
+  try {
+    const subscribers = await Subscriber.find().sort({ createdAt: -1 });
+    res.json(subscribers);
+  } catch (err) {
+    console.error('Newsletter fetch subscribers error:', err);
+    res.status(500).json({ error: 'Failed to fetch subscribers list' });
+  }
+});
+
+app.delete('/api/newsletter/subscribers/:id', protect, adminOnly, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const subscriber = await Subscriber.findByIdAndDelete(id);
+    if (!subscriber) {
+      return res.status(404).json({ error: 'Subscriber not found' });
+    }
+    res.json({ success: true, message: 'Subscriber deleted successfully' });
+  } catch (err) {
+    console.error('Newsletter delete subscriber error:', err);
+    res.status(500).json({ error: 'Failed to delete subscriber' });
+  }
 });
 
 // Start backend server

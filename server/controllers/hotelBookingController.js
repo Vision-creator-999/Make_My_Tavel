@@ -30,6 +30,86 @@ exports.createBooking = async (req, res) => {
       return res.status(400).json({ error: 'Not enough rooms available' });
     }
 
+    // Validate promo code if provided
+    let verifiedDiscount = 0;
+    if (promoCode) {
+      const code = promoCode.toUpperCase().trim();
+      const validCodes = ['HOTEL20', 'FIRSTSTAY20', 'MEMBER25', 'LUXE5000', 'WEEKEND1500', 'LONGSTAY15'];
+      if (!validCodes.includes(code)) {
+        return res.status(400).json({ error: 'Invalid promo code for hotel bookings.' });
+      }
+
+      // Check if user already used this promo code (duplicate prevention)
+      const Booking = require('../models/Booking');
+      const alreadyUsedOthers = await Booking.findOne({
+        user: req.user._id,
+        promoCode: code,
+        status: { $ne: 'cancelled' }
+      });
+      const alreadyUsedHotels = await HotelBooking.findOne({
+        user: req.user._id,
+        promoCode: code,
+        bookingStatus: { $ne: 'cancelled' }
+      });
+
+      if (alreadyUsedOthers || alreadyUsedHotels) {
+        return res.status(400).json({ error: 'You have already used this promo code.' });
+      }
+
+      // Validate lock requirements and calculate discounts based on the code
+      if (code === 'HOTEL20') {
+        if (req.user.profileCompleted !== true) {
+          return res.status(400).json({ error: 'Promo code HOTEL20 is locked! You must complete your user profile under My Profile to unlock this offer.' });
+        }
+        verifiedDiscount = Math.round(subtotal * 0.20);
+      } else if (code === 'FIRSTSTAY20') {
+        const priorCount = await HotelBooking.countDocuments({
+          user: req.user._id,
+          bookingStatus: { $ne: 'cancelled' }
+        });
+        if (priorCount > 0) {
+          return res.status(400).json({ error: 'FIRSTSTAY20 is only valid on your first hotel booking.' });
+        }
+        verifiedDiscount = Math.min(Math.round(subtotal * 0.20), 2000);
+      } else if (code === 'MEMBER25') {
+        const bookingCount = await Booking.countDocuments({
+          user: req.user._id,
+          status: { $ne: 'cancelled' }
+        });
+        const hotelBookingCount = await HotelBooking.countDocuments({
+          user: req.user._id,
+          bookingStatus: { $ne: 'cancelled' }
+        });
+        if ((bookingCount + hotelBookingCount) < 3) {
+          return res.status(400).json({ error: 'MEMBER25 is locked! Complete at least 3 bookings to unlock this offer.' });
+        }
+        verifiedDiscount = Math.round(subtotal * 0.25);
+      } else if (code === 'LUXE5000') {
+        if (hotel.category !== '5 Star' || subtotal < 25000) {
+          return res.status(400).json({ error: 'LUXE5000 is only valid on 5-star hotel bookings above ₹25,000.' });
+        }
+        verifiedDiscount = 5000;
+      } else if (code === 'WEEKEND1500') {
+        const checkInDate = new Date(checkIn);
+        const day = checkInDate.getDay(); // 0 = Sunday, 5 = Friday, 6 = Saturday
+        if (day !== 0 && day !== 5 && day !== 6) {
+          return res.status(400).json({ error: 'WEEKEND1500 is only valid for weekend check-ins (Friday to Sunday).' });
+        }
+        verifiedDiscount = 1500;
+      } else if (code === 'LONGSTAY15') {
+        const start = new Date(checkIn);
+        const end = new Date(checkOut);
+        const msDiff = end - start;
+        const computedNights = Math.round(msDiff / (1000 * 60 * 60 * 24));
+        if (computedNights < 5) {
+          return res.status(400).json({ error: 'LONGSTAY15 is only valid for stays of 5 nights or more.' });
+        }
+        verifiedDiscount = Math.round(subtotal * 0.15);
+      }
+    }
+
+    const verifiedAmount = subtotal + taxes - verifiedDiscount;
+
     // Generate unique booking ID
     const bookingId = 'HTL' + Date.now();
 
@@ -50,9 +130,9 @@ exports.createBooking = async (req, res) => {
       rooms: roomsRequested,
       subtotal,
       taxes,
-      discount: discount || 0,
-      totalAmount,
-      promoCode: promoCode || '',
+      discount: verifiedDiscount,
+      totalAmount: verifiedAmount,
+      promoCode: promoCode ? promoCode.toUpperCase().trim() : '',
       paymentMethod: paymentMethod || 'online',
       paymentStatus: paymentMethod === 'pay_at_hotel' ? 'pending' : 'paid',
       bookingStatus: 'confirmed',
@@ -68,6 +148,9 @@ exports.createBooking = async (req, res) => {
 
     res.status(201).json(booking);
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({ error: 'You have already used this promo code.' });
+    }
     console.error('Error creating booking:', err);
     res.status(500).json({ error: 'Failed to create booking' });
   }

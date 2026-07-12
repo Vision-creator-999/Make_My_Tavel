@@ -9,6 +9,12 @@
   gtag('js', new Date());
   gtag('config', 'G-NDTZ3LFREK');
 </script>
+  <script>
+    if (!localStorage.getItem('token')) {
+      localStorage.setItem('redirect_after_login', 'list-package.html');
+      window.location.href = 'login.html';
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>List Your Holiday Package | Make My Travel</title>
@@ -362,6 +368,7 @@
   </div>
 
   <script src="config.js"></script>
+  <script src="globe-loader.js"></script>
   <script>
     const form = document.getElementById('package-registration-form');
     const modalOverlay = document.getElementById('success-modal-overlay');
@@ -451,6 +458,7 @@
 
       const formData = new FormData(form);
 
+      showLoader();
       try {
         // Upload images first
         const uploadData = new FormData();
@@ -480,6 +488,7 @@
           inclusions: formData.get('inclusions'),
           images: uploadedImageUrls,
           status: 'Pending',
+          partnerEmail: formData.get('email') || '',
           packageId: `MMT-PKG-${Math.floor(100000 + Math.random() * 900000)}`
         };
 
@@ -518,6 +527,8 @@
       } catch (err) {
         console.error('Submit package error:', err);
         alert(err.message || 'Submission failed. Please try again.');
+      } finally {
+        hideLoader();
       }
     });
 

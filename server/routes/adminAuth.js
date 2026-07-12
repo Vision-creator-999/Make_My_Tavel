@@ -59,7 +59,15 @@ router.post('/login', async (req, res) => {
 router.get('/check', async (req, res) => {
   try {
     const cookies = parseCookies(req);
-    const token = cookies.admin_token;
+    let token = cookies.admin_token;
+
+    // Fallback to Bearer token inside Authorization header if cookie is blocked (e.g. cross-origin localhost)
+    if (!token && req.headers.authorization) {
+      const parts = req.headers.authorization.split(' ');
+      if (parts.length === 2 && parts[0] === 'Bearer') {
+        token = parts[1];
+      }
+    }
 
     if (!token) {
       return res.status(401).json({ success: false, message: 'Not authenticated.' });

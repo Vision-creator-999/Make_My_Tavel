@@ -112,7 +112,7 @@
         </svg>
         Download App
       </a>
-      <a href="#">
+      <a href="help-center.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
           stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -167,7 +167,7 @@
         </svg>
         Holiday Packages
       </a>
-      <a href="#">
+      <a href="offers.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
           <line x1="7" y1="7" x2="7.01" y2="7"></line>
@@ -183,13 +183,8 @@
       </a>
     </div>
     <div class="nav-right" id="nav-auth-area">
-      <a href="#" class="wishlist-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path
-            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-          </path>
-        </svg>
-        Wishlist
+      <a href="partner-with-us.html" class="partner-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13.5px; color: white; background-color: #0F8B8D; padding: 8px 16px; border-radius: 9999px; transition: all 0.2s; margin-right: 10px;">
+        <i class="fa-solid fa-handshake"></i> Partner with Us
       </a>
       <!-- Shown when NOT logged in -->
       <a href="login.html" class="login-btn" id="nav-login-btn">
@@ -754,7 +749,7 @@
             <div class="mod-heading">Cars</div>
             <p class="mod-desc">Choose from a wide range of cars for your trip</p>
           </div>
-          <button class="mod-btn btn-orange">Book Cars →</button>
+          <button class="mod-btn btn-orange" onclick="window.location.href='cab-booking.html'">Book Cars →</button>
         </div>
         <div class="mod-img">
           <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&q=80" alt="Luxury car" />
@@ -775,7 +770,7 @@
             <div class="mod-heading">Packages</div>
             <p class="mod-desc">Handpicked packages just for you</p>
           </div>
-          <button class="mod-btn btn-teal">Explore Packages →</button>
+          <button class="mod-btn btn-teal" onclick="window.location.href='package-booking.html'">Explore Packages →</button>
         </div>
         <div class="mod-img">
           <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80"
@@ -979,7 +974,7 @@
       <div class="nl-form-container">
         <div class="nl-form">
           <input type="email" placeholder="Enter your email address" />
-          <button>Subscribe ✈</button>
+          <button id="nl-subscribe-btn">Subscribe ✈</button>
         </div>
       </div>
     </div>
@@ -994,25 +989,25 @@
     </div>
     <div class="footer-col">
       <h4>Company</h4>
-      <a href="#">About Us</a>
-      <a href="#">Careers</a>
-      <a href="#">Blog</a>
-      <a href="#">Press</a>
-      <a href="#">Contact Us</a>
+      <a href="about-us.html">About Us</a>
+      <a href="careers.html">Careers</a>
+      <a href="blog.html">Blog</a>
+      <a href="press.html">Press</a>
+      <a href="contact-us.html">Contact Us</a>
     </div>
     <div class="footer-col">
       <h4>Support</h4>
-      <a href="#">Help Center</a>
-      <a href="#">FAQs</a>
-      <a href="#">Terms &amp; Conditions</a>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Cancellation Policy</a>
+      <a href="help-center.html">Help Center</a>
+      <a href="faqs.html">FAQs</a>
+      <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="cancellation-policy.html">Cancellation Policy</a>
       <div class="partner-menu-container">
-        <a href="#" id="partner-trigger" style="font-weight: 700; color: var(--color-primary); display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
+        <a href="partner-with-us.html" id="partner-trigger" style="font-weight: 700; color: var(--color-primary); display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
           Partner with Us <span style="font-size: 8px; transition: transform var(--transition-fast);" id="partner-arrow">▼</span>
         </a>
         <div id="partner-options" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease; display: flex; flex-direction: column; gap: 8px; padding-left: 10px; border-left: 2px solid var(--color-primary); margin-top: 4px;">
-          <a href="partner-with-us.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🚕 List your Cab</a>
+          <a href="list-cab.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🚕 List your Cab</a>
           <a href="list-hotel.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🏨 List your Hotel</a>
           <a href="list-package.html" style="font-size: 13px; margin: 0; padding: 4px 0 0 0;">🌴 List your Holiday Package</a>
         </div>
@@ -1058,9 +1053,9 @@
     <div class="footer-bottom-content">
       <div>© 2026 Make My Travel. All Rights Reserved.</div>
       <div class="footer-bottom-left">
-        <a href="#">Privacy Policy</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
         <span>|</span>
-        <a href="#">Terms of Use</a>
+        <a href="terms-and-conditions.html">Terms of Use</a>
       </div>
     </div>
   </div>
@@ -1071,7 +1066,8 @@
       <polyline points="18 15 12 9 6 15"></polyline>
     </svg>
   </button>
-
+  <script src="config.js"></script>
+  <script src="globe-loader.js"></script>
   <script>
     // Tab switching logic
     document.querySelectorAll('.tab').forEach(tab => {
@@ -1734,6 +1730,40 @@
         } else {
           partnerOptions.style.maxHeight = '140px';
           partnerArrow.style.transform = 'rotate(180deg)';
+        }
+      });
+    }
+
+    // Immediate popup on newsletter subscribe button click
+    const subscribeBtn = document.querySelector('.nl-form button');
+    if (subscribeBtn) {
+      subscribeBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const emailInput = subscribeBtn.parentNode.querySelector('input');
+        const email = emailInput ? emailInput.value.trim() : '';
+        if (!email) {
+          alert('Please enter a valid email address.');
+          return;
+        }
+
+        showLoader();
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          if (res.ok) {
+            alert('Thanks for subscribing us!');
+            if (emailInput) emailInput.value = '';
+          } else {
+            alert('Something went wrong, please try again.');
+          }
+        } catch (err) {
+          console.error('Subscription error:', err);
+          alert('Something went wrong, please try again.');
+        } finally {
+          hideLoader();
         }
       });
     }

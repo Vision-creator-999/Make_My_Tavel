@@ -25,27 +25,30 @@ router.put('/me', protect, async (req, res) => {
       address, preferences
     } = req.body;
 
-    const update = {};
-    if (name !== undefined) update.name = name.trim();
-    if (phone !== undefined) update.phone = phone.trim();
-    if (dateOfBirth !== undefined) update.dateOfBirth = dateOfBirth;
-    if (gender !== undefined) update.gender = gender;
-    if (bio !== undefined) update.bio = bio.slice(0, 300);
-    if (address !== undefined) update.address = address;
-    if (preferences !== undefined) update.preferences = preferences;
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $set: update },
-      { new: true, runValidators: true }
-    );
-    if (user && user.toObject) {
-      delete user.password;
-    } else if (user) {
-      delete user.password;
+    if (name !== undefined) user.name = name.trim();
+    if (phone !== undefined) user.phone = phone.trim();
+    if (dateOfBirth !== undefined) user.dateOfBirth = dateOfBirth;
+    if (gender !== undefined) user.gender = gender;
+    if (bio !== undefined) user.bio = bio.slice(0, 300);
+    if (address !== undefined) user.address = address;
+    if (preferences !== undefined) user.preferences = preferences;
+
+    // Determine profile completion status:
+    const hasPhone = user.phone && user.phone.trim() !== '';
+    const hasBio = user.bio && user.bio.trim() !== '';
+    const hasCity = user.address && user.address.city && user.address.city.trim() !== '';
+
+    if (hasPhone && hasBio && hasCity) {
+      user.profileCompleted = true;
+    } else {
+      user.profileCompleted = false;
     }
 
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    await user.save();
+
     res.json({ message: 'Profile updated successfully', user: user.toSafeJSON() });
   } catch (err) {
     console.error('Profile update error:', err);
@@ -85,6 +88,24 @@ router.put('/me/password', protect, async (req, res) => {
   }
 });
 
+// POST /api/profile/invite — Send an invitation to a friend
+router.post('/invite', protect, async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email || !email.trim()) {
+      return res.status(400).json({ error: 'Email address is required' });
+    }
+
+    // Increment user invitesSent counter
+    await User.findByIdAndUpdate(req.user._id, { $inc: { invitesSent: 1 } });
+
+    res.json({ message: `Invitation successfully sent to ${email}!` });
+  } catch (err) {
+    console.error('Invite send error:', err);
+    res.status(500).json({ error: 'Failed to send invitation' });
+  }
+});
+
 // GET /api/profile/me/bookings — Fetch all bookings for the logged-in user
 router.get('/me/bookings', protect, async (req, res) => {
   try {
@@ -109,11 +130,11 @@ router.get('/me/bookings', protect, async (req, res) => {
         .sort({ createdAt: -1 }).limit(20).lean();
       cabBookings = other.filter(b => b.bookingType === 'cab').map(b => {
         const plain = b.toObject ? b.toObject() : b;
-        return { ...plain, type: 'cab', id: plain._id };
+        return { ...plain, type: 'cab', id: plain._id, totalAmount: plain.amount };
       });
       packageBookings = other.filter(b => b.bookingType === 'package').map(b => {
         const plain = b.toObject ? b.toObject() : b;
-        return { ...plain, type: 'package', id: plain._id };
+        return { ...plain, type: 'package', id: plain._id, totalAmount: plain.amount };
       });
     } catch (e) {
       if (e.code !== 'MODULE_NOT_FOUND') throw e;

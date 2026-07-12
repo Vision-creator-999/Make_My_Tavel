@@ -69,6 +69,17 @@ const hotelBookingSchema = new mongoose.Schema({
   }
 });
 
+hotelBookingSchema.index(
+  { user: 1, promoCode: 1 },
+  { 
+    unique: true, 
+    partialFilterExpression: { 
+      promoCode: { $gt: "" }, 
+      bookingStatus: { $ne: "cancelled" } 
+    } 
+  }
+);
+
 // Auto-update updatedAt on save
 hotelBookingSchema.pre('save', function() {
   this.updatedAt = Date.now();

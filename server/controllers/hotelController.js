@@ -236,3 +236,24 @@ exports.getHotelStats = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch hotel stats' });
   }
 };
+
+exports.getHotelStatus = async (req, res) => {
+  try {
+    const hotel = await Hotel.findOne({ hotelId: req.params.hotelId });
+    if (!hotel) {
+      return res.status(404).json({ error: 'Hotel not found with the given Reference ID' });
+    }
+    res.json({
+      hotelId: hotel.hotelId,
+      name: hotel.name,
+      ownerName: hotel.ownerName,
+      status: hotel.status,
+      city: hotel.city,
+      createdAt: hotel.createdAt
+    });
+  } catch (err) {
+    console.error('Error fetching hotel status:', err);
+    res.status(500).json({ error: 'Failed to fetch status' });
+  }
+};
+
