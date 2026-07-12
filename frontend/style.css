@@ -659,22 +659,53 @@ section {
 }
 
 /* --- DESTINATIONS CARDS --- */
+.carousel-wrapper.dest-marquee-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-wrapper.dest-marquee-container::before,
+.carousel-wrapper.dest-marquee-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.carousel-wrapper.dest-marquee-container::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg), transparent);
+}
+
+.carousel-wrapper.dest-marquee-container::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg), transparent);
+}
+
 .dest-scroll {
   display: flex;
   gap: 16px;
-  overflow-x: auto;
-  padding: 4px 10px 16px;
+  padding: 10px 0 20px;
+  width: max-content;
+  overflow: visible;
   scrollbar-width: none;
-  scroll-behavior: smooth;
+  animation: dest-marquee 40s linear infinite;
 }
 
 .dest-scroll::-webkit-scrollbar {
   display: none;
 }
 
+.dest-scroll:hover {
+  animation-play-state: paused;
+}
+
 .dest-card {
-  flex: 0 0 calc(100% / 6 - 13.3px);
-  min-width: 170px;
+  flex: 0 0 180px;
   border-radius: 14px;
   overflow: hidden;
   position: relative;
@@ -692,6 +723,29 @@ section {
 .dest-card:active {
   transform: scale(0.96) !important;
   transition: transform 0.05s ease;
+}
+
+@keyframes dest-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dest-scroll {
+    animation: none;
+    width: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    padding: 20px 0;
+  }
+  
+  .dest-scroll .dest-card.duplicate-marquee {
+    display: none;
+  }
 }
 
 /* Play/Pause Motion Toggle Header Button */
@@ -1112,16 +1166,45 @@ section {
 
 .testimonials-container {
   position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.testimonials-container::before,
+.testimonials-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.testimonials-container::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg), transparent);
+}
+
+.testimonials-container::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg), transparent);
 }
 
 .testimonials {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 20px;
-  padding: 4px 0 20px;
+  padding: 10px 0 30px;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.testimonials:hover {
+  animation-play-state: paused;
 }
 
 .testi-card {
+  flex: 0 0 320px;
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: 16px;
@@ -1130,6 +1213,12 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.testi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
 .stars {
@@ -1177,26 +1266,27 @@ section {
   color: var(--color-text-body);
 }
 
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--color-border);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.dot.active {
-  background-color: var(--color-primary);
-  width: 24px;
-  border-radius: 4px;
+@media (prefers-reduced-motion: reduce) {
+  .testimonials {
+    animation: none;
+    width: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    padding: 20px 0;
+  }
+  
+  .testimonials .testi-card.duplicate-marquee {
+    display: none;
+  }
 }
 
 /* --- NEWSLETTER SECTION --- */
