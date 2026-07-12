@@ -35,6 +35,10 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Sanitize user input — strip MongoDB operator keys ($, .) from req.body/query/params
+const mongoSanitize = require('express-mongo-sanitize');
+app.use(mongoSanitize());
+
 // Serve static website files from the frontend folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -59,6 +63,9 @@ app.post('/api/auth/register', registerLimiter, async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
+    }
+    if (typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ error: 'Invalid input format.' });
     }
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -93,6 +100,9 @@ app.post('/api/auth/login', authLimiter, async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ error: 'Invalid email or password format.' });
+    }
 
     const user = await User.findOne({
       email: email.toLowerCase(),
@@ -125,7 +135,7 @@ app.post('/api/auth/login', authLimiter, async (req, res) => {
 app.post('/api/auth/google', registerLimiter, async (req, res) => {
   try {
     const { credential } = req.body;
-    if (!credential) {
+    if (!credential || typeof credential !== 'string') {
       return res.status(400).json({ error: 'Google credential is required' });
     }
 
@@ -392,11 +402,11 @@ app.post('/api/contact', formLimiter, async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
     
-    // Basic validation
-    if (!name || !name.trim()) {
+    // Basic validation — type checks prevent crashes on non-string input
+    if (!name || typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({ error: 'Name is required' });
     }
-    if (!email || !email.trim()) {
+    if (!email || typeof email !== 'string' || !email.trim()) {
       return res.status(400).json({ error: 'Email is required' });
     }
     const emailLower = email.toLowerCase().trim();
@@ -404,10 +414,10 @@ app.post('/api/contact', formLimiter, async (req, res) => {
     if (!emailRegex.test(emailLower)) {
       return res.status(400).json({ error: 'Please provide a valid email address' });
     }
-    if (!subject || !subject.trim()) {
+    if (!subject || typeof subject !== 'string' || !subject.trim()) {
       return res.status(400).json({ error: 'Subject is required' });
     }
-    if (!message || !message.trim()) {
+    if (!message || typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({ error: 'Message is required' });
     }
 
@@ -429,7 +439,7 @@ app.post('/api/contact', formLimiter, async (req, res) => {
 app.post('/api/newsletter/subscribe', formLimiter, async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email) {
+    if (!email || typeof email !== 'string') {
       return res.status(400).json({ error: 'Email is required' });
     }
 

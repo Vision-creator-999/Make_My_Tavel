@@ -24,6 +24,9 @@ router.post('/login', authLimiter, async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ success: false, message: 'Email and password are required.' });
     }
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ success: false, message: 'Invalid email or password format.' });
+    }
 
     // Search database for admin user
     const user = await User.findOne({ email: email.toLowerCase(), role: 'admin' });
