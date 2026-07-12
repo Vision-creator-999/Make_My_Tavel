@@ -199,7 +199,8 @@ nav {
   transition: color var(--transition-fast);
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.active {
   color: var(--color-primary);
 }
 
@@ -211,7 +212,8 @@ nav {
   fill: none;
 }
 
-.nav-links a:hover svg {
+.nav-links a:hover svg,
+.nav-links a.active svg {
   stroke: var(--color-primary);
 }
 
