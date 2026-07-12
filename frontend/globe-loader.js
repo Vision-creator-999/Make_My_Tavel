@@ -241,6 +241,18 @@
     hideInitialLoader();
   }
 
+  // Handle back-forward cache (bfcache) restoration
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      if (loaderTimeout) {
+        clearTimeout(loaderTimeout);
+        loaderTimeout = null;
+      }
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+  });
+
   // Dynamic transition animation when leaving the page (clicking internal links)
   document.addEventListener('click', (e) => {
     if (e.defaultPrevented) return;
