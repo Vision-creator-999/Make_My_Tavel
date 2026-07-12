@@ -73,6 +73,23 @@ exports.createHotel = async (req, res) => {
     if (!name || !city || !pricePerNight) {
       return res.status(400).json({ error: 'Name, city, and price per night are required' });
     }
+
+    // 60 seconds deduplication check
+    const oneMinuteAgo = new Date(Date.now() - 60000);
+    const targetName = name || req.body.hotelName;
+    const duplicate = await Hotel.findOne({
+      mobile: req.body.mobile,
+      $or: [{ name: targetName }, { hotelName: targetName }],
+      city: city,
+      createdAt: { $gte: oneMinuteAgo }
+    });
+
+    if (duplicate) {
+      return res.status(429).json({
+        error: 'A similar listing was already submitted moments ago. Please wait before submitting again.'
+      });
+    }
+
     // Force status to Pending for new listings
     req.body.status = 'Pending';
     const hotel = await Hotel.create(req.body);

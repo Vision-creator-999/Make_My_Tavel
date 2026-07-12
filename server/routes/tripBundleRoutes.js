@@ -46,6 +46,20 @@ router.get('/:id', async (req, res) => {
 // POST /api/trip-bundles (Public listing registration, defaults to Pending)
 router.post('/', async (req, res) => {
   try {
+    // 60 seconds deduplication check
+    const oneMinuteAgo = new Date(Date.now() - 60000);
+    const duplicate = await TripBundle.findOne({
+      partnerEmail: req.body.partnerEmail,
+      name: req.body.name,
+      createdAt: { $gte: oneMinuteAgo }
+    });
+
+    if (duplicate) {
+      return res.status(429).json({
+        error: 'A similar listing was already submitted moments ago. Please wait before submitting again.'
+      });
+    }
+
     req.body.status = 'Pending';
     const bundle = await TripBundle.create(req.body);
     res.status(201).json(bundle);

@@ -860,8 +860,15 @@
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Registering Cab...';
+
         if (carSelectedFiles.length === 0) {
           alert('Please upload at least one photo of your car.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
           return;
         }
 
@@ -915,7 +922,8 @@
           });
 
           if (!response.ok) {
-            throw new Error('Failed to register cab');
+            const errData = await response.json();
+            throw new Error(errData.error || 'Failed to register cab');
           }
 
           const savedCab = await response.json();
@@ -945,6 +953,8 @@
           console.error('Error submitting driver registration:', error);
           alert(error.message || 'Registration failed. Please try again.');
         } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
           hideLoader();
         }
       });

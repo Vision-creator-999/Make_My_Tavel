@@ -578,8 +578,15 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const submitBtn = form.querySelector('.btn-submit');
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Listing Hotel...';
+
       if (selectedFiles.length === 0) {
         alert('Please upload at least one photo of the hotel.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
         return;
       }
 
@@ -607,6 +614,8 @@
 
       if (rooms.length === 0) {
         alert('Please add at least one room type.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
         return;
       }
 
@@ -662,7 +671,8 @@
         });
 
         if (!response.ok) {
-          throw new Error('Failed to submit hotel');
+          const errData = await response.json();
+          throw new Error(errData.error || 'Failed to submit hotel');
         }
 
         const savedHotel = await response.json();
@@ -689,6 +699,8 @@
         console.error('Submit hotel error:', err);
         alert(err.message || 'Submission failed. Please try again.');
       } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
         hideLoader();
       }
     });
