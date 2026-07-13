@@ -253,9 +253,35 @@
     .add-room-btn:hover {
       background: rgba(11, 111, 113, 0.05);
     }
+    .attraction-row {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 40px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    .attraction-row .form-group {
+      margin-bottom: 0;
+    }
+    .attraction-row input {
+      font-size: 13px;
+      padding: 8px 10px;
+      width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background-color: var(--card-bg);
+      box-sizing: border-box;
+    }
     @media (max-width: 900px) {
       .room-row {
         grid-template-columns: 1fr 1fr;
+      }
+      .attraction-row {
+        grid-template-columns: 1fr 1fr 40px;
       }
     }
   </style>
@@ -452,6 +478,15 @@
           </div>
         </div>
 
+        <!-- Nearby Attractions Builder -->
+        <div class="form-group" style="grid-column: 1 / -1; margin-top: 15px; margin-bottom: 25px;">
+          <label style="font-weight: 700; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-map-location-dot"></i> Nearby Attractions
+          </label>
+          <div id="attraction-rows" style="margin-top: 10px;"></div>
+          <button type="button" class="add-room-btn" onclick="addAttractionRow()">+ Add Nearby Attraction</button>
+        </div>
+
         <!-- Room Types Builder -->
         <div class="form-group" style="grid-column: 1 / -1; margin-top: 15px; margin-bottom: 25px;">
           <label style="font-weight: 700; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
@@ -612,6 +647,20 @@
         });
       });
 
+      // Dynamically parse nearby attractions from the builder
+      const nearbyAttractions = [];
+      document.querySelectorAll('#attraction-rows .attraction-row').forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        const nameVal = inputs[0]?.value.trim();
+        const distVal = inputs[1]?.value.trim();
+        if (nameVal && distVal) {
+          nearbyAttractions.push({
+            name: nameVal,
+            distance: distVal
+          });
+        }
+      });
+
       if (rooms.length === 0) {
         alert('Please add at least one room type.');
         submitBtn.disabled = false;
@@ -660,6 +709,7 @@
           amenities: formData.get('amenities').split(',').map(a => a.trim()).filter(Boolean),
           images: uploadedImageUrls,
           rooms: rooms,
+          nearbyAttractions: nearbyAttractions,
           isActive: true,
           status: 'Pending',
           hotelId: `MMT-HTL-${Math.floor(100000 + Math.random() * 900000)}`
@@ -751,6 +801,22 @@
       size: 320,
       totalRooms: 10
     });
+
+    function addAttractionRow(data) {
+      const container = document.getElementById('attraction-rows');
+      const row = document.createElement('div');
+      row.className = 'attraction-row';
+      row.innerHTML = `
+        <div class="form-group"><input placeholder="Attraction Name (e.g. Baga Beach)" value="${data?.name || ''}" required/></div>
+        <div class="form-group"><input placeholder="Distance/Time (e.g. 2 mins walk, 6.5 km)" value="${data?.distance || ''}" required/></div>
+        <button type="button" class="remove-room-btn" onclick="this.parentElement.remove()">x</button>
+      `;
+      container.appendChild(row);
+    }
+
+    // Initialize with default attractions
+    addAttractionRow({ name: 'Candolim Beach', distance: '2 mins walk' });
+    addAttractionRow({ name: 'Fort Aguada', distance: '6.5 km' });
   </script>
 </body>
 </html>

@@ -378,6 +378,7 @@ const bookingRoutes = require('./routes/bookingRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const ratingRoutes = require('./routes/ratingRoutes');
+const weatherRoutes = require('./routes/weatherRoutes');
 
 // General rate limiter baseline for all /api/ routes
 app.use('/api/', generalLimiter);
@@ -386,6 +387,7 @@ app.use('/api/hotels', hotelRoutes);
 app.use('/api/hotel-bookings', hotelBookingRoutes);
 app.use('/api/admin', adminAuthRoutes);
 app.use('/api/cabs', cabRoutes);
+app.use('/api/weather', weatherRoutes);
 app.use('/api/trip-bundles', tripBundleRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/profile', profileRoutes);

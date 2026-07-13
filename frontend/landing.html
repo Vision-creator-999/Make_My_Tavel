@@ -93,6 +93,18 @@
       height: 16px;
       cursor: pointer;
     }
+
+    @media (max-width: 640px) {
+      #fields-hotels,
+      #fields-cars.oneway,
+      #fields-cars.roundtrip,
+      #fields-packages {
+        grid-template-columns: 1fr;
+      }
+      #fields-packages .field-dest-pkg {
+        grid-column: span 1;
+      }
+    }
   </style>
 </head>
 
@@ -104,14 +116,7 @@
       🎁 Get Up to 30% OFF on Hotel Bookings &nbsp;|&nbsp; Use Code: <span class="promo-code">TRAVEL30</span>
     </div>
     <div class="topbar-right">
-      <a href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-          stroke-linejoin="round">
-          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-          <line x1="12" y1="18" x2="12.01" y2="18"></line>
-        </svg>
-        Download App
-      </a>
+      <div id="weather-widget-container"></div>
       <a href="help-center.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
           stroke-linejoin="round">
@@ -203,7 +208,117 @@
         <span id="nav-user-greeting">My Profile</span>
       </a>
     </div>
+
+    <!-- HAMBURGER MENU BUTTON -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle Navigation">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
   </nav>
+
+  <!-- MOBILE DRAWER OVERLAY -->
+  <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <!-- Rich Profile Card Header -->
+    <div class="mobile-drawer-header-card">
+      <button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Close Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Unauthenticated Header Card -->
+      <div id="mobile-header-unauth" class="drawer-header-content">
+        <div class="logo-text-drawer">
+          <strong>Make<span class="accent">my</span>Travel</strong>
+        </div>
+        <div class="drawer-unauth-card">
+          <p class="drawer-header-prompt">Sign in for the best experience</p>
+          <a href="login.html" class="drawer-signin-btn">Sign In / Register</a>
+        </div>
+      </div>
+
+      <!-- Authenticated Header Card -->
+      <div id="mobile-header-auth" class="drawer-header-content" style="display: none;">
+        <div class="drawer-profile-card">
+          <div class="drawer-avatar-wrap">
+            <div id="mobile-user-initials" class="drawer-avatar-initials" style="display: none;"></div>
+            <img id="mobile-user-avatar" src="" alt="User Avatar" class="drawer-avatar" style="display: none;" />
+          </div>
+          <div class="drawer-profile-info">
+            <span id="mobile-user-name" class="drawer-username">Traveler</span>
+            <a href="profile.html" class="drawer-view-profile">View Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation links with square tinted icons and chevron right -->
+    <div class="mobile-drawer-links">
+      <a href="hotel-booking.html">
+        <span class="icon-wrap hotel-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </span>
+        <span class="link-label">Hotels</span>
+        <span class="chevron-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+      </a>
+      <a href="cab-booking.html">
+        <span class="icon-wrap cab-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="22" height="13" rx="2" ry="2"></rect><path d="M7 21h0a2 2 0 0 1-2-2v-3h14v3a2 2 0 0 1-2 2h0"></path></svg>
+        </span>
+        <span class="link-label">Cars</span>
+        <span class="chevron-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+      </a>
+      <a href="package-booking.html">
+        <span class="icon-wrap package-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="14" rx="2" ry="2"></rect><path d="M7 8V5a3 3 0 0 1 6 0v3"></path></svg>
+        </span>
+        <span class="link-label">Holiday Packages</span>
+        <span class="chevron-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+      </a>
+      <a href="offers.html" class="divider-after">
+        <span class="icon-wrap offers-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+        </span>
+        <span class="link-label">Offers</span>
+        <span class="chevron-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+      </a>
+      <a href="travel-guide.html">
+        <span class="icon-wrap guide-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        </span>
+        <span class="link-label">Travel Guide</span>
+        <span class="chevron-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+      </a>
+    </div>
+    <div class="mobile-drawer-footer" id="mobileDrawerFooter">
+      <a href="partner-with-us.html" class="partner-btn">
+        <i class="fa-solid fa-handshake"></i> Partner with Us
+      </a>
+      <a href="login.html" class="login-btn" id="mobile-login-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        Login / Sign Up
+      </a>
+      <div id="mobile-profile-area" style="display:none; flex-direction: column; gap: 12px; width: 100%;">
+        <a href="profile.html" class="login-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          My Profile
+        </a>
+        <a href="admin-dashboard.html" id="mobile-admin-btn" class="login-btn" style="border-color: #0F8B8D; color: #0F8B8D; display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          Admin Dashboard
+        </a>
+        <button id="mobile-logout-btn" class="login-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          Log Out
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- HERO SECTION -->
   <div class="hero">
@@ -546,7 +661,7 @@
           </button>
         </div>
       </div>
-      <a href="#" class="view-all">View All
+      <a href="package-booking.html" class="view-all">View All
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
@@ -558,133 +673,133 @@
       <div class="dest-scroll" id="dest-scroll">
         <!-- Real Set of 12 Unique Cards -->
         <a href="package-booking.html?destination=Goa" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&q=80" alt="Goa" />
+          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80" alt="Goa" />
           <div class="dest-info"><strong>📍 Goa</strong><span>From ₹2,999</span></div>
         </a>
         <a href="package-booking.html?destination=Manali" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&q=80" alt="Manali" />
+          <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80" alt="Manali" />
           <div class="dest-info"><strong>📍 Manali</strong><span>From ₹3,499</span></div>
         </a>
         <a href="package-booking.html?destination=Dubai" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=400&q=80" alt="Dubai" />
+          <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai" />
           <div class="dest-info"><strong>📍 Dubai</strong><span>From ₹11,999</span></div>
         </a>
         <a href="package-booking.html?destination=Thailand" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400&q=80" alt="Thailand" />
+          <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80" alt="Thailand" />
           <div class="dest-info"><strong>📍 Thailand</strong><span>From ₹15,999</span></div>
         </a>
         <a href="package-booking.html?destination=Kerala" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&q=80" alt="Kerala" />
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80" alt="Kerala" />
           <div class="dest-info"><strong>📍 Kerala</strong><span>From ₹2,499</span></div>
         </a>
         <a href="package-booking.html?destination=Jaipur" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&q=80" alt="Jaipur" />
+          <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&q=80" alt="Jaipur" />
           <div class="dest-info"><strong>📍 Jaipur</strong><span>From ₹2,199</span></div>
         </a>
         <a href="package-booking.html?destination=Udaipur" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=400&q=80" alt="Udaipur" />
+          <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=800&q=80" alt="Udaipur" />
           <div class="dest-info"><strong>📍 Udaipur</strong><span>From ₹3,999</span></div>
         </a>
         <a href="package-booking.html?destination=Shimla" class="dest-card">
-          <img src="https://media.istockphoto.com/id/1492080164/photo/rampur-bushahr-town-himachal-pradesh-india.jpg?s=612x612&w=0&k=20&c=mUG_jCG7RYY3tpgVHAor_70IwnnFxdH1LoWNpPmY5CA=" alt="Shimla" />
+          <img src="https://images.unsplash.com/photo-1597075687490-8f673c6c17f6?w=800&q=80" alt="Shimla" />
           <div class="dest-info"><strong>📍 Shimla</strong><span>From ₹2,899</span></div>
         </a>
         <a href="package-booking.html?destination=Singapore" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400&q=80" alt="Singapore" />
+          <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&q=80" alt="Singapore" />
           <div class="dest-info"><strong>📍 Singapore</strong><span>From ₹24,999</span></div>
         </a>
         <a href="package-booking.html?destination=Bali" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" alt="Bali" />
+          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80" alt="Bali" />
           <div class="dest-info"><strong>📍 Bali</strong><span>From ₹19,999</span></div>
         </a>
         <a href="package-booking.html?destination=Rishikesh" class="dest-card">
-          <img src="https://www.shutterstock.com/image-photo/rishikesh-yoga-city-india-gange-260nw-1137990866.jpg" alt="Rishikesh" />
+          <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&q=80" alt="Rishikesh" />
           <div class="dest-info"><strong>📍 Rishikesh</strong><span>From ₹1,999</span></div>
         </a>
         <a href="package-booking.html?destination=Ladakh" class="dest-card">
-          <img src="https://i0.wp.com/lahimalaya.com/wp-content/uploads/2019/08/Ladakh-trip.jpg?fit=960%2C640&ssl=1" alt="Ladakh" />
+          <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&q=80" alt="Ladakh" />
           <div class="dest-info"><strong>📍 Ladakh</strong><span>From ₹8,999</span></div>
         </a>
         <a href="package-booking.html?destination=Varanasi" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&q=80" alt="Varanasi" />
+          <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80" alt="Varanasi" />
           <div class="dest-info"><strong>📍 Varanasi</strong><span>From ₹2,499</span></div>
         </a>
         <a href="package-booking.html?destination=Ooty" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1592639296346-560c37a0f711?w=400&q=80" alt="Ooty" />
+          <img src="https://images.unsplash.com/photo-1592639296346-560c37a0f711?w=800&q=80" alt="Ooty" />
           <div class="dest-info"><strong>📍 Ooty</strong><span>From ₹3,299</span></div>
         </a>
         <a href="package-booking.html?destination=Agra" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=80" alt="Agra" />
+          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80" alt="Agra" />
           <div class="dest-info"><strong>📍 Agra</strong><span>From ₹1,799</span></div>
         </a>
         <a href="package-booking.html?destination=Maldives" class="dest-card">
-          <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=80" alt="Maldives" />
+          <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80" alt="Maldives" />
           <div class="dest-info"><strong>📍 Maldives</strong><span>From ₹34,999</span></div>
         </a>
 
         <!-- Duplicated Set for Infinite Drift -->
         <a href="package-booking.html?destination=Goa" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Goa</strong><span>From ₹2,999</span></div>
         </a>
         <a href="package-booking.html?destination=Manali" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Manali</strong><span>From ₹3,499</span></div>
         </a>
         <a href="package-booking.html?destination=Dubai" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Dubai</strong><span>From ₹11,999</span></div>
         </a>
         <a href="package-booking.html?destination=Thailand" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Thailand</strong><span>From ₹15,999</span></div>
         </a>
         <a href="package-booking.html?destination=Kerala" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Kerala</strong><span>From ₹2,499</span></div>
         </a>
         <a href="package-booking.html?destination=Jaipur" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Jaipur</strong><span>From ₹2,199</span></div>
         </a>
         <a href="package-booking.html?destination=Udaipur" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Udaipur</strong><span>From ₹3,999</span></div>
         </a>
         <a href="package-booking.html?destination=Shimla" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://media.istockphoto.com/id/1492080164/photo/rampur-bushahr-town-himachal-pradesh-india.jpg?s=612x612&w=0&k=20&c=mUG_jCG7RYY3tpgVHAor_70IwnnFxdH1LoWNpPmY5CA=" alt="" />
+          <img src="https://images.unsplash.com/photo-1597075687490-8f673c6c17f6?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Shimla</strong><span>From ₹2,899</span></div>
         </a>
         <a href="package-booking.html?destination=Singapore" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Singapore</strong><span>From ₹24,999</span></div>
         </a>
         <a href="package-booking.html?destination=Bali" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Bali</strong><span>From ₹19,999</span></div>
         </a>
         <a href="package-booking.html?destination=Rishikesh" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://www.shutterstock.com/image-photo/rishikesh-yoga-city-india-gange-260nw-1137990866.jpg" alt="" />
+          <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Rishikesh</strong><span>From ₹1,999</span></div>
         </a>
         <a href="package-booking.html?destination=Ladakh" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://i0.wp.com/lahimalaya.com/wp-content/uploads/2019/08/Ladakh-trip.jpg?fit=960%2C640&ssl=1" alt="" />
+          <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Ladakh</strong><span>From ₹8,999</span></div>
         </a>
         <a href="package-booking.html?destination=Varanasi" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Varanasi</strong><span>From ₹2,499</span></div>
         </a>
         <a href="package-booking.html?destination=Ooty" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1592639296346-560c37a0f711?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1592639296346-560c37a0f711?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Ooty</strong><span>From ₹3,299</span></div>
         </a>
         <a href="package-booking.html?destination=Agra" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Agra</strong><span>From ₹1,799</span></div>
         </a>
         <a href="package-booking.html?destination=Maldives" class="dest-card duplicate-marquee" aria-hidden="true" tabindex="-1">
-          <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=80" alt="" />
+          <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80" alt="" />
           <div class="dest-info"><strong>📍 Maldives</strong><span>From ₹34,999</span></div>
         </a>
       </div>
@@ -1265,6 +1380,7 @@
   </button>
   <script src="config.js"></script>
   <script src="globe-loader.js"></script>
+  <script src="weather-widget.js"></script>
   <script>
     // Tab switching logic
     document.querySelectorAll('.tab').forEach(tab => {
@@ -1545,11 +1661,47 @@
       const loginBtn = document.getElementById('nav-login-btn');
       const profileBtn = document.getElementById('nav-profile-btn');
 
+      const mobileLoginBtn = document.getElementById('mobile-login-btn');
+      const mobileProfileArea = document.getElementById('mobile-profile-area');
+      const mobileAdminBtn = document.getElementById('mobile-admin-btn');
+      
+      const mobileHeaderAuth = document.getElementById('mobile-header-auth');
+      const mobileHeaderUnauth = document.getElementById('mobile-header-unauth');
+      const mobileUserAvatar = document.getElementById('mobile-user-avatar');
+      const mobileUserName = document.getElementById('mobile-user-name');
+
       if (token && userStr) {
         try {
           const user = JSON.parse(userStr);
           if (loginBtn) loginBtn.style.display = 'none';
           if (profileBtn) profileBtn.style.display = 'none';
+
+          if (mobileLoginBtn) mobileLoginBtn.style.display = 'none';
+          if (mobileProfileArea) {
+            mobileProfileArea.style.display = 'flex';
+            if (user.role === 'admin' && mobileAdminBtn) {
+              mobileAdminBtn.style.display = 'flex';
+            }
+          }
+          
+          if (mobileHeaderAuth) mobileHeaderAuth.style.display = 'block';
+          if (mobileHeaderUnauth) mobileHeaderUnauth.style.display = 'none';
+
+          const mobileUserInitials = document.getElementById('mobile-user-initials');
+          if (user.picture && mobileUserAvatar) {
+            mobileUserAvatar.src = user.picture;
+            mobileUserAvatar.style.display = 'block';
+            if (mobileUserInitials) mobileUserInitials.style.display = 'none';
+          } else {
+            if (mobileUserAvatar) mobileUserAvatar.style.display = 'none';
+            if (mobileUserInitials && user.name) {
+              const parts = user.name.split(' ');
+              const initials = parts.map(p => p[0]).join('').substring(0, 2).toUpperCase();
+              mobileUserInitials.textContent = initials || 'TR';
+              mobileUserInitials.style.display = 'flex';
+            }
+          }
+          if (user.name && mobileUserName) mobileUserName.textContent = user.name;
 
           const navRight = document.querySelector('.nav-right');
           if (navRight && !navRight.querySelector('.user-menu')) {
@@ -1626,12 +1778,29 @@
               if (userDropdown) userDropdown.style.display = '';
             });
           }
+
+          // Setup mobile drawer logout click
+          const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+          if (mobileLogoutBtn) {
+            mobileLogoutBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              localStorage.removeItem('user');
+              localStorage.removeItem('token');
+              window.location.reload();
+            });
+          }
         } catch (err) {
           console.error('Error parsing login user state:', err);
         }
       } else {
         if (loginBtn) loginBtn.style.display = 'flex';
         if (profileBtn) profileBtn.style.display = 'none';
+
+        if (mobileLoginBtn) mobileLoginBtn.style.display = 'flex';
+        if (mobileProfileArea) mobileProfileArea.style.display = 'none';
+        
+        if (mobileHeaderAuth) mobileHeaderAuth.style.display = 'none';
+        if (mobileHeaderUnauth) mobileHeaderUnauth.style.display = 'block';
       }
     }
 
@@ -1690,6 +1859,32 @@
 
     // Run login state check on load
     checkLoginState();
+
+    // Mobile navigation drawer toggle event listeners
+    const mobileToggle = document.getElementById('mobileNavToggle');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+    const mobileOverlay = document.getElementById('mobileDrawerOverlay');
+    const mobileClose = document.getElementById('mobileDrawerClose');
+
+    function openDrawer() {
+      if (mobileDrawer && mobileOverlay) {
+        mobileDrawer.classList.add('active');
+        mobileOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeDrawer() {
+      if (mobileDrawer && mobileOverlay) {
+        mobileDrawer.classList.remove('active');
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (mobileToggle) mobileToggle.addEventListener('click', openDrawer);
+    if (mobileClose) mobileClose.addEventListener('click', closeDrawer);
+    if (mobileOverlay) mobileOverlay.addEventListener('click', closeDrawer);
 
   </script>
 </body>

@@ -88,6 +88,30 @@
     .nav-links{display:none;}
     .page-head, .filters, .grid{padding-left:20px;padding-right:20px;}
     .page-head h1{font-size:24px;}
+    .newsletter {
+      flex-direction: column;
+      text-align: center;
+      padding: 24px;
+    }
+    .newsletter-left {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .nl-form {
+      flex-direction: column;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 16px;
+    }
+    .nl-form input {
+      width: 100%;
+      text-align: center;
+      padding: 12px 16px;
+    }
+    .nl-form button {
+      width: 100%;
+      justify-content: center;
+    }
   }
 
   /* --- NEWSLETTER SECTION --- */
@@ -179,6 +203,23 @@
   }
   .nl-form button:hover {
     background-color: #0b6f71;
+  }
+  .page-breadcrumb {
+    font-size: 13px;
+    color: var(--body-text);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .page-breadcrumb a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .page-breadcrumb a:hover {
+    text-decoration: underline;
   }
 
   /* --- FOOTER --- */
@@ -299,7 +340,7 @@
 
 <div class="topbar">
   <div><span class="promo-badge">GIFT</span> Get Up to 30% OFF on Hotel Bookings &nbsp;|&nbsp; Use Code: <strong>TRAVEL30</strong></div>
-  <div class="topbar-right"><span>Download App</span><span>Help</span><span>INR ▾</span></div>
+  <div class="topbar-right"><span>Help</span><span>INR ▾</span></div>
 </div>
 
 <nav>
@@ -332,6 +373,12 @@
 </nav>
 
 <div class="page-head">
+  <div class="page-breadcrumb">
+    <a href="landing.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 14px; height: 14px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Home
+    </a>
+  </div>
   <h1>Offers &amp; deals</h1>
   <p>Handpicked discounts on hotels, cabs, holiday packages and referral rewards.</p>
 </div>
@@ -363,8 +410,8 @@
     </div>
     <div class="nl-form-container">
       <div class="nl-form">
-        <input type="email" placeholder="Enter your email address" />
-        <button>Subscribe ✈</button>
+        <input type="email" placeholder="Enter your email address" id="newsletter-email" />
+        <button id="newsletter-btn">Subscribe ✈</button>
       </div>
     </div>
   </div>
@@ -757,6 +804,47 @@ if (partnerTrigger && partnerOptions) {
       partnerOptions.style.maxHeight = '140px';
       partnerArrow.style.transform = 'rotate(180deg)';
     }
+  });
+}
+
+// Newsletter subscription logic
+const newsletterBtn = document.getElementById('newsletter-btn');
+const newsletterEmail = document.getElementById('newsletter-email');
+
+if (newsletterBtn && newsletterEmail) {
+  newsletterBtn.addEventListener('click', () => {
+    const email = newsletterEmail.value.trim();
+    if (!email) {
+      alert('Please enter your email.');
+      return;
+    }
+
+    // Show loading status
+    const originalText = newsletterBtn.textContent;
+    newsletterBtn.textContent = 'Subscribing...';
+    newsletterBtn.disabled = true;
+
+    fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    })
+    .then(res => {
+      if (res.ok) {
+        alert('Thanks for subscribing us!');
+        newsletterEmail.value = '';
+      } else {
+        alert('Something went wrong, please try again.');
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Something went wrong, please try again.');
+    })
+    .finally(() => {
+      newsletterBtn.textContent = originalText;
+      newsletterBtn.disabled = false;
+    });
   });
 }
 </script>
