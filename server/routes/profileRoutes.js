@@ -225,10 +225,10 @@ router.get('/me/vendor-bookings', protect, async (req, res) => {
 
     const vendorId = req.user._id;
 
-    // 1. Find all vendor's listings
-    const myHotels = await Hotel.find({ user: vendorId }).select('_id name');
-    const myCabs = await Cab.find({ user: vendorId }).select('_id vehicle');
-    const myPackages = await TripBundle.find({ user: vendorId }).select('_id name');
+    // 1. Find all vendor's listings (avoid .select() — dbFallback wrapper corrupts Mongoose docs)
+    const myHotels = await Hotel.find({ user: vendorId });
+    const myCabs = await Cab.find({ user: vendorId });
+    const myPackages = await TripBundle.find({ user: vendorId });
 
     const hotelIds = myHotels.map(h => h._id);
     const cabIds = myCabs.map(c => c._id);
