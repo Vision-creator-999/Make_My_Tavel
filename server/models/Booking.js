@@ -36,6 +36,14 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     enum: ['cab', 'package']
   },
+  cabId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cab'
+  },
+  packageId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'TripBundle'
+  },
   itemName: {
     type: String
   },

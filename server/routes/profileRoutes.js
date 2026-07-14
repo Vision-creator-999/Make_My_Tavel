@@ -214,4 +214,100 @@ router.get('/me/listings', protect, async (req, res) => {
   }
 });
 
+// GET /api/profile/me/vendor-bookings — Get bookings for vendor's own listings
+router.get('/me/vendor-bookings', protect, async (req, res) => {
+  try {
+    const Hotel = require('../models/Hotel');
+    const Cab = require('../models/Cab');
+    const TripBundle = require('../models/TripBundle');
+    const Booking = require('../models/Booking');
+    const HotelBooking = require('../models/HotelBooking');
+
+    const vendorId = req.user._id;
+
+    // 1. Find all vendor's listings
+    const myHotels = await Hotel.find({ user: vendorId }).select('_id name');
+    const myCabs = await Cab.find({ user: vendorId }).select('_id vehicle');
+    const myPackages = await TripBundle.find({ user: vendorId }).select('_id name');
+
+    const hotelIds = myHotels.map(h => h._id);
+    const cabIds = myCabs.map(c => c._id);
+    const packageIds = myPackages.map(p => p._id);
+
+    const cabNames = myCabs.map(c => c.vehicle);
+    const packageNames = myPackages.map(p => p.name);
+
+    // 2. Fetch hotel bookings
+    const hotelBookings = await HotelBooking.find({ hotel: { $in: hotelIds } });
+
+    // 3. Fetch cab and package bookings
+    const genericBookings = await Booking.find({
+      $or: [
+        { cabId: { $in: cabIds } },
+        { packageId: { $in: packageIds } },
+        { bookingType: 'cab', itemName: { $in: cabNames } },
+        { bookingType: 'package', itemName: { $in: packageNames } }
+      ]
+    });
+
+    // 4. Map them to a unified format
+    const results = [];
+
+    // Map hotel bookings
+    hotelBookings.forEach(hb => {
+      results.push({
+        type: 'hotel',
+        listingName: hb.hotelName || 'Unknown Hotel',
+        customerName: hb.guestName || 'N/A',
+        customerPhone: hb.guestPhone || 'N/A',
+        customerEmail: hb.guestEmail || 'N/A',
+        bookingDate: hb.checkIn ? new Date(hb.checkIn).toISOString().split('T')[0] : 'N/A',
+        amount: hb.totalAmount || 0,
+        status: hb.bookingStatus || 'pending',
+        bookingId: hb.bookingId || hb._id.toString(),
+        isLegacy: false
+      });
+    });
+
+    // Map generic bookings
+    genericBookings.forEach(gb => {
+      let isLegacy = false;
+      if (gb.bookingType === 'cab') {
+        if (!gb.cabId) {
+          isLegacy = true;
+        }
+      } else if (gb.bookingType === 'package') {
+        if (!gb.packageId) {
+          isLegacy = true;
+        }
+      }
+
+      results.push({
+        type: gb.bookingType, // 'cab' or 'package'
+        listingName: gb.itemName || 'Unknown Listing',
+        customerName: gb.customerName || 'N/A',
+        customerPhone: gb.customerPhone || 'N/A',
+        customerEmail: gb.customerEmail || 'N/A',
+        bookingDate: gb.bookingDate || 'N/A',
+        amount: gb.amount || 0,
+        status: gb.status || 'pending',
+        bookingId: gb.bookingId || gb._id.toString(),
+        isLegacy
+      });
+    });
+
+    // 5. Sort by most recent first
+    results.sort((a, b) => {
+      const dateA = new Date(a.bookingDate === 'N/A' ? 0 : a.bookingDate);
+      const dateB = new Date(b.bookingDate === 'N/A' ? 0 : b.bookingDate);
+      return dateB - dateA;
+    });
+
+    res.json(results);
+  } catch (err) {
+    console.error('Error fetching vendor bookings:', err);
+    res.status(500).json({ error: 'Failed to fetch vendor bookings' });
+  }
+});
+
 module.exports = router;

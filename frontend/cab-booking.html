@@ -277,12 +277,7 @@
   <nav>
     <a href="landing.html" class="logo">
       <div class="logo-icon-wrapper">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" fill="#17375E"/>
-          <path d="M15 80 C 35 70, 70 50, 85 25" stroke="#F97316" stroke-width="8" stroke-linecap="round"/>
-          <path d="M15 80 C 35 70, 70 50, 85 25" stroke="#FBBF24" stroke-width="4" stroke-linecap="round"/>
-          <g transform="translate(68, 15) rotate(45) scale(0.65)"><path d="M25 0 L29 15 L45 22 L29 25 L25 40 L21 25 L5 22 L21 15 Z" fill="#FFFFFF"/></g>
-        </svg>
+        <img src="assets/logo.png" alt="MakeMyTravel Logo" />
       </div>
       <div class="logo-text">
         <strong>Make<span class="accent">my</span>Travel</strong>
@@ -920,6 +915,7 @@
       const totalAmount = subtotal + taxes - discount;
 
       const bookingData = {
+        cabId: currentCab._id,
         customerName: nameVal,
         customerPhone: phoneVal,
         customerEmail: emailVal,

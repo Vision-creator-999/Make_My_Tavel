@@ -147,42 +147,110 @@ router.post('/', protect, async (req, res) => {
 });
 
 // PUT /api/bookings/:id (update booking status)
-router.put('/:id', async (req, res) => {
+router.put('/:id', protect, async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
 
-    // Check custom Booking collection first
-    let booking = await Booking.findById(id);
-    if (booking) {
-      booking.status = status.toLowerCase();
-      await booking.save();
-      return res.json(booking);
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required.' });
     }
 
-    // Check by custom bookingId in Booking collection
-    booking = await Booking.findOne({ bookingId: id });
+    const targetStatus = status.toLowerCase().trim();
+    const isAdmin = req.user.role === 'admin';
+
+    // Helper to verify listing owner for generic Booking
+    async function verifyGenericBookingOwner(booking) {
+      if (booking.bookingType === 'cab') {
+        const Cab = require('../models/Cab');
+        let cabOwnerId = null;
+        if (booking.cabId) {
+          const cab = await Cab.findById(booking.cabId);
+          if (cab) cabOwnerId = cab.user;
+        } else {
+          const cab = await Cab.findOne({ vehicle: booking.itemName });
+          if (cab) cabOwnerId = cab.user;
+        }
+        return cabOwnerId && cabOwnerId.toString() === req.user._id.toString();
+      } else if (booking.bookingType === 'package') {
+        const TripBundle = require('../models/TripBundle');
+        let pkgOwnerId = null;
+        if (booking.packageId) {
+          const pkg = await TripBundle.findById(booking.packageId);
+          if (pkg) pkgOwnerId = pkg.user;
+        } else {
+          const pkg = await TripBundle.findOne({ name: booking.itemName });
+          if (pkg) pkgOwnerId = pkg.user;
+        }
+        return pkgOwnerId && pkgOwnerId.toString() === req.user._id.toString();
+      }
+      return false;
+    }
+
+    // Helper to verify listing owner for HotelBooking
+    async function verifyHotelBookingOwner(hb) {
+      const Hotel = require('../models/Hotel');
+      const hotel = await Hotel.findById(hb.hotel);
+      const hotelOwnerId = hotel ? hotel.user : null;
+      return hotelOwnerId && hotelOwnerId.toString() === req.user._id.toString();
+    }
+
+    // Check custom Booking collection first
+    let booking = await Booking.findById(id);
+    if (!booking) {
+      booking = await Booking.findOne({ bookingId: id });
+    }
+
     if (booking) {
-      booking.status = status.toLowerCase();
+      // Apply authorization checks
+      if (targetStatus === 'confirmed') {
+        const isOwner = await verifyGenericBookingOwner(booking);
+        if (!isOwner && !isAdmin) {
+          return res.status(403).json({ error: 'You can only confirm bookings for your own listings.' });
+        }
+      } else if (targetStatus === 'cancelled') {
+        const isCustomer = booking.user && booking.user.toString() === req.user._id.toString();
+        if (!isCustomer && !isAdmin) {
+          return res.status(403).json({ error: 'You can only cancel your own bookings.' });
+        }
+      } else {
+        if (!isAdmin) {
+          return res.status(403).json({ error: 'Only administrators can perform this action.' });
+        }
+      }
+
+      booking.status = targetStatus;
       await booking.save();
       return res.json(booking);
     }
 
     // Check HotelBooking collection
     let hotelBooking = await HotelBooking.findById(id);
-    if (hotelBooking) {
-      let mappedStatus = status.toLowerCase();
-      if (mappedStatus === 'completed') mappedStatus = 'checked_out';
-      hotelBooking.bookingStatus = mappedStatus;
-      await hotelBooking.save();
-      return res.json(hotelBooking);
+    if (!hotelBooking) {
+      hotelBooking = await HotelBooking.findOne({ bookingId: id });
     }
 
-    // Check by bookingId in HotelBooking
-    hotelBooking = await HotelBooking.findOne({ bookingId: id });
     if (hotelBooking) {
-      let mappedStatus = status.toLowerCase();
+      let mappedStatus = targetStatus;
       if (mappedStatus === 'completed') mappedStatus = 'checked_out';
+
+      // Apply authorization checks
+      if (mappedStatus === 'confirmed') {
+        const isOwner = await verifyHotelBookingOwner(hotelBooking);
+        if (!isOwner && !isAdmin) {
+          return res.status(403).json({ error: 'You can only confirm bookings for your own listings.' });
+        }
+      } else if (mappedStatus === 'cancelled') {
+        const isCustomer = hotelBooking.user && hotelBooking.user.toString() === req.user._id.toString();
+        if (!isCustomer && !isAdmin) {
+          return res.status(403).json({ error: 'You can only cancel your own bookings.' });
+        }
+      } else {
+        if (!isAdmin) {
+          return res.status(403).json({ error: 'Only administrators can perform this action.' });
+        }
+      }
+
       hotelBooking.bookingStatus = mappedStatus;
       await hotelBooking.save();
       return res.json(hotelBooking);
