@@ -330,6 +330,7 @@
         <option value="suv">SUV</option>
         <option value="hatchback">Hatchback</option>
         <option value="luxury">Luxury</option>
+        <option value="mini van">Mini Van</option>
       </select>
       <select id="filter-rate">
         <option value="">All Rates</option>
@@ -633,7 +634,7 @@
 
       let filtered = allCabs.filter(c => {
         if (search && !(c.driver || '').toLowerCase().includes(search) && !(c.vehicle || '').toLowerCase().includes(search) && !(c.city || '').toLowerCase().includes(search)) return false;
-        if (category && (c.category || '').toLowerCase() !== category.toLowerCase()) return false;
+        if (category && !(c.category || '').toLowerCase().includes(category.toLowerCase())) return false;
         if (rateRange) {
           const [min, max] = rateRange.split('-').map(Number);
           if ((c.ratePerKm || 0) < min || (max && (c.ratePerKm || 0) > max)) return false;
@@ -718,8 +719,19 @@
                 <input type="number" id="book-distance" placeholder="e.g. 280" min="1" oninput="calculatePrice()"/>
               </div>
               <div class="form-group">
+                <label>Passenger Name</label>
+                <input type="text" id="book-name" placeholder="Enter passenger name" required/>
+                <span id="error-book-name" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
+              </div>
+              <div class="form-group">
                 <label>Phone Number</label>
-                <input type="tel" id="book-phone" placeholder="+91 98765 43210"/>
+                <input type="tel" id="book-phone" placeholder="+91 98765 43210" required/>
+                <span id="error-book-phone" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="book-email" placeholder="passenger@email.com" required/>
+                <span id="error-book-email" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
               </div>
               <div class="form-group">
                 <label>Promo Code</label>
@@ -851,11 +863,51 @@
     async function confirmBooking() {
       if (!isLoggedIn() || !currentCab) return;
 
+      // Reset inline errors
+      document.getElementById('error-book-name').style.display = 'none';
+      document.getElementById('error-book-phone').style.display = 'none';
+      document.getElementById('error-book-email').style.display = 'none';
+
+      const nameVal = document.getElementById('book-name').value.trim();
+      const phoneVal = document.getElementById('book-phone').value.trim();
+      const emailVal = document.getElementById('book-email').value.trim();
+
+      let hasError = false;
+
+      if (!nameVal) {
+        document.getElementById('error-book-name').textContent = 'Name is required.';
+        document.getElementById('error-book-name').style.display = 'block';
+        hasError = true;
+      }
+      
+      const phoneRegex = /^\+?[0-9]{10,15}$/;
+      if (!phoneVal) {
+        document.getElementById('error-book-phone').textContent = 'Phone number is required.';
+        document.getElementById('error-book-phone').style.display = 'block';
+        hasError = true;
+      } else if (!phoneRegex.test(phoneVal)) {
+        document.getElementById('error-book-phone').textContent = 'Enter a valid numeric phone number (10-15 digits).';
+        document.getElementById('error-book-phone').style.display = 'block';
+        hasError = true;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailVal) {
+        document.getElementById('error-book-email').textContent = 'Email address is required.';
+        document.getElementById('error-book-email').style.display = 'block';
+        hasError = true;
+      } else if (!emailRegex.test(emailVal)) {
+        document.getElementById('error-book-email').textContent = 'Enter a valid email address.';
+        document.getElementById('error-book-email').style.display = 'block';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
       const btn = document.getElementById('confirm-btn');
       btn.disabled = true;
       btn.textContent = 'Processing...';
 
-      const user = getUser();
       const distance = parseFloat(document.getElementById('book-distance').value) || 0;
       const promo = (document.getElementById('book-promo').value || '').toUpperCase().trim();
       const rate = currentCab.ratePerKm || 0;
@@ -868,8 +920,9 @@
       const totalAmount = subtotal + taxes - discount;
 
       const bookingData = {
-        customerName: user.name,
-        customerPhone: document.getElementById('book-phone').value || 'N/A',
+        customerName: nameVal,
+        customerPhone: phoneVal,
+        customerEmail: emailVal,
         bookingDate: document.getElementById('book-date').value,
         amount: totalAmount,
         subtotal: subtotal,

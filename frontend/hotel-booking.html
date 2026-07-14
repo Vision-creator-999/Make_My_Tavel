@@ -450,9 +450,6 @@
       <input type="text" id="filter-search" placeholder="Search hotels by name or city..."/>
       <select id="filter-city">
         <option value="">All Cities</option>
-        <option value="Goa">Goa</option>
-        <option value="Manali">Manali</option>
-        <option value="Jaipur">Jaipur</option>
       </select>
       <select id="filter-rating">
         <option value="">All Ratings</option>
@@ -697,6 +694,9 @@
           // Only show approved hotels
           allHotels = allHotels.filter(h => h.status === 'Approved');
           
+          // Populate city dropdown dynamically
+          populateCityDropdown(allHotels);
+          
           // Read query parameters
           const params = new URLSearchParams(window.location.search);
           const cityParam = params.get('city');
@@ -711,6 +711,22 @@
         console.error('Failed to load hotels:', err);
       } finally {
         hideLoader();
+      }
+    }
+
+    function populateCityDropdown(hotels) {
+      const citySelect = document.getElementById('filter-city');
+      if (!citySelect) return;
+
+      const cities = [...new Set(hotels.map(h => h.city).filter(Boolean))];
+      cities.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+      const currentSelected = citySelect.value;
+      citySelect.innerHTML = `<option value="">All Cities</option>` + 
+        cities.map(city => `<option value="${city}">${city}</option>`).join('');
+
+      if (cities.includes(currentSelected)) {
+        citySelect.value = currentSelected;
       }
     }
 
@@ -913,8 +929,19 @@
                 </select>
               </div>
               <div class="form-group">
+                <label>Guest Name</label>
+                <input type="text" id="book-name" placeholder="Enter guest name" required/>
+                <span id="error-book-name" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
+              </div>
+              <div class="form-group">
                 <label>Phone Number</label>
-                <input type="tel" id="book-phone" placeholder="+91 98765 43210"/>
+                <input type="tel" id="book-phone" placeholder="+91 98765 43210" required/>
+                <span id="error-book-phone" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="book-email" placeholder="guest@email.com" required/>
+                <span id="error-book-email" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
               </div>
               <div class="form-group">
                 <label>Promo Code</label>
@@ -1103,6 +1130,47 @@
     async function confirmBooking() {
       if (!isLoggedIn() || !selectedRoom || !currentHotel) return;
 
+      // Reset inline errors
+      document.getElementById('error-book-name').style.display = 'none';
+      document.getElementById('error-book-phone').style.display = 'none';
+      document.getElementById('error-book-email').style.display = 'none';
+
+      const nameVal = document.getElementById('book-name').value.trim();
+      const phoneVal = document.getElementById('book-phone').value.trim();
+      const emailVal = document.getElementById('book-email').value.trim();
+
+      let hasError = false;
+
+      if (!nameVal) {
+        document.getElementById('error-book-name').textContent = 'Name is required.';
+        document.getElementById('error-book-name').style.display = 'block';
+        hasError = true;
+      }
+      
+      const phoneRegex = /^\+?[0-9]{10,15}$/;
+      if (!phoneVal) {
+        document.getElementById('error-book-phone').textContent = 'Phone number is required.';
+        document.getElementById('error-book-phone').style.display = 'block';
+        hasError = true;
+      } else if (!phoneRegex.test(phoneVal)) {
+        document.getElementById('error-book-phone').textContent = 'Enter a valid numeric phone number (10-15 digits).';
+        document.getElementById('error-book-phone').style.display = 'block';
+        hasError = true;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailVal) {
+        document.getElementById('error-book-email').textContent = 'Email address is required.';
+        document.getElementById('error-book-email').style.display = 'block';
+        hasError = true;
+      } else if (!emailRegex.test(emailVal)) {
+        document.getElementById('error-book-email').textContent = 'Enter a valid email address.';
+        document.getElementById('error-book-email').style.display = 'block';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
       const btn = document.getElementById('confirm-btn');
       btn.disabled = true;
       btn.textContent = 'Processing...';
@@ -1136,7 +1204,9 @@
         totalAmount,
         promoCode: promo || '',
         paymentMethod: document.getElementById('book-payment').value,
-        guestPhone: document.getElementById('book-phone').value,
+        guestName: nameVal,
+        guestPhone: phoneVal,
+        guestEmail: emailVal,
         specialRequests: document.getElementById('book-requests').value
       };
 

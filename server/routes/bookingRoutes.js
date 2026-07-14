@@ -44,7 +44,25 @@ const { protect, adminOnly } = require('../middleware/auth');
 router.post('/', protect, async (req, res) => {
   try {
     req.body.user = req.user._id;
-    const { bookingType, amount, promoCode, subtotal } = req.body;
+    const { customerName, customerPhone, customerEmail, bookingType, amount, promoCode, subtotal } = req.body;
+
+    if (!customerName || !customerName.trim()) {
+      return res.status(400).json({ error: 'Customer name is required.' });
+    }
+    if (!customerPhone || !customerPhone.trim()) {
+      return res.status(400).json({ error: 'Customer phone number is required.' });
+    }
+    if (!customerEmail || !customerEmail.trim()) {
+      return res.status(400).json({ error: 'Customer email address is required.' });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerEmail.trim())) {
+      return res.status(400).json({ error: 'Customer email address must be a valid email format.' });
+    }
+    const phoneRegex = /^\+?[0-9]{10,15}$/;
+    if (!phoneRegex.test(customerPhone.trim())) {
+      return res.status(400).json({ error: 'Customer phone number must be a valid numeric phone format (10-15 digits).' });
+    }
 
     let discount = 0;
     const User = require('../models/User');

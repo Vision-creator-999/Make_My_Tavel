@@ -767,8 +767,19 @@
                 </select>
               </div>
               <div class="form-group">
+                <label>Traveler Name</label>
+                <input type="text" id="book-name" placeholder="Enter traveler name" required/>
+                <span id="error-book-name" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
+              </div>
+              <div class="form-group">
                 <label>Phone Number</label>
-                <input type="tel" id="book-phone" placeholder="+91 98765 43210"/>
+                <input type="tel" id="book-phone" placeholder="+91 98765 43210" required/>
+                <span id="error-book-phone" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="book-email" placeholder="traveler@email.com" required/>
+                <span id="error-book-email" style="color:red; font-size:11px; display:none; margin-top:2px;"></span>
               </div>
               <div class="form-group">
                 <label>Promo Code</label>
@@ -906,11 +917,51 @@
     async function confirmBooking() {
       if (!isLoggedIn() || !currentPkg) return;
 
+      // Reset inline errors
+      document.getElementById('error-book-name').style.display = 'none';
+      document.getElementById('error-book-phone').style.display = 'none';
+      document.getElementById('error-book-email').style.display = 'none';
+
+      const nameVal = document.getElementById('book-name').value.trim();
+      const phoneVal = document.getElementById('book-phone').value.trim();
+      const emailVal = document.getElementById('book-email').value.trim();
+
+      let hasError = false;
+
+      if (!nameVal) {
+        document.getElementById('error-book-name').textContent = 'Name is required.';
+        document.getElementById('error-book-name').style.display = 'block';
+        hasError = true;
+      }
+      
+      const phoneRegex = /^\+?[0-9]{10,15}$/;
+      if (!phoneVal) {
+        document.getElementById('error-book-phone').textContent = 'Phone number is required.';
+        document.getElementById('error-book-phone').style.display = 'block';
+        hasError = true;
+      } else if (!phoneRegex.test(phoneVal)) {
+        document.getElementById('error-book-phone').textContent = 'Enter a valid numeric phone number (10-15 digits).';
+        document.getElementById('error-book-phone').style.display = 'block';
+        hasError = true;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailVal) {
+        document.getElementById('error-book-email').textContent = 'Email address is required.';
+        document.getElementById('error-book-email').style.display = 'block';
+        hasError = true;
+      } else if (!emailRegex.test(emailVal)) {
+        document.getElementById('error-book-email').textContent = 'Enter a valid email address.';
+        document.getElementById('error-book-email').style.display = 'block';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
       const btn = document.getElementById('confirm-btn');
       btn.disabled = true;
       btn.textContent = 'Processing...';
 
-      const user = getUser();
       const travelers = parseInt(document.getElementById('book-travelers').value) || 2;
       const promo = (document.getElementById('book-promo').value || '').toUpperCase().trim();
       const basePrice = currentPkg.price || 0;
@@ -923,8 +974,9 @@
       const totalAmount = subtotal + taxes - discount;
 
       const bookingData = {
-        customerName: user.name,
-        customerPhone: document.getElementById('book-phone').value || 'N/A',
+        customerName: nameVal,
+        customerPhone: phoneVal,
+        customerEmail: emailVal,
         bookingDate: document.getElementById('book-date').value,
         amount: totalAmount,
         subtotal: subtotal,

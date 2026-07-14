@@ -11,8 +11,27 @@ exports.createBooking = async (req, res) => {
       hotelId, roomType, roomName, pricePerNight,
       checkIn, checkOut, nights, guests, rooms,
       subtotal, taxes, discount, totalAmount,
-      promoCode, paymentMethod, specialRequests, guestPhone
+      promoCode, paymentMethod, specialRequests,
+      guestName, guestEmail, guestPhone
     } = req.body;
+
+    if (!guestName || !guestName.trim()) {
+      return res.status(400).json({ error: 'Guest name is required.' });
+    }
+    if (!guestPhone || !guestPhone.trim()) {
+      return res.status(400).json({ error: 'Guest phone number is required.' });
+    }
+    if (!guestEmail || !guestEmail.trim()) {
+      return res.status(400).json({ error: 'Guest email address is required.' });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(guestEmail.trim())) {
+      return res.status(400).json({ error: 'Guest email address must be a valid email format.' });
+    }
+    const phoneRegex = /^\+?[0-9]{10,15}$/;
+    if (!phoneRegex.test(guestPhone.trim())) {
+      return res.status(400).json({ error: 'Guest phone number must be a valid numeric phone format (10-15 digits).' });
+    }
 
     // Validate hotel
     const hotel = await Hotel.findById(hotelId);
@@ -136,9 +155,9 @@ exports.createBooking = async (req, res) => {
       paymentMethod: paymentMethod || 'online',
       paymentStatus: paymentMethod === 'pay_at_hotel' ? 'pending' : 'paid',
       bookingStatus: 'confirmed',
-      guestName: req.user.name,
-      guestEmail: req.user.email,
-      guestPhone: guestPhone || req.user.phone || '',
+      guestName: guestName.trim(),
+      guestEmail: guestEmail.trim(),
+      guestPhone: guestPhone.trim(),
       specialRequests: specialRequests || ''
     });
 

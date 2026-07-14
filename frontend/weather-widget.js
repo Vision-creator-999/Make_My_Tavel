@@ -110,9 +110,8 @@
   // Load weather details from API
   async function loadWeather(queryParam) {
     toggleLoader(true);
-    const baseUrl = window.API_BASE_URL || 'http://localhost:5500';
     try {
-      const response = await fetch(`${baseUrl}/api/weather?${queryParam}`);
+      const response = await fetch(`${API_BASE_URL}/api/weather?${queryParam}`);
       if (!response.ok) {
         throw new Error('Location not found');
       }
@@ -128,7 +127,15 @@
 
   // Render widget content
   function renderWidget(container, weather) {
-    if (!weather) return;
+    if (!weather) {
+      container.innerHTML = `
+        <div class="weather-widget-inner" style="opacity: 0.75;">
+          <span class="weather-emoji" title="Weather Unavailable">⚠️</span>
+          <span class="weather-city">Weather unavailable</span>
+        </div>
+      `;
+      return;
+    }
 
     const emoji = weatherEmojiMap[weather.condition] || '🌡️';
     container.innerHTML = `
