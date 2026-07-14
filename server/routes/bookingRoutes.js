@@ -203,10 +203,10 @@ router.put('/:id', protect, async (req, res) => {
 
     if (booking) {
       // Apply authorization checks
-      if (targetStatus === 'confirmed' || targetStatus === 'rejected') {
+      if (['confirmed', 'rejected', 'pending'].includes(targetStatus)) {
         const isOwner = await verifyGenericBookingOwner(booking);
         if (!isOwner && !isAdmin) {
-          return res.status(403).json({ error: 'You can only confirm or reject bookings for your own listings.' });
+          return res.status(403).json({ error: 'You can only confirm, reject, or set pending status for bookings on your own listings.' });
         }
       } else if (targetStatus === 'cancelled') {
         const isCustomer = booking.user && booking.user.toString() === req.user._id.toString();
@@ -235,10 +235,10 @@ router.put('/:id', protect, async (req, res) => {
       if (mappedStatus === 'completed') mappedStatus = 'checked_out';
 
       // Apply authorization checks
-      if (mappedStatus === 'confirmed' || mappedStatus === 'rejected') {
+      if (['confirmed', 'rejected', 'pending'].includes(mappedStatus)) {
         const isOwner = await verifyHotelBookingOwner(hotelBooking);
         if (!isOwner && !isAdmin) {
-          return res.status(403).json({ error: 'You can only confirm or reject bookings for your own listings.' });
+          return res.status(403).json({ error: 'You can only confirm, reject, or set pending status for bookings on your own listings.' });
         }
       } else if (mappedStatus === 'cancelled') {
         const isCustomer = hotelBooking.user && hotelBooking.user.toString() === req.user._id.toString();

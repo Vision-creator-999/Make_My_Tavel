@@ -117,6 +117,11 @@ textarea.fi2{resize:vertical;min-height:100px;line-height:1.6;}
 .sp.pending{background:rgba(245,158,11,.12);color:var(--warn);}
 .sp.cancelled{background:rgba(239,68,68,.12);color:var(--danger);}
 .sp.rejected{background:rgba(239,68,68,.12);color:var(--danger);}
+.status-select{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;border:none;outline:none;cursor:pointer;font-family:inherit;}
+.status-select.confirmed{background:rgba(34,197,94,.12);color:var(--success);}
+.status-select.pending{background:rgba(245,158,11,.12);color:var(--warn);}
+.status-select.rejected{background:rgba(239,68,68,.12);color:var(--danger);}
+.status-select option{background:#111827;color:#fff;font-weight:normal;}
 .es{text-align:center;padding:60px 20px;}
 .ei{width:64px;height:64px;background:rgba(26,180,154,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
 .ei svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.5;}
@@ -335,7 +340,6 @@ textarea.fi2{resize:vertical;min-height:100px;line-height:1.6;}
                 <th>Booking Date</th>
                 <th>Amount</th>
                 <th>Status</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody id="vendor-bookings-list">
@@ -754,22 +758,6 @@ function renderVendorBookings(bookings) {
     const status = (b.status || 'pending').toLowerCase();
     const typeIcon = bi(b.type);
     
-    let actionCol = '—';
-    if (status === 'pending') {
-      actionCol = `
-        <div style="display:flex;gap:6px;">
-          <button onclick="updateVendorBookingStatus('${b.bookingId}', '${b.type}', 'confirmed')" 
-                  style="background:var(--success);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;">
-            Confirm
-          </button>
-          <button onclick="updateVendorBookingStatus('${b.bookingId}', '${b.type}', 'rejected')" 
-                  style="background:#EF4444;color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;">
-            Reject
-          </button>
-        </div>
-      `;
-    }
-
     const legacyBadge = b.isLegacy 
       ? `<span style="display:inline-block;background:rgba(245,158,11,0.15);color:#d97706;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:6px;font-weight:600;" title="Matched by name (older booking)">Legacy Match</span>`
       : '';
@@ -794,11 +782,12 @@ function renderVendorBookings(bookings) {
         <td style="font-size:12px;">${bookingDateFormatted}</td>
         <td style="font-weight:700;color:var(--accent);">Rs.${Number(b.amount).toLocaleString()}</td>
         <td>
-          <span class="sp ${status}">
-            ${cap(status)}
-          </span>
+          <select onchange="updateVendorBookingStatus('${b.bookingId}', '${b.type}', this.value)" class="status-select ${status}">
+            <option value="pending" ${status === 'pending' ? 'selected' : ''}>Pending</option>
+            <option value="confirmed" ${status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+            <option value="rejected" ${status === 'rejected' ? 'selected' : ''}>Rejected</option>
+          </select>
         </td>
-        <td>${actionCol}</td>
       </tr>
     `;
   }).join('');
