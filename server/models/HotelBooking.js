@@ -48,8 +48,8 @@ const hotelBookingSchema = new mongoose.Schema({
   },
   bookingStatus: {
     type: String,
-    enum: ['confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show'],
-    default: 'confirmed'
+    enum: ['pending', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show', 'rejected'],
+    default: 'pending'
   },
   guestName: { type: String },
   guestEmail: { type: String },

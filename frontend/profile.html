@@ -116,6 +116,7 @@ textarea.fi2{resize:vertical;min-height:100px;line-height:1.6;}
 .sp.confirmed{background:rgba(34,197,94,.12);color:var(--success);}
 .sp.pending{background:rgba(245,158,11,.12);color:var(--warn);}
 .sp.cancelled{background:rgba(239,68,68,.12);color:var(--danger);}
+.sp.rejected{background:rgba(239,68,68,.12);color:var(--danger);}
 .es{text-align:center;padding:60px 20px;}
 .ei{width:64px;height:64px;background:rgba(26,180,154,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
 .ei svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.5;}
@@ -756,10 +757,16 @@ function renderVendorBookings(bookings) {
     let actionCol = '—';
     if (status === 'pending') {
       actionCol = `
-        <button onclick="confirmVendorBooking('${b.bookingId}', '${b.type}')" 
-                style="background:var(--success);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;">
-          Confirm Booking
-        </button>
+        <div style="display:flex;gap:6px;">
+          <button onclick="updateVendorBookingStatus('${b.bookingId}', '${b.type}', 'confirmed')" 
+                  style="background:var(--success);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;">
+            Confirm
+          </button>
+          <button onclick="updateVendorBookingStatus('${b.bookingId}', '${b.type}', 'rejected')" 
+                  style="background:#EF4444;color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;">
+            Reject
+          </button>
+        </div>
       `;
     }
 
@@ -797,8 +804,9 @@ function renderVendorBookings(bookings) {
   }).join('');
 }
 
-async function confirmVendorBooking(id, type) {
-  if (!confirm('Are you sure you want to confirm this booking?')) return;
+async function updateVendorBookingStatus(id, type, newStatus) {
+  const actionText = newStatus === 'confirmed' ? 'confirm' : 'reject';
+  if (!confirm(`Are you sure you want to ${actionText} this booking?`)) return;
   showLoader();
   try {
     const res = await fetch(API + '/api/bookings/' + id, {
@@ -807,14 +815,14 @@ async function confirmVendorBooking(id, type) {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + tok()
       },
-      body: JSON.stringify({ status: 'confirmed' })
+      body: JSON.stringify({ status: newStatus })
     });
     if (res.ok) {
-      alert('Booking confirmed successfully!');
+      alert(`Booking ${newStatus} successfully!`);
       await loadVendorBookings();
     } else {
       const err = await res.json();
-      alert(err.error || 'Failed to confirm booking.');
+      alert(err.error || `Failed to ${actionText} booking.`);
     }
   } catch (err) {
     alert('Network error. Please try again.');
