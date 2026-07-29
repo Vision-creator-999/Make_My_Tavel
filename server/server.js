@@ -42,6 +42,14 @@ app.use(mongoSanitize());
 // Serve static website files from the frontend folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+// Route for root and index.html to serve landing.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/landing.html'));
+});
+app.get('/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/landing.html'));
+});
+
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 

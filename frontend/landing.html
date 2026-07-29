@@ -1402,8 +1402,16 @@
       });
     });
 
+    // Helper to get local date string in YYYY-MM-DD format
+    function getLocalDateString(date = new Date()) {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
     // Date constraints setup
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = getLocalDateString();
     document.getElementById('hotel-checkin').min = todayStr;
     document.getElementById('hotel-checkout').min = todayStr;
     document.getElementById('car-pickup-date').min = todayStr;
@@ -1414,7 +1422,7 @@
     document.getElementById('hotel-checkin').value = todayStr;
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    const tomorrowStr = getLocalDateString(tomorrow);
     document.getElementById('hotel-checkout').value = tomorrowStr;
     document.getElementById('car-pickup-date').value = todayStr;
     document.getElementById('car-return-date').value = tomorrowStr;
@@ -1475,8 +1483,7 @@
       if (!activeTab) return;
       const type = activeTab.getAttribute('data-type');
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const todayVal = getLocalDateString();
 
       if (type === 'hotels') {
         const dest = document.getElementById('hotel-destination').value.trim();
@@ -1497,16 +1504,11 @@
           return;
         }
 
-        const cinDate = new Date(checkin);
-        const coutDate = new Date(checkout);
-        cinDate.setHours(0, 0, 0, 0);
-        coutDate.setHours(0, 0, 0, 0);
-
-        if (cinDate < today) {
+        if (checkin < todayVal) {
           alert('Check-in date cannot be in the past.');
           return;
         }
-        if (coutDate <= cinDate) {
+        if (checkout <= checkin) {
           alert('Check-out date must be after check-in date.');
           return;
         }
@@ -1537,9 +1539,7 @@
           return;
         }
 
-        const pDate = new Date(pickupDate);
-        pDate.setHours(0, 0, 0, 0);
-        if (pDate < today) {
+        if (pickupDate < todayVal) {
           alert('Pick-up date cannot be in the past.');
           return;
         }
@@ -1566,17 +1566,15 @@
             return;
           }
 
-          const rDate = new Date(returnDate);
-          rDate.setHours(0, 0, 0, 0);
-          if (rDate < today) {
+          if (returnDate < todayVal) {
             alert('Return date cannot be in the past.');
             return;
           }
-          if (rDate < pDate) {
+          if (returnDate < pickupDate) {
             alert('Return date cannot be before pick-up date.');
             return;
           }
-          if (rDate.getTime() === pDate.getTime()) {
+          if (returnDate === pickupDate) {
             if (returnTime <= pickupTime) {
               alert('Return time must be after pick-up time on the same day.');
               return;
@@ -1619,9 +1617,7 @@
           return;
         }
 
-        const sDate = new Date(startDate);
-        sDate.setHours(0, 0, 0, 0);
-        if (sDate < today) {
+        if (startDate < todayVal) {
           alert('Start date cannot be in the past.');
           return;
         }
